@@ -31,13 +31,15 @@ See the examples/ directory for examples of the key client features.
   require_once 'examples/autoloader.php'; // or other way to load classes
   $OrionContextBroker = new Orion\ContextBroker("127.0.0.1");
 
+    //Build your query Context
   $queryContext = new Orion\Operations\queryContext();
-
   $queryContext->addElement(".*", "Room", true); 
 
   $reqBody = $queryContext->getRequest();
+    //Runs the request and get response from server
   $raw_return = $OrionConnection->queryContext($reqBody);
 
+    //Manipulate your data
   $Context = new Orion\Context\Context($raw_return);
 
   $ResponseObject = $Context->__toObject();
