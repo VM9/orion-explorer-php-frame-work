@@ -31,20 +31,12 @@ See the examples/ directory for examples of the key client features.
   require_once 'examples/autoloader.php'; // or other way to load classes
   $OrionContextBroker = new Orion\ContextBroker("127.0.0.1");
 
-  $updateContext = new \Orion\Operations\updateContext();
+  $queryContext = new Orion\Operations\queryContext();
 
-  $updateContext->addElement("Room", "Room1", false)
-                    ->addAttrinbute("temperature", "centigrade", "26.5")
-                    ->addAttrinbute("pressure", "mmHg", "763")
-                    ->addGeolocation(40.1234, 3.4321)
-                ->addElement("Room", "Room2", false)
-                    ->addAttrinbute("temperature", "centigrade", "26.5")
-                    ->addAttrinbute("pressure", "mmHg", "763")
-                    ->addGeolocation(40.1234, 3.4321)
-                ->setAction("APPEND"); 
+  $queryContext->addElement(".*", "Room", true); 
 
-  $reqBody = $updateContext->getRequest();
-  $raw_return = $OrionConnection->updateContext($reqBody);
+  $reqBody = $queryContext->getRequest();
+  $raw_return = $OrionConnection->queryContext($reqBody);
 
   $Context = new Orion\Context\Context($raw_return);
 
