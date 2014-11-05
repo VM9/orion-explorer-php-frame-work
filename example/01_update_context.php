@@ -153,7 +153,7 @@ $APPEND->addGeolocation($lat, $lng);
 
         
         
- $APPEND->setAction("APPEND"); 
+$APPEND->setAction("APPEND"); 
 
 
 //Its Necessary get the request body from build elements 
@@ -166,3 +166,18 @@ $OrionConnection->updateContext($reqBodyAPPEND); //I can use the same instance o
 
 
 
+//Delete Entities
+$DELETE = new \Orion\Operations\updateContext();
+
+$DELETE->addElement("Room", "Room1", false)
+        ->addAttrinbute("temperature", "centigrade", "26.5")
+        ->addAttrinbute("pressure", "mmHg", "763")
+        ->setAction("DELETE"); 
+
+
+//Its Necessary get the request body from build elements 
+$reqBody = $DELETE->getRequest();
+
+//From Orion Connection you need use updateContext passing your request body.
+//Its will return a raw data from server, depends of your chose about type will return XML or JSON string, by default JSON is used
+$raw_return = $OrionConnection->updateContext($reqBody);
