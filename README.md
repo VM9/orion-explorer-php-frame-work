@@ -56,7 +56,6 @@ See the examples/ directory for examples of the key client features.
             echo "Type: ", $attr->type, PHP_EOL;
             echo "Value: ", $attr->value, PHP_EOL;
         }
-        
     }
     echo "</pre>";
 ```

@@ -5,7 +5,7 @@ set_time_limit(0);
 spl_autoload_register(function ($className) {
     $thisClass = str_replace(__NAMESPACE__ . '\\', '', __CLASS__);
 
-    $baseDir = dirname(__FILE__) . DIRECTORY_SEPARATOR .        ".." . DIRECTORY_SEPARATOR . "lib".DIRECTORY_SEPARATOR;
+    $baseDir = dirname(__FILE__) . DIRECTORY_SEPARATOR .  ".." . DIRECTORY_SEPARATOR . "lib".DIRECTORY_SEPARATOR; //Your Lib Folder
 
     if (substr($baseDir, -strlen($thisClass)) === $thisClass) {
         $baseDir = substr($baseDir, 0, -strlen($thisClass));
