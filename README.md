@@ -1,13 +1,13 @@
 Orion Context Explorer PHP Frame Work
 =============================
-####PHP 5 framework for Orion Context Broker.
+#### PHP 5 framework for Orion Context Broker.
 
 This is the code repository for the Orion Context Explorer PHP Frame Work.
 It's possible see the running implementation here:
 
 http://orionexplorer.com/
 
-##Features
+## Features
 - Make some operations of Orion Context Broker API.
 - Create, Delete and update Entities.
 - Register subscriptions.
@@ -18,7 +18,7 @@ http://orionexplorer.com/
 
 
 
-##Requirements
+## Requirements
 
 PHP 5.3+ with the cURL extension installed
 
