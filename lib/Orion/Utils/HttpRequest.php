@@ -10,9 +10,9 @@
  *
  * @copyright   Leonan Carvalho 
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
+ * @link        http://br.linkedin.com/in/leonancarvalho/
  * @license     http://opensource.org/licenses/MIT
  * @version     1.0.0
- * @package     Orion
  *
  * MIT LICENSE
  *

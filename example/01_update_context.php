@@ -163,9 +163,6 @@ $OrionConnection->updateContext($reqBodyAPPEND); //I can use the same instance o
 
 
 
-
-
-
 //Delete Entities
 $DELETE = new \Orion\Operations\updateContext();
 
