@@ -85,7 +85,7 @@ class ContextBroker {
      * @param  string $alias String API Alias NGSI10 or NGSI9
      * @param  string $type String ContentType only json is supported actually
      */
-    public function __construct($ServerAddress = 'orion.fi-guardian.com', $port = '1026', $alias = 'NGSI10', $type = "application/json") {
+    public function __construct($ServerAddress, $port = '1026', $alias = 'NGSI10', $type = "application/json") {
         $this->ip = (string) $ServerAddress;
         $this->port = $port;
         $this->serverUrl = $ServerAddress . ":" . $port . "/";
