@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Orion Context Explorer FrameWork - a PHP 5 framework for Orion Context Broker
  *
@@ -94,6 +95,18 @@ class ContextBroker {
         $this->restReq = new Utils\HttpRequest();
         $this->restReq->setAcceptType($type);
         $this->restReq->setContentType($type);
+    }
+
+    /**
+     * Experimental Authentication for Orion Context Broker
+     * 
+     * eg: X-Auth-Token: HLcJPAliV55X5zI68DfDZgVI-by2MBR0s3QhJF7WwwOU0u5AO3f85ycMouzxr3UWGfbCjO3ODcaM6ybt4wUdbV
+     * 
+     * @param string $key Name of Header Key
+     * @param string $token Token
+     */
+    public function setToken($key, $token) {
+        $this->restReq->addCustonHeader($key, $token);
     }
 
     /**
@@ -273,14 +286,15 @@ class ContextBroker {
     }
 
     /**
-     * This method build a view like database view, where attributes and ID are colums
-     * With this way is possible shows entity context type as database tables.
+     * This method build a "gridview" like database view, where attributes and
+     *  ID are colums with their respective values as rows for each entity
+     * With this way is possible shows entity context type as database tables
      *
      * @param  string  $type Selected Type
      * @return Context object  
      * 
      */
-    public function getEntityAttributeView($type = false) {
+    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = "on") {
         $Entities = array();
         $Columns = array();
 
@@ -291,7 +305,7 @@ class ContextBroker {
         }
 
         //Need improvments sinse paging was implemented
-        $ret = $this->restRequest($url . "?offset=0&limit=1000&details=on", 'GET');
+        $ret = $this->restRequest($url . "?offset=$offset&limit=$limit&details=$details", 'GET');
 
         $Context = new Context\Context($ret);
 
@@ -364,18 +378,20 @@ class ContextBroker {
     /**
      * This method returns Context Entities
      *
-     * @param  string  $type Selected Type
-     * @return Entities object  
-     * 
+     * @param type $type Selected Type
+     * @param type $offset
+     * @param type $limit
+     * @param type $details
+     * @return  Entities object  
      */
-    public function getEntities($type = false) {
+    public function getEntities($type = false, $offset = 0, $limit = 1000, $details = "on") {
         if ($type) {
             $url = $this->url . "contextEntityTypes/" . $type;
         } else {
             $url = $this->url . "contextEntityTypes/";
         }
 
-        $ret = $this->restRequest($url . "?offset=0&limit=1000&details=on", 'GET');
+        $ret = $this->restRequest($url . "?offset=$offset&limit=$limit&details=$details", 'GET');
         $Context = new Context\Context($ret);
         $Entities = array();
 
@@ -403,7 +419,6 @@ class ContextBroker {
      * @return string 
      * 
      */
-
     public function convenienceGet($url) {
         try {
             $url = $this->url . $url;
@@ -420,7 +435,6 @@ class ContextBroker {
      * @return string 
      * 
      */
-
     public function conveniencePOST($url, $reqBody) {
         try {
             $url = $this->url . $url;
@@ -437,7 +451,6 @@ class ContextBroker {
      * @return string 
      * 
      */
-
     public function conveniencePUT($url, $reqBody) {
         try {
             $url = $this->url . $url;
@@ -453,7 +466,6 @@ class ContextBroker {
      * @return string 
      * 
      */
-
     public function convenienceDELETE($url) {
         try {
             $url = $this->url . $url;
@@ -467,14 +479,12 @@ class ContextBroker {
      * Orion Context Broker API standard operations
      * ***************************************************************************** */
 
-
     /**
      * Register Context:
      * @param  /Orion/Context  $reqBody 
      * @return string 
      * 
      */
-
     public function registerContext($reqBody) {
         try {
             $url = $this->url . "registerContext";

@@ -118,7 +118,7 @@ class HttpRequest {
      * @param string $method
      * @param string $request_body
      */
-    public function __construct($url = null, $method = 'GET', $request_body = null) {
+    public function __construct($url = null, $method = 'GET', $request_body = null, $custonHeader = array()) {
         $this->url = $url;
         $this->method = $method;
         $this->request_body = $request_body;
@@ -131,6 +131,9 @@ class HttpRequest {
         $this->response_info = null;
         $this->file_to_upload = array();
 
+        $this->custonHeader = $custonHeader;
+        
+        
         if ($this->request_body !== null) {
             $this->buildPostBody();
         }
@@ -343,9 +346,30 @@ class HttpRequest {
         curl_setopt($curlHandle, CURLOPT_URL, $this->url);
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curlHandle, CURLOPT_COOKIEFILE, '/dev/null');
-        curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array('Content-Type: ' . $this->content_type,
-            'Accept: ' . $this->accept_type));
+        curl_setopt($curlHandle, CURLOPT_HTTPHEADER, $this->getDefaultHeader());
     }
+
+    /**
+     * 
+     * @return type
+     */
+    protected function getDefaultHeader(){
+        $default = array('Content-Type: ' . $this->content_type,
+            'Accept: ' . $this->accept_type);
+        return $default + $this->custonHeader;
+    }
+    
+    /**
+     * 
+     * @param type $key
+     * @param type $value
+     */
+    public function addCustonHeader($key, $value){        
+        $header = $key . ": ".$value;
+        
+        array_push( $this->custonHeader, $header);
+    }
+
 
     /**
      * Set Basic Authentication Headers to Curl Options
