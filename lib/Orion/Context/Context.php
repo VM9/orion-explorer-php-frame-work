@@ -56,7 +56,7 @@ class Context {
         if ($context) {
             $this->_jsonstring = (string) $context;
         } else {
-            $this->_jsonstring = "[]"; //Empty Array
+            $this->_jsonstring = null;
         }
     }
 

@@ -395,11 +395,14 @@ class ContextBroker {
         $Context = new Context\Context($ret);
         $Entities = array();
 
-
-        foreach ($Context->__toObject()->contextResponses as $entity) {
-            $t = $entity->contextElement->type;
-            $id = $entity->contextElement->id;
-            $Entities[$t][$id] = $entity->contextElement->attributes;
+        
+        $ContextObj = $Context->__toObject();
+        if (is_object($ContextObj)) {
+            foreach ($ContextObj->contextResponses as $entity) {
+                $t = $entity->contextElement->type;
+                $id = $entity->contextElement->id;
+                $Entities[$t][$id] = $entity->contextElement->attributes;
+            }
         }
 
 

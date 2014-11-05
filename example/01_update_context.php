@@ -104,16 +104,14 @@ $object = $Context->__toObject();
 
 $contextResponses = $object->contextResponses; //Based on json response above using that a array will be returned
 
-$contextResponses->statusCode; //Some info about this request
-
 //For exemple to debug returned elements on contextResponses
 
 echo "<pre>";
 foreach ($contextResponses as $contextElement) {
-    echo "Entity ID: ", $contextElement->id, PHP_EOL;
-    echo "Entity Type: ", $contextElement->type, PHP_EOL;
-    echo "isPattern: ", $contextElement->isPattern, PHP_EOL;
-    $attributes = $contextElement->attributes;
+    echo "Entity ID: ", $contextElement->contextElement->id, PHP_EOL;
+    echo "Entity Type: ", $contextElement->contextElement->type, PHP_EOL;
+    echo "isPattern: ", $contextElement->contextElement->isPattern, PHP_EOL;
+    $attributes = $contextElement->contextElement->attributes;
     
     echo "Attributes:", PHP_EOL;
     

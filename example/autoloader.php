@@ -2,14 +2,10 @@
 
 set_time_limit(0);
 
-set_include_path(dirname(__FILE__) . DIRECTORY_SEPARATOR .
-        "lib". PATH_SEPARATOR .
-        get_include_path());
-
-spl_autoload_register(function ($class) {
+spl_autoload_register(function ($className) {
     $thisClass = str_replace(__NAMESPACE__ . '\\', '', __CLASS__);
 
-    $baseDir = __DIR__;
+    $baseDir = dirname(__FILE__) . DIRECTORY_SEPARATOR .        ".." . DIRECTORY_SEPARATOR . "lib".DIRECTORY_SEPARATOR;
 
     if (substr($baseDir, -strlen($thisClass)) === $thisClass) {
         $baseDir = substr($baseDir, 0, -strlen($thisClass));
@@ -29,8 +25,6 @@ spl_autoload_register(function ($class) {
         require $fileName;
     }
 });
-
-
 
 //Some functions to help samples
 

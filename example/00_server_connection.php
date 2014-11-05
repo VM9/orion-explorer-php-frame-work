@@ -17,6 +17,8 @@ $ip = "0.0.0.0";
 http://0.0.0.0:1026/NGSI10
 
 $OrionSimpleIP = new Orion\ContextBroker($ip);
+
+
 $OrionSimpleHostname = new Orion\ContextBroker("orion.example.com");
 
 //Changing port and API Alias
@@ -103,12 +105,12 @@ $OrionSimpleIP->getEntityTypes();
 /**
  * NGSI10 Standard Operations will be explained in their own examples
  */
-
-$OrionSimpleIP->updateContext($reqBody);
-$OrionSimpleIP->queryContext($reqBody, $limit, $offset, $details);
-$OrionSimpleIP->subscribeContext($reqBody);
-$OrionSimpleIP->unsubscribeContext($subscriptionId);
-$OrionSimpleIP->updateContextSubscription($reqBody);
+//
+//$OrionSimpleIP->updateContext($reqBody);
+//$OrionSimpleIP->queryContext($reqBody, $limit, $offset, $details);
+//$OrionSimpleIP->subscribeContext($reqBody);
+//$OrionSimpleIP->unsubscribeContext($subscriptionId);
+//$OrionSimpleIP->updateContextSubscription($reqBody);
 
 
 
@@ -117,9 +119,12 @@ $OrionSimpleIP->updateContextSubscription($reqBody);
  * Details : https://docs.google.com/spreadsheet/ccc?key=0Aj_S9VF3rt5DdEhqZHlBaGVURmhZRDY3aDRBdlpHS3c#gid=0
  */
 $reqBody = ""; //Should be a json or XML sting
+/**
+ * 
 $OrionSimpleIP->convenienceDELETE("contextSubscriptions/{subscriptionID}"); //Execute a DELETE Request
 $OrionSimpleIP->convenienceGet("contextEntities"); // Execute a DELETE request
 $OrionSimpleIP->conveniencePOST("contextEntities", $reqBody); //Execute a POST request
 $OrionSimpleIP->conveniencePUT("contextEntities/{EntityID*}", $reqBody); //Execute a PUT request
-
+ * 
+*/
 
