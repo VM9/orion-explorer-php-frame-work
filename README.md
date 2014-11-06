@@ -1,18 +1,17 @@
-Orion Context Explorer PHP Frame Work
+Orion Context Explorer PHP Framework
 =============================
 #### PHP 5 framework for Orion Context Broker.
 
-This is the code repository for the Orion Context Explorer PHP Frame Work.
+This is the code repository for the Orion Context Explorer PHP Framework.
 It's possible see the running implementation here:
 
 http://orionexplorer.com/
 
 ## Features
-- Make some operations of Orion Context Broker API.
-- Create, Delete and update Entities.
+- Make some operations of Orion Context Broker API such as create, delete and update Entities.
 - Register subscriptions.
 - Build query and context using flexible functions
--  Get information about your Instance, such as uptime and availability
+- Get information about your Instance, such as uptime and availability
 - List all created Entities and filter them by type
 - And more.
 
