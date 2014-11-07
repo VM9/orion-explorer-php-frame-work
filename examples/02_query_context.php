@@ -182,7 +182,7 @@ $polygon_restriction = new \Orion\Context\queryRestriction();
 
 $polygon_restriction
         ->createScope("FIWARE::Location") //Create Scope will define scope type
-        ->addPolygon(true); //By default inverted is true
+        ->addPolygon(true); //By default inverted is false
 //Just for less code ;)
 $lat = array(3, 3, 11, 11);
 $lng = array(3, 8, 8, 3);

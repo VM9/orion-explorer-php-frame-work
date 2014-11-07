@@ -46,7 +46,7 @@ $OrionConnection = new Orion\ContextBroker($ip);
 
 $UPDATE = new \Orion\Operations\updateContext();
 
-$UPDATE->addElement("Room", "Room1", false)
+$UPDATE->addElement("Room1", "Room", false)
         ->addAttrinbute("temperature", "centigrade", "26.5")
         ->addAttrinbute("pressure", "mmHg", "763")
         ->setAction("UPDATE"); 
@@ -133,11 +133,11 @@ echo "</pre>";
 
 $APPEND = new \Orion\Operations\updateContext();
 
-$APPEND->addElement("Room", "Room1", false)
+$APPEND->addElement("Room1", "Room", false)
             ->addAttrinbute("temperature", "centigrade", "26.5")
             ->addAttrinbute("pressure", "mmHg", "763")
             ->addGeolocation(getRandLat(), getRandLng())
-        ->addElement("Room", "Room2", false)
+        ->addElement("Room2", "Room", false)
             ->addAttrinbute("temperature", "centigrade", "26.5")
             ->addAttrinbute("pressure", "mmHg", "763")
             ->addGeolocation(getRandLat(), getRandLng());
@@ -145,7 +145,7 @@ $APPEND->addElement("Room", "Room1", false)
 //There is another way to define objects:
 $lat = getRandLat();
 $lng = getRandLng();
-$APPEND->addElement("Room", "Room3", false);
+$APPEND->addElement("Room3", "Room", false);
 $APPEND->addAttrinbute("temperature", "centigrade", "26.5");
 $APPEND->addAttrinbute("pressure", "mmHg", "763");
 //addGeolocation method Auto-generates "position" attribute with metadata using location WSG84(Like Orion Docs, see link above)
@@ -166,7 +166,7 @@ $OrionConnection->updateContext($reqBodyAPPEND); //I can use the same instance o
 //Delete Entities
 $DELETE = new \Orion\Operations\updateContext();
 
-$DELETE->addElement("Room", "Room1", false)
+$DELETE->addElement("Room1", "Room", false)
         ->addAttrinbute("temperature", "centigrade", "26.5")
         ->addAttrinbute("pressure", "mmHg", "763")
         ->setAction("DELETE"); 
