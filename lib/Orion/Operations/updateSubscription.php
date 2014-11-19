@@ -63,7 +63,7 @@ class updateSubscription {
         $this->_notifyConditions = array();
         $this->_context = new \Orion\Context\ContextFactory();
 
-        $this->_context->put("subscriptionId", $subscriptionId);
+        $this->_context->put("subscriptionId", (string) $subscriptionId);
     }
 
     /**
