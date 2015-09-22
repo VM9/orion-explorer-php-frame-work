@@ -112,11 +112,13 @@ class HttpRequest {
     protected $file_to_upload = array();
 
     /**
-     * Construct 
+     * HttpRequest Provide HTTP Requests based on cURL lib methods.
      * 
+     * @depends cUrl
      * @param string $url
      * @param string $method
      * @param string $request_body
+     * @param array $custonHeader
      */
     public function __construct($url = null, $method = 'GET', $request_body = null, $custonHeader = array()) {
         $this->url = $url;
@@ -132,8 +134,8 @@ class HttpRequest {
         $this->file_to_upload = array();
 
         $this->custonHeader = $custonHeader;
-        
-        
+
+
         if ($this->request_body !== null) {
             $this->buildPostBody();
         }
@@ -353,12 +355,13 @@ class HttpRequest {
      * 
      * @return type
      */
-    protected function getDefaultHeader(){
+    protected function getDefaultHeader() {
         $default = array('Content-Type: ' . $this->content_type,
             'Accept: ' . $this->accept_type);
-        return $default + $this->custonHeader;
+        
+        return array_merge($default, $this->custonHeader);
     }
-    
+
     /**
      * 
      * @param type $key
@@ -366,10 +369,9 @@ class HttpRequest {
      */
     public function addCustonHeader($key, $value){        
         $header = $key . ": ".$value;
-        
+
         array_push( $this->custonHeader, $header);
     }
-
 
     /**
      * Set Basic Authentication Headers to Curl Options
