@@ -55,6 +55,11 @@ class ContextBroker {
     protected $ip;
 
     /**
+     * @var string
+     */
+    protected $alias;
+
+    /**
      * @var mixed
      */
     protected $port;
@@ -88,6 +93,7 @@ class ContextBroker {
     public function __construct($ServerAddress, $port = '1026', $alias = 'NGSI10', $type = "application/json") {
         $this->ip = (string) $ServerAddress;
         $this->port = $port;
+        $this->alias = $alias;
         $this->serverUrl = $ServerAddress . ":" . $port . "/";
         $this->url = $this->serverUrl . $alias . "/";
 
@@ -191,8 +197,14 @@ class ContextBroker {
                     $fixjson = str_replace('"orion" : ', "", trim($ret)); //fix to json_decode
                     $VersionContext = new Context\Context($fixjson);
                     $Version = $VersionContext->__toObject();
+                    if(isset($Version) && is_object($Version)){
                     $info["version"] = $Version->version;
                     $info["uptime"] = $Version->uptime;
+                    }else{
+                         $info["version"] = "";
+                         $info["uptime"] = "";
+//                        echo "<pre>"; var_dump($Version);exit;
+                }
                 }
                 $this->_orionVersion = floatval($info["version"]);
 
@@ -200,7 +212,7 @@ class ContextBroker {
             } else {
                 return array();
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return FALSE;
         }
     }
@@ -264,7 +276,11 @@ class ContextBroker {
             if (isset($this->_entityTypes)) {
                 return $this->_entityTypes;
             } else {
-                $url = $this->serverUrl . "v1/contextTypes";
+                if($type){
+                    $url = $this->serverUrl .  $this->alias . "/contextTypes/$type";
+                }else{
+                    $url = $this->serverUrl . $this->alias . "/contextTypes";
+                }
                 $ret = $this->restRequest($url, 'GET');
 
                 $Context = new Context\Context($ret);
@@ -286,9 +302,8 @@ class ContextBroker {
     }
 
     /**
-     * This method build a "gridview" like database view, where attributes and
-     *  ID are colums with their respective values as rows for each entity
-     * With this way is possible shows entity context type as database tables
+     * This method build a view like database view, where attributes and ID are colums
+     * With this way is possible shows entity context type as database tables.
      *
      * @param  string  $type Selected Type
      * @return Context object  
@@ -345,10 +360,12 @@ class ContextBroker {
                 if (!isset($this->_entityTypes)) {
                     $this->getEntityTypes();
                 }
+                
                 foreach ($this->_entityTypes as $t => $attr) {
                     $Columns[$t] = array("id", "__original");
                     foreach ($attr as $a) {
-                        array_push($Columns[$t], $a->name);
+//                        var_dump($a);
+                        array_push($Columns[$t], $a);
                     }
                 }
             } else {
@@ -396,14 +413,11 @@ class ContextBroker {
         $Entities = array();
 
         
-        $ContextObj = $Context->__toObject();
-        if (is_object($ContextObj)) {
-            foreach ($ContextObj->contextResponses as $entity) {
+        foreach ($Context->__toObject()->contextResponses as $entity) {
                 $t = $entity->contextElement->type;
                 $id = $entity->contextElement->id;
                 $Entities[$t][$id] = $entity->contextElement->attributes;
             }
-        }
 
 
 
