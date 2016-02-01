@@ -69,4 +69,9 @@ http://catalogue.fi-ware.eu/enablers/publishsubscribe-context-broker-orion-conte
 
 
 
+## How to help us?
+- If you're involved with Orion Context Broker and have PHP, Javascript, Python Skills.
+- If you believe that can help develop this tool somehow.
+
+Please send a contact to j.leonancarvalho:cyclone:gmail.com and let's start it.
 
