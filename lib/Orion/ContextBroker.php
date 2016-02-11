@@ -86,11 +86,11 @@ class ContextBroker {
     /**
      * Constructor
      * @param  string $ServerAddress String that contain IPv4 Address or Hostname
-     * @param  mixed $port String or Integer that contain Port Number
-     * @param  string $alias String API Alias NGSI10 or NGSI9
-     * @param  string $type String ContentType only json is supported actually
+     * @param  mixed $port String or Integer that contain Port Number Default: 1026
+     * @param  string $alias String API Alias Default: v1
+     * @param  string $type String ContentType only json is supported actually Default: application/json
      */
-    public function __construct($ServerAddress, $port = '1026', $alias = 'NGSI10', $type = "application/json") {
+    public function __construct($ServerAddress, $port = '1026', $alias = 'v1', $type = "application/json", $headers = array()) {
         $this->ip = (string) $ServerAddress;
         $this->port = $port;
         $this->alias = $alias;
@@ -101,9 +101,33 @@ class ContextBroker {
         $this->restReq = new Utils\HttpRequest();
         $this->restReq->setAcceptType($type);
         $this->restReq->setContentType($type);
+        
+        if(!is_array($headers)){
+            $headers = (array) $headers;
+        }
+        
+        if(count($headers) > 0){
+            foreach ($headers as $header => $value) {
+               $this->restReq->addCustonHeader($header, $value); 
+            }
+        }
+        
     }
+    
+     /**
+     * 
+     * eg: X-Auth-Token: HLcJPAliV55X5zI68DfDZgVI-by2MBR0s3QhJF7WwwOU0u5AO3f85ycMouzxr3UWGfbCjO3ODcaM6ybt4wUdbV
+     * 
+     * @param string $header Name of Header Key
+     * @param string $value Token
+     */
+    public function setHeader($header, $value) {
+        $this->restReq->addCustonHeader($header, $value);
+    }
+    
 
     /**
+     * ******** Deprecated ********
      * Experimental Authentication for Orion Context Broker
      * 
      * eg: X-Auth-Token: HLcJPAliV55X5zI68DfDZgVI-by2MBR0s3QhJF7WwwOU0u5AO3f85ycMouzxr3UWGfbCjO3ODcaM6ybt4wUdbV

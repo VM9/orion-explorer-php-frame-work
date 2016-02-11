@@ -32,12 +32,27 @@ $OrionAPI = new Orion\ContextBroker($ip, 1024, "v1");
 
 $OrionXML = new Orion\ContextBroker($ip, 1024, "v1", "application/xml");
 
-
+/** Deprecated **/
 //Experimental Use: ORION CONTEXT BROKER Authentication
 //NOTE: Orion don't have your own authentication mode, but you can implements Oauth authentication
 //Take a look on https://github.com/fgalan/oauth2-example-orion-client and see a example of this implementation
-$OrionToken = new Orion\ContextBroker($ip);
-$OrionToken->setToken("X-Auth-Token", "HASHTOKEN-auth_token");
+//$OrionToken = new Orion\ContextBroker($ip);
+//$OrionToken->setToken("X-Auth-Token", "HASHTOKEN-auth_token");
+
+
+// Multi tenancy, Autentication and Service Path
+
+$CustonHeaders = array(
+    "Fiware-Service"=>"t_02",
+    "Fiware-ServicePath" => '/Madrid/Gardens/ParqueNorte/Parterre1', #Tip: Use ' instead " for values with /
+    "X-Auth-Token" => "HASHTOKEN-auth_token",
+    "Whatever" => "foo"
+    ); 
+
+$OrionWithHeaders = new Orion\ContextBroker($ip, 1024, "v1", "application/json", $CustonHeaders);
+
+$OrionWithHeaders->setHeader("Fiware-Service", "t_02"); //To Change service after some operation...
+
 
 
 /**
