@@ -176,6 +176,9 @@ class ContextBroker {
      * Any authentication will be ignored.
      * If a Firewall is applied may this test will fail.
      *
+     * On CentOS fsockopen needs permition to network connect, to allow use this cmd:
+     *  setsebool -P httpd_can_network_connect 1
+     * http://yml.com/fv-b-1-619/selinux--apache-httpd--php-establishing-socket-connections-using-fsockopen---et-al.html
      * @param  strinq  $ip IPv4 or Hostname
      * @param  string  $port GET/POST/DELETE/PUT
      * @return boolean  
