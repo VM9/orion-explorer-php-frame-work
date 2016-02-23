@@ -179,6 +179,7 @@ class ContextBroker {
      * On CentOS fsockopen needs permition to network connect, to allow use this cmd:
      *  setsebool -P httpd_can_network_connect 1
      * http://yml.com/fv-b-1-619/selinux--apache-httpd--php-establishing-socket-connections-using-fsockopen---et-al.html
+     * 
      * @param  strinq  $ip IPv4 or Hostname
      * @param  string  $port GET/POST/DELETE/PUT
      * @return boolean  
@@ -344,7 +345,7 @@ class ContextBroker {
         if ($type) {
             $url = $this->url . "contextEntityTypes/" . $type;
         } else {
-            $url = $this->url . "contextEntityTypes/";
+            $url = $this->url . "contextEntities";
         }
 
         //Need improvments sinse paging was implemented
