@@ -36,6 +36,7 @@ namespace Orion;
 
 use Orion\Context;
 use Orion\Utils;
+use Utils\HttpRequest as HTTPClient;
 
 /**
  * Orion ContextBroker Class
@@ -57,7 +58,7 @@ class ContextBroker {
     /**
      * @var string
      */
-    protected $alias;
+    protected $apiversion;
 
     /**
      * @var mixed
@@ -87,19 +88,19 @@ class ContextBroker {
      * Constructor
      * @param  string $ServerAddress String that contain IPv4 Address or Hostname
      * @param  mixed $port String or Integer that contain Port Number Default: 1026
-     * @param  string $alias String API Alias Default: v1
+     * @param  int $apiversion 
      * @param  string $type String ContentType only json is supported actually Default: application/json
      * @param  array $headers Array With headers key:value 
      */
-    public function __construct($ServerAddress, $port = '1026', $alias = 'v1', $type = "application/json", $headers = array()) {
+    public function __construct($ServerAddress, $port = '1026', $apiversion = 1, $type = "application/json", $headers = array()) {
         $this->ip = (string) $ServerAddress;
         $this->port = $port;
-        $this->alias = $alias;
+        $this->apiversion = $apiversion;
         $this->serverUrl = $ServerAddress . ":" . $port . "/";
-        $this->url = $this->serverUrl . $alias . "/";
+        $this->url = "{$this->serverUrl}/v{$apiversion}/";
 
         //Setup Http Requests
-        $this->restReq = new Utils\HttpRequest();
+        $this->restReq = new HTTPClient();
         $this->restReq->setAcceptType($type);
         $this->restReq->setContentType($type);
         
@@ -306,9 +307,9 @@ class ContextBroker {
                 return $this->_entityTypes;
             } else {
                 if($type){
-                    $url = $this->serverUrl .  $this->alias . "/contextTypes/$type";
+                    $url = $this->serverUrl .  $this->apiversion . "/contextTypes/$type";
                 }else{
-                    $url = $this->serverUrl . $this->alias . "/contextTypes";
+                    $url = $this->serverUrl . $this->apiversion . "/contextTypes";
                 }
                 $ret = $this->restRequest($url, 'GET');
 
