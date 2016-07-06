@@ -8,7 +8,7 @@ It's possible see the running implementation here:
 http://orionexplorer.com/
 
 ## Features
-- Make some operations of Orion Context Broker API such as create, delete and update Entities.
+- Make some operations of [Orion Context Broker](https://github.com/telefonicaid/fiware-orion) API such as create, delete and update Entities.
 - Register subscriptions.
 - Build query and context using flexible functions
 - Get information about your Instance, such as uptime and availability
