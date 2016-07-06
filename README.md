@@ -1,6 +1,6 @@
 Orion Context Explorer PHP Framework
 =============================
-#### PHP 5 framework for Orion Context Broker.
+#### PHP 5 framework for [Orion Context Broker](https://github.com/telefonicaid/fiware-orion).
 
 This is the code repository for the Orion Context Explorer PHP Framework.
 It's possible see the running implementation here:
@@ -8,7 +8,7 @@ It's possible see the running implementation here:
 http://orionexplorer.com/
 
 ## Features
-- Make some operations of [Orion Context Broker](https://github.com/telefonicaid/fiware-orion) API such as create, delete and update Entities.
+- Make some operations of [Orion Context Broker](https://github.com/telefonicaid/fiware-orion) [API Operations](https://docs.google.com/spreadsheet/ccc?key=0Aj_S9VF3rt5DdEhqZHlBaGVURmhZRDY3aDRBdlpHS3c#gid=0)  such as create, delete and update Entities.
 - Register subscriptions.
 - Build query and context using flexible functions
 - Get information about your Instance, such as uptime and availability
