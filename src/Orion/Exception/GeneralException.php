@@ -31,65 +31,28 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Orion\Context;
+namespace Orion\Exception;
 
 /**
- * Orion ContextFactory Class
- *  
+ * Orion Exception
+ * 
+ * This Exception is thrown when the Orion Explorer needs to abort
+ * processing and return control flow to the outer PHP script.
+ * 
+ * A 500 Internal Server Error response will be sent to the client.
+ * 
  * @package      Orion
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
  * @since      1.0.0
- * 
  */
-class ContextFactory {
-
-    /**
-     * @var stdClass
-     */
-    private $_context;
-
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->_context = new \stdClass();
+class GeneralException extends \Exception{
+    private $_raw;
+    public function __construct ($message, $code, $previous = null, $rawnresponse = "") {
+        $this->_raw = $rawnresponse;
+        parent::__construct($message, $code, $previous);
     }
-
-    /**
-     * 
-     * Put values based on a key into context object 
-     * Update, append values is allowed
-     *
-     * @param  mixed  $key Key indentifier
-     * @param  mixed  $value Value, can by any type
-     * @return self  
-     */
-    public function put($key, $value) {
-        $this->_context->$key = $value;
-        return $this;
+    
+    public function getResponse(){
+        return $this->_raw;
     }
-
-    /**
-     * 
-     * Get values based on known key
-     *
-     * @param  mixed  $key 
-     * @return mixed  
-     */
-    public function get($key = null) {
-        if(null != $key){
-            return $this->_context->$key;
-        }else{
-            return $this->_context;
-        }
-    }
-
-    /**
-     * Return full object
-     * @return \Orion\Context\Context
-     */
-    public function getContext() {
-        return $this->_context;
-    }
-
 }

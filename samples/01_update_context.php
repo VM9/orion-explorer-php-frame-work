@@ -46,17 +46,16 @@ $OrionConnection = new Orion\ContextBroker($ip);
 
 $UPDATE = new \Orion\Operations\updateContext();
 
-$UPDATE->addElement("Room1", "Room", false)
+$context = $UPDATE->addElement("Room1", "Room", false)
         ->addAttrinbute("temperature", "centigrade", "26.5")
         ->addAttrinbute("pressure", "mmHg", "763")
-        ->setAction("UPDATE"); 
+        ->setAction("UPDATE")
+        ->send($OrionConnection); 
 
-
-//Its Necessary get the request body from build elements 
-$reqBody = $UPDATE->getRequest();
 
 //From Orion Connection you need use updateContext passing your request body.
 //Its will return a raw data from server, depends of your chose about type will return XML or JSON string, by default JSON is used
+$reqBody = $UPDATE->getRequest(); //Its Necessary get the request body from build elements 
 $raw_return = $OrionConnection->updateContext($reqBody);
 
 //If request return a successful response like  that you can do process this information using some tools

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Orion Context Explorer FrameWork - a PHP 5 framework for Orion Context Broker
  *
@@ -31,65 +32,13 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Orion\Context;
+namespace Orion\Operations;
 
 /**
- * Orion ContextFactory Class
- *  
- * @package      Orion
- * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
- * @since      1.0.0
- * 
+ *
+ * @author Leonan
  */
-class ContextFactory {
-
-    /**
-     * @var stdClass
-     */
-    private $_context;
-
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->_context = new \stdClass();
-    }
-
-    /**
-     * 
-     * Put values based on a key into context object 
-     * Update, append values is allowed
-     *
-     * @param  mixed  $key Key indentifier
-     * @param  mixed  $value Value, can by any type
-     * @return self  
-     */
-    public function put($key, $value) {
-        $this->_context->$key = $value;
-        return $this;
-    }
-
-    /**
-     * 
-     * Get values based on known key
-     *
-     * @param  mixed  $key 
-     * @return mixed  
-     */
-    public function get($key = null) {
-        if(null != $key){
-            return $this->_context->$key;
-        }else{
-            return $this->_context;
-        }
-    }
-
-    /**
-     * Return full object
-     * @return \Orion\Context\Context
-     */
-    public function getContext() {
-        return $this->_context;
-    }
-
+interface operationsInterface {
+     public function send(\Orion\ContextBroker $orionconn);
+     public function getRequest();
 }

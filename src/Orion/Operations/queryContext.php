@@ -41,7 +41,7 @@ namespace Orion\Operations;
  * @since      1.0.0
  * 
  */
-class queryContext {
+class queryContext  implements operationsInterface {
 
     /**
      * @var  Orion\Context\ContextFactory
@@ -141,7 +141,13 @@ class queryContext {
         $this->_context->put("entities", $this->_elements);
         $this->_context->put("attributes", $this->_attributes);
 
-        return $this->_context->getContext();
+        return new \Orion\Context\Context($this->_context->getContext());
+    }
+
+    public function send(\Orion\ContextBroker $orionconn) {
+        $reqBody = $this->getRequest();
+        $ret = $orionconn->queryContext($reqBody);
+        return new \Orion\Context\Context($ret);
     }
 
 }

@@ -42,7 +42,7 @@ namespace Orion\Operations;
  * @since      1.0.0
  * 
  */
-class updateSubscription {
+class updateSubscription  implements operationsInterface {
 
     /**
      * @var  Orion\Context\ContextFactory
@@ -105,4 +105,9 @@ class updateSubscription {
         return $this->_context->getContext();
     }
 
+    public function send(\Orion\ContextBroker $orionconn) {
+        $reqBody = $this->getRequest();
+        $ret = $orionconn->updateContextSubscription($reqBody);
+        return new \Orion\Context\Context($ret);
+    }
 }

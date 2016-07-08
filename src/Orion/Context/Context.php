@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Orion Context Explorer FrameWork - a PHP 5 framework for Orion Context Broker
  *
@@ -46,17 +47,27 @@ class Context {
     /**
      * @var string
      */
-    private $_jsonstring;
+    private $_rawcontext;
+
+    /**
+     *
+     * @var  \stdClass
+     */
+    private $_context;
 
     /**
      * Constructor
      * @param  string $context String that contain json response from Orion API
      */
-    public function __construct($context) {
-        if ($context) {
-            $this->_jsonstring = (string) $context;
-        } else {
-            $this->_jsonstring = null;
+    public function __construct($raw_context = null) {
+        if($raw_context instanceof \stdClass){
+            $this->_rawcontext = (string) json_encode($raw_context);
+        }else{
+            if ($raw_context) {
+                $this->_rawcontext = (string) $raw_context;
+            } else {
+                $this->_rawcontext = "{}";
+            }
         }
     }
 
@@ -66,7 +77,12 @@ class Context {
      * @return stdClass
      */
     public function __toObject() {
-        return json_decode($this->_jsonstring);
+        $this->_context = json_decode($this->_rawcontext);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new \InvalidArgumentException(
+            'Unable to decode raw data: ' . json_last_error_msg());
+        }
+        return $this->_context;
     }
 
     /**
@@ -75,7 +91,12 @@ class Context {
      * @return array
      */
     public function __toArray() {
-        return json_decode($this->_jsonstring, true);
+        $array = json_decode($this->_rawcontext, true);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new \InvalidArgumentException(
+            'Unable to decode raw data: ' . json_last_error_msg());
+        }
+        return $array;
     }
 
     /**
@@ -84,7 +105,17 @@ class Context {
      * @return string
      */
     public function __toString() {
-        return $this->_jsonstring;
+        return $this->_rawcontext;
+    }
+
+    public function get() {
+        $Context = $this->__toObject();
+       
+        return $Context;
+    }
+    
+    public function prettyPrint(){
+        echo json_encode($this->__toObject(),JSON_PRETTY_PRINT);
     }
 
 }

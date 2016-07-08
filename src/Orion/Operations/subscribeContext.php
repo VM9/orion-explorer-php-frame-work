@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Orion Context Explorer FrameWork - a PHP 5 framework for Orion Context Broker
  *
@@ -41,7 +42,7 @@ namespace Orion\Operations;
  * @since      1.0.0
  * 
  */
-class subscribeContext {
+class subscribeContext implements operationsInterface {
 
     /**
      * @var  Orion\Context\ContextFactory
@@ -140,7 +141,6 @@ class subscribeContext {
      * @param  array $condValues insert is Parttern attribute
      * @param  mixed $throttling throttling element is used to specify a minimum inter-notification arrival time(ISO 8601 format)
      */
-
     public function notifyConditions($type, $condValues = array(), $throttling = false) {
         if (!is_array($condValues)) {
             $condValues = array($condValues);
@@ -150,11 +150,17 @@ class subscribeContext {
         $context->put("type", $type);
         $context->put("condValues", $condValues);
 
-        if ($throttling) {
-            $this->_context->put("throttling", $throttling);
-        }
-
         $this->_notifyConditions[] = $context->getContext();
+        return $this;
+    }
+    
+    /**
+     * Throttling time in ISO 8601 format
+     * @param string $throttling
+     */
+    public function setThrottling($throttling){
+        $this->_context->put("throttling", $throttling);
+        return $this;
     }
 
     /**
@@ -174,7 +180,13 @@ class subscribeContext {
         $this->_context->put("attributes", $this->_attributes);
         $this->_context->put("notifyConditions", $this->_notifyConditions);
 
-        return $this->_context->getContext();
+        return new \Orion\Context\Context($this->_context->getContext());
+    }
+
+    public function send(\Orion\ContextBroker $orionconn) {
+        $reqBody = $this->getRequest();
+        $ret = $orionconn->subscribeContext($reqBody);
+        return new \Orion\Context\Context($ret);
     }
 
 }

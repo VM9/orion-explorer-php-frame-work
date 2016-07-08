@@ -35,8 +35,7 @@
 namespace Orion;
 
 use Orion\Context;
-use Orion\Utils;
-use Utils\HttpRequest as HTTPClient;
+use Orion\Utils\HttpRequest as HTTPClient;
 
 /**
  * Orion ContextBroker Class
@@ -231,8 +230,8 @@ class ContextBroker {
                     $info["version"] = $Version->version;
                     $info["uptime"] = $Version->uptime;
                     }else{
-                         $info["version"] = "";
-                         $info["uptime"] = "";
+                         $info["version"] = null;
+                         $info["uptime"] = null;
 //                        echo "<pre>"; var_dump($Version);exit;
                 }
                 }
@@ -240,10 +239,10 @@ class ContextBroker {
 
                 return $info;
             } else {
-                return array();
+                return array("version"=>null,"uptime"=>null);
             }
         } catch (\Exception $e) {
-            return FALSE;
+            return array("version"=>null,"uptime"=>null, "error"=> $e);
         }
     }
 
@@ -433,21 +432,39 @@ class ContextBroker {
      */
     public function getEntities($type = false, $offset = 0, $limit = 1000, $details = "on") {
         if ($type) {
-            $url = $this->url . "contextEntityTypes/" . $type;
+            $url = $this->url . "contextTypes/" . $type;
         } else {
-            $url = $this->url . "contextEntityTypes/";
+            $url = $this->url . "contextEntities/";
         }
 
         $ret = $this->restRequest($url . "?offset=$offset&limit=$limit&details=$details", 'GET');
-        $Context = new Context\Context($ret);
-        $Entities = array();
-
+        $Context = (new Context\Context($ret))->get();
+        $Entities = [];
+        var_dump($Context);exit;
+        if($Context instanceof \stdClass && isset($Context->errorCode)){
+            switch ((int) $Context->errorCode->code) {
+                case 404:
+                case 500:
+                    throw new Exception\GeneralException($Context->errorCode->reasonPhrase,(int)$Context->errorCode->code, null, $ret);
+                default:
+                case 200:
+                    break;
+            }
+        }else{
+            throw new Exception\GeneralException("Malformed Orion Response",500, null, $ret);
+        }
         
-        foreach ($Context->__toObject()->contextResponses as $entity) {
+        if(isset($Context->contextResponses) && count($Context->contextResponses) > 0){
+            foreach ($Context->contextResponses as $entity) {
                 $t = $entity->contextElement->type;
                 $id = $entity->contextElement->id;
+                
+                if(!array_key_exists($t, $Entities)){
+                    $Entities[$t] = [];
+                }
                 $Entities[$t][$id] = $entity->contextElement->attributes;
             }
+        }
 
 
 
@@ -547,10 +564,10 @@ class ContextBroker {
      * @return string 
      * 
      */
-    public function updateContext($reqBody) {
+    public function updateContext(Context\Context $reqBody) {
         try {
             $url = $this->url . "updateContext";
-            return $this->restRequest($url, 'POST', $reqBody);
+            return $this->restRequest($url, 'POST', $reqBody->get());
         } catch (\ErrorException $e) {
             echo $e->__toString();
             $erro = array("erro" => $e->getMessage());
@@ -564,10 +581,10 @@ class ContextBroker {
      * @return string 
      * 
      */
-    public function subscribeContext($reqBody) {
+    public function subscribeContext(Context\Context $reqBody) {
         try {
             $url = $this->url . "subscribeContext";
-            return $this->restRequest($url, 'POST', $reqBody);
+            return $this->restRequest($url, 'POST', $reqBody->get());
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -601,11 +618,11 @@ class ContextBroker {
      * @return string 
      * 
      */
-    public function queryContext($reqBody, $limit = 100, $offset = 0, $details = true) {
+    public function queryContext(Context\Context $reqBody, $limit = 100, $offset = 0, $details = true) {
         try {
             $urldetails = ($details) ? "on" : "off";
             $url = $this->url . "queryContext?offset=$offset&limit=$limit&details=$urldetails";
-            return $this->restRequest($url, 'POST', $reqBody);
+            return $this->restRequest($url, 'POST', $reqBody->get());
         } catch (Exception $e) {
             var_dump($e);
         }

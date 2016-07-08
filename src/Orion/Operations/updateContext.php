@@ -41,7 +41,7 @@ namespace Orion\Operations;
  * @since      1.0.0
  * 
  */
-class updateContext {
+class updateContext implements operationsInterface {
 
      /**
      * @var  Orion\Context\ContextFactory
@@ -174,7 +174,22 @@ class updateContext {
         $this->_context->put("contextElements", $this->_elements);
         $this->_context->put("updateAction", $this->_action);
 
-        return $this->_context->getContext();
+        return new \Orion\Context\Context($this->_context->getContext());
+    }
+    
+    /**
+     * 
+     * @param \Orion\ContextBroker $orionconn
+     * @return type
+     */
+    public function send(\Orion\ContextBroker $orionconn){
+        $reqBody = $this->getRequest();
+//        var_dump($reqBody->get(),$this->_context);exit;
+        $ret = $orionconn->updateContext($reqBody);
+        $Context = new \Orion\Context\Context($ret);
+//        $ResponseObject = $Context->get();
+        
+        return $Context;
     }
 
 }
