@@ -73,21 +73,23 @@ class ContextFactory {
      * 
      * Get values based on known key
      *
-     * @param  mixed  $key IPv4 or Hostname
+     * @param  mixed  $key 
      * @return mixed  
      */
-    public function get($key) {
-        return $this->_context->$key;
+    public function get($key = null) {
+        if(null != $key){
+            return $this->_context->$key;
+        }else{
+            return $this->_context;
+        }
     }
 
     /**
-     * 
      * Return full object
-     *
-     * @return stdClass  $_context
+     * @return \Orion\Context\Context
      */
     public function getContext() {
-        return $this->_context;
+        return new Context($this->_context);
     }
 
 }
