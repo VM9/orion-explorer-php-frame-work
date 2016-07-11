@@ -634,10 +634,10 @@ class ContextBroker {
      * @return string 
      * 
      */
-    public function updateContextSubscription($reqBody) {
+    public function updateContextSubscription(Context\Context $reqBody) {
         try {
             $url = $this->url . "updateContextSubscription";
-            return $this->restRequest($url, 'POST', $reqBody);
+            return $this->restRequest($url, 'POST', $reqBody->get());
         } catch (Exception $e) {
             var_dump($e);
         }

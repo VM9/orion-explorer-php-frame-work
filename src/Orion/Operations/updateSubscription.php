@@ -102,7 +102,25 @@ class updateSubscription  implements operationsInterface {
     public function getRequest() {
         $this->_context->put("notifyConditions", $this->_notifyConditions);
 
-        return $this->_context->getContext();
+        return new \Orion\Context\Context($this->_context->getContext());
+    }
+    
+    /**
+     * Duration time in ISO 8601 format
+     * @param string $duration
+     */
+    public function setDuration($duration) {
+        $this->_context->put("duration", $duration);
+        return $this;
+    }
+
+    /**
+     * Throttling time in ISO 8601 format
+     * @param string $throttling
+     */
+    public function setThrottling($throttling) {
+        $this->_context->put("throttling", $throttling);
+        return $this;
     }
 
     public function send(\Orion\ContextBroker $orionconn) {

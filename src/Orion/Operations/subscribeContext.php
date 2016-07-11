@@ -153,12 +153,21 @@ class subscribeContext implements operationsInterface {
         $this->_notifyConditions[] = $context->getContext();
         return $this;
     }
-    
+
+    /**
+     * Duration time in ISO 8601 format
+     * @param string $duration
+     */
+    public function setDuration($duration) {
+        $this->_context->put("duration", $duration);
+        return $this;
+    }
+
     /**
      * Throttling time in ISO 8601 format
      * @param string $throttling
      */
-    public function setThrottling($throttling){
+    public function setThrottling($throttling) {
         $this->_context->put("throttling", $throttling);
         return $this;
     }

@@ -19,7 +19,7 @@ http://orionexplorer.com/
 
 ## Requirements
 
-PHP 5.3+ with the cURL extension installed
+PHP 5.6+ with the cURL extension installed
 
 
 
@@ -59,6 +59,13 @@ See the examples/ directory for examples of the key client features.
         }
     }
     echo "</pre>";
+```
+
+#Running Samples:
+
+```
+cd example
+php -S  localhost:8000
 ```
 
 
