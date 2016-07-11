@@ -28,7 +28,7 @@ try {
      * Entity Creation
      * Ref: https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#entity-creation
      */
-    echo "<h1>Entity Creation:</h1>", PHP_EOL;
+    echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#entity-creation' target='_blank'>Entity Creation:</a></h1>", PHP_EOL;
     $Create = new \Orion\Operations\updateContext();
 
     $contextResponses = $Create->addElement("Room1", "Room", false)
@@ -50,7 +50,7 @@ try {
      * Query Context operation
      * Ref: https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#query-context-operation
      */
-    echo "<h1>Query Context operation</h1>", PHP_EOL;
+    echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#query-context-operation' target='_blank'>Query Context operation</a></h1>", PHP_EOL;
     $queryContext = new Orion\Operations\queryContext();
     $queryResponse = $queryContext->addElement("Room1", "Room")
             ->send($OrionConn);
@@ -103,7 +103,7 @@ try {
      * Update context elements
      * Ref: https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#update-context-elements
      */
-    echo "<h1>Update context elements:</h1>", PHP_EOL;
+    echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#update-context-elements' target='_blank'>Update context elements:</a></h1>", PHP_EOL;
     $UPDATE = new \Orion\Operations\updateContext();
 
     $contextResponses = $UPDATE->addElement("Room1", "Room", false)
@@ -125,7 +125,7 @@ try {
      * Context subscriptions
      * Ref: https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#context-subscriptions
      */
-    echo "<h1>Context subscriptions</h1>", PHP_EOL;
+    echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#context-subscriptions' target='_blank'>Context subscriptions</a></h1>", PHP_EOL;
     $subscribeContext = new \Orion\Operations\subscribeContext("http://localhost:1028/accumulate", "P1M");
     $subscribeResponse = $subscribeContext->addElement("Room1", "Room", false)
             ->addAttr("temperature")

@@ -61,12 +61,13 @@ See the examples/ directory for examples of the key client features.
     echo "</pre>";
 ```
 
-#Running Samples:
-
+#Running Examples:
+- You can use native php server 
 ```
 cd example
 php -S  localhost:8000
 ```
+- And access http://localhost:8000
 
 
 You will find all the information on Orion Context Broker in its page in the FI-WARE Catalogue:
