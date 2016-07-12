@@ -139,9 +139,8 @@ class subscribeContext implements operationsInterface {
      * an empty  means all attributes
      * 
      * @param  array $condValues insert is Parttern attribute
-     * @param  mixed $throttling throttling element is used to specify a minimum inter-notification arrival time(ISO 8601 format)
      */
-    public function notifyConditions($type, $condValues = array(), $throttling = false) {
+    public function notifyConditions($type, $condValues = array()) {
         if (!is_array($condValues)) {
             $condValues = array($condValues);
         }
