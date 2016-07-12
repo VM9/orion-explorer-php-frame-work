@@ -60,7 +60,7 @@ class Context {
      * @param  string $context String that contain json response from Orion API
      */
     public function __construct($raw_context = null) {
-        if($raw_context instanceof \stdClass){
+        if($raw_context instanceof \stdClass || is_array($raw_context)){
             $this->_rawcontext = (string) json_encode($raw_context);
         }else{
             if ($raw_context) {

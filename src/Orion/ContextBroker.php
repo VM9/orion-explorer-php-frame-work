@@ -96,7 +96,7 @@ class ContextBroker {
         $this->port = $port;
         $this->apiversion = $apiversion;
         $this->serverUrl = $ServerAddress . ":" . $port . "/";
-        $this->url = "{$this->serverUrl}/v{$apiversion}/";
+        $this->url = "{$this->serverUrl}v{$apiversion}/";
 
         //Setup Http Requests
         $this->restReq = new HTTPClient();
@@ -440,7 +440,7 @@ class ContextBroker {
         $ret = $this->restRequest($url . "?offset=$offset&limit=$limit&details=$details", 'GET');
         $Context = (new Context\Context($ret))->get();
         $Entities = [];
-        var_dump($Context);exit;
+        
         if($Context instanceof \stdClass && isset($Context->errorCode)){
             switch ((int) $Context->errorCode->code) {
                 case 404:
@@ -469,7 +469,7 @@ class ContextBroker {
 
 
 
-        return $Entities;
+        return new Context\Context($Entities);
     }
 
     /*     * ******************************************************************************

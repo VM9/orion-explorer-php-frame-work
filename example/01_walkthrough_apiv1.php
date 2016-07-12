@@ -170,19 +170,3 @@ try {
     echo $e->getFile(), " [", $e->getLine(), "]<br>";
     echo "<pre>", $e->getTraceAsString(), "</pre>";
 }
-?>
-<style>
-    pre {
-        display:block;
-        font:normal 12px/22px Monaco,Monospace !important;
-        color:#CFDBEC;
-        background-color:#2f2f2f;
-        background-image:-webkit-repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
-        background-image:-moz-repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
-        background-image:-ms-repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
-        background-image:-o-repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
-        background-image:repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
-        padding:0em 1em;
-        overflow:auto;
-    }
-</style>
