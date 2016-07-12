@@ -47,7 +47,7 @@ use Orion\Utils\HttpRequest as HTTPClient;
  * @property \Orion\Context  Context Controller
  * @property \Orion\Utils    Http Requiest Utils
  */
-class ContextBroker {
+class NGSIAPIv1 {
 
     /**
      * @var string
