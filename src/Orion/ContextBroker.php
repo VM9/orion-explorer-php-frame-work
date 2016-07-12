@@ -486,7 +486,7 @@ class ContextBroker {
     public function convenienceGet($url) {
         try {
             $url = $this->url . $url;
-            return $this->restRequest($url, 'GET');
+            return  new Context\Context($this->restRequest($url, 'GET'));
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -502,7 +502,7 @@ class ContextBroker {
     public function conveniencePOST($url, $reqBody) {
         try {
             $url = $this->url . $url;
-            return $this->restRequest($url, 'POST', $reqBody);
+            return  new Context\Context($this->restRequest($url, 'POST', $reqBody));
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -518,7 +518,7 @@ class ContextBroker {
     public function conveniencePUT($url, $reqBody) {
         try {
             $url = $this->url . $url;
-            return $this->restRequest($url, 'PUT', $reqBody);
+            return  new Context\Context($this->restRequest($url, 'PUT', $reqBody));
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -533,7 +533,7 @@ class ContextBroker {
     public function convenienceDELETE($url) {
         try {
             $url = $this->url . $url;
-            return $this->restRequest($url, 'DELETE');
+            return  new Context\Context($this->restRequest($url, 'DELETE'));
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -593,7 +593,7 @@ class ContextBroker {
     /**
      * Unsubscribe Context:
      * @param  string  $subscriptionId 
-     * @return string 
+     * @return Context\Context 
      * 
      */
     public function unsubscribeContext($subscriptionId) {
@@ -602,8 +602,9 @@ class ContextBroker {
             $context = new \Orion\Context\ContextFactory();
             $context->put("subscriptionId", $subscriptionId);
             $reqBody = $context->getContext();
-
-            return $this->restRequest($url, 'POST', $reqBody);
+            
+            $ret = $this->restRequest($url, 'POST', $reqBody);
+            return new Context\Context($ret);
         } catch (Exception $e) {
             var_dump($e);
         }

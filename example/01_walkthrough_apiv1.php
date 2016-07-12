@@ -142,7 +142,8 @@ try {
     echo "</pre>";
 
     echo "<h1>Update subscription </h1>", PHP_EOL;
-//    
+    $subscriptionId = $subscribeResponse->get()->subscribeResponse->subscriptionId;
+    echo "<h2>Subscription ID: {$subscriptionId}</h2>",PHP_EOL;
     $UPDATEsubscribeContext = new Orion\Operations\updateSubscription($subscribeResponse->get()->subscribeResponse->subscriptionId);
     $UPDATEsubscribeResponse = $UPDATEsubscribeContext->setDuration("P1M")->send($OrionConn);
 
@@ -159,7 +160,7 @@ try {
     echo "<h3>Response: </h3>", PHP_EOL;
     echo "<pre>";
     
-    echo $OrionConn->unsubscribeContext($subscribeResponse->get()->subscribeResponse->subscriptionId);
+    $OrionConn->unsubscribeContext($subscribeResponse->get()->subscribeResponse->subscriptionId)->prettyPrint();
     echo "</pre>";
 
 
