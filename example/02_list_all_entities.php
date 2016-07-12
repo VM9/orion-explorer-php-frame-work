@@ -15,7 +15,7 @@ $ip = "192.168.1.20";
 
 try {
     //First of all we need create a instance of "Orion ContextBroker Connection"
-    $OrionConn = new Orion\ContextBroker($ip);
+    $OrionConn = new Orion\NGSIAPIv1($ip);
     $OrionStatus = ($OrionConn->checkStatus() ? "Up" : "Down");
 
     echo "<h1>Service Status {$OrionStatus}</h1>", PHP_EOL;

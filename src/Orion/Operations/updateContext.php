@@ -121,10 +121,11 @@ class updateContext implements operationsInterface {
      * @param  strinq  $name Attribute Name
      * @param  string  $type Attribute Type
      * @param  string  $value Attribute value
+     * @param  \Orion\Context\ContextFactory  $value Attribute value
      * @return self
      * 
      */
-    public function addAttrinbute($name, $type, $value) {
+    public function addAttrinbute($name, $type, $value, \Orion\Context\ContextFactory $metadata = null) {
         $this->_currentelement->addAttrinbute($name, $type, $value);
         return $this;
     }
@@ -179,10 +180,10 @@ class updateContext implements operationsInterface {
     
     /**
      * 
-     * @param \Orion\ContextBroker $orionconn
+     * @param \Orion\NGSIAPIv1 $orionconn
      * @return type
      */
-    public function send(\Orion\ContextBroker $orionconn){
+    public function send(\Orion\NGSIAPIv1 $orionconn){
         $reqBody = $this->getRequest();
 //        var_dump($reqBody->get(),$this->_context);exit;
         $ret = $orionconn->updateContext($reqBody);

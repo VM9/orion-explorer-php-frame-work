@@ -87,16 +87,15 @@ class ContextBroker {
      * Constructor
      * @param  string $ServerAddress String that contain IPv4 Address or Hostname
      * @param  mixed $port String or Integer that contain Port Number Default: 1026
-     * @param  int $apiversion 
      * @param  string $type String ContentType only json is supported actually Default: application/json
      * @param  array $headers Array With headers key:value 
      */
-    public function __construct($ServerAddress, $port = '1026', $apiversion = 1, $type = "application/json", $headers = array()) {
+    public function __construct($ServerAddress, $port = '1026', $type = "application/json", $headers = array()) {
         $this->ip = (string) $ServerAddress;
         $this->port = $port;
-        $this->apiversion = $apiversion;
+        $this->apiversion = "v1";
         $this->serverUrl = $ServerAddress . ":" . $port . "/";
-        $this->url = "{$this->serverUrl}v{$apiversion}/";
+        $this->url = "{$this->serverUrl}v1/";
 
         //Setup Http Requests
         $this->restReq = new HTTPClient();

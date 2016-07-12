@@ -76,10 +76,10 @@ class contextElement {
      * @param  strinq  $name Attribute Name
      * @param  string  $type Attribute Type
      * @param  string  $value Attribute value
-     * @param  Orion\Context\ContextFactory  $metadata should be a context build by Orion\Context\ContextFactory
+     * @param  Orion\Context\ContextFactory|array  $metadata should be a context build by Orion\Context\ContextFactory
      * @return self
      */
-    public function addAttrinbute($name, $type, $value, $metadata = false) {
+    public function addAttrinbute($name, $type, $value, $metadata = null) {
 
         //Build Attribute Context
         $attribute = new \Orion\Context\ContextFactory();
@@ -87,7 +87,9 @@ class contextElement {
         $attribute->put("type", $type);
         $attribute->put("value", $value);
 
-        if ($metadata) {
+        if ($metadata instanceof ContextFactory) {
+            $attribute->put("metadatas", [$metadata->getContext()]);
+        }elseif(is_array($metadata)){
             $attribute->put("metadatas", $metadata);
         }
 

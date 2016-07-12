@@ -39,6 +39,6 @@ namespace Orion\Operations;
  * @author Leonan
  */
 interface operationsInterface {
-     public function send(\Orion\ContextBroker $orionconn);
+     public function send(\Orion\NGSIAPIv1 $orionconn);
      public function getRequest();
 }
