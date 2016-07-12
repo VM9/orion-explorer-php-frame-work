@@ -29,8 +29,8 @@ try {
      * Ref: https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#entity-creation
      */
     echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#entity-creation' target='_blank'>Entity Creation:</a></h1>", PHP_EOL;
+    
     $Create = new \Orion\Operations\updateContext();
-
     $contextResponses = $Create->addElement("Room1", "Room", false)
             ->addAttrinbute("temperature", "float", "23")
             ->addAttrinbute("pressure", "integer", "720")
