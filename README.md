@@ -28,7 +28,7 @@ See the examples/ directory for examples of the key client features.
 ```PHP
 <?php
   require_once 'examples/autoloader.php'; // or other way to load classes
-  $OrionConn = new Orion\ContextBroker("127.0.0.1");
+  $OrionConn = new Orion\NGSIAPIv1("127.0.0.1");
 
     //Build your query Context
     $queryContext = new Orion\Operations\queryContext();

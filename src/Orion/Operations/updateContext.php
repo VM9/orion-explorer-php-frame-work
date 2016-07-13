@@ -126,7 +126,7 @@ class updateContext implements operationsInterface {
      * 
      */
     public function addAttrinbute($name, $type, $value, \Orion\Context\ContextFactory $metadata = null) {
-        $this->_currentelement->addAttrinbute($name, $type, $value);
+        $this->_currentelement->addAttrinbute($name, $type, $value,$metadata);
         return $this;
     }
 
@@ -144,11 +144,9 @@ class updateContext implements operationsInterface {
         $geometadata->put("type", "string");
         $geometadata->put("value", "WSG84");
 
-        $metadata = array($geometadata->getContext());
-
         $value = $lat . ", " . $lng; //EX: "40.418889, -23.691944"
 
-        $this->_currentelement->addAttrinbute("position", "coords", $value, $metadata);
+        $this->_currentelement->addAttrinbute("position", "coords", $value, $geometadata);
         return $this;
     }
 
