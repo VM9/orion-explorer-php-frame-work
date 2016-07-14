@@ -60,7 +60,30 @@ class Context {
      * @param  string $context String that contain json response from Orion API
      */
     public function __construct($raw_context = null) {
+        if(null == $raw_context){
+            $this->_context = (object)[];
+            $this->_rawcontext = "{}";
+        }elseif($raw_context instanceof \stdClass || is_array($raw_context)){
+            $this->_context = (object) $raw_context;
+            $this->_rawcontext = json_encode($raw_context);
+        }elseif(is_string($raw_context)){
+            $this->_context = (object) json_decode($raw_context);
+            if($this->_context instanceof \stdClass){
+                $this->_rawcontext = $raw_context;
+            }else{
+                $this->_context = (object)[];
+                $this->_rawcontext = "{}";
+            }
+        }
+        else{
+            debug_print_backtrace();
+            print_r($raw_context);
+        }
+        
+        
+        
         if($raw_context instanceof \stdClass || is_array($raw_context)){
+            $this->_context = (object) $raw_context;
             $this->_rawcontext = (string) json_encode($raw_context);
         }else{
             if ($raw_context) {

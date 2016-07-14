@@ -1,3 +1,4 @@
+<h1><strong>FIWARE NGSI APIv1 Walkthrough</strong></h1>
 <?php
 include './autoloader.php';
 
@@ -30,6 +31,8 @@ try {
      */
     echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#entity-creation' target='_blank'>Entity Creation:</a></h1>", PHP_EOL;
     
+    echo "<h3>Request: </h3>", PHP_EOL;
+    echo "<pre>";
     $Create = new \Orion\Operations\updateContext();
     $contextResponses = $Create->addElement("Room1", "Room", false)
             ->addAttrinbute("temperature", "float", "23")
@@ -37,9 +40,8 @@ try {
             ->setAction("APPEND")
             ->send($OrionConn); //To send it you must give the orion connection as parameter
 //            $UPDATE->send($OrionConn2);//You also can work with 2 connections using this way, sending same entity to 2 different instances
-    echo "<h3>Request: </h3>", PHP_EOL;
-    echo "<pre>";
-    $Create->getRequest()->prettyPrint();
+    
+    $Create->getRequest()->prettyPrint();//The contextElements sent to orion context broker in json format
     echo "</pre>";
     echo "<h3>Response: </h3>", PHP_EOL;
     echo "<pre>";
@@ -51,15 +53,16 @@ try {
      * Ref: https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#query-context-operation
      */
     echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv1/index.html#query-context-operation' target='_blank'>Query Context operation</a></h1>", PHP_EOL;
+        
+    echo "<h2>Basic</h2>";
+    echo "<h3>Request : </h3>", PHP_EOL;
+    echo "<pre>";
     $queryContext = new Orion\Operations\queryContext();
     $queryResponse = $queryContext->addElement("Room1", "Room")
             ->send($OrionConn);
     $responseData = $queryResponse->get();
 
-    //Simple
-    echo "<h2>Basic</h2>";
-    echo "<h3>Request : </h3>", PHP_EOL;
-    echo "<pre>";
+
     $queryContext->getRequest()->prettyPrint();
     echo "</pre>";
     echo "<h3>Response: </h3>", PHP_EOL;
@@ -160,7 +163,7 @@ try {
     echo "<h3>Response: </h3>", PHP_EOL;
     echo "<pre>";
     
-    $OrionConn->unsubscribeContext($subscribeResponse->get()->subscribeResponse->subscriptionId)->prettyPrint();
+    $OrionConn->unsubscribeContext($subscriptionId)->prettyPrint();
     echo "</pre>";
 
 

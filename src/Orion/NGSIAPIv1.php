@@ -35,10 +35,9 @@
 namespace Orion;
 
 use Orion\Context;
-use Orion\Utils\HttpRequest as HTTPClient;
 
 /**
- * Orion ContextBroker Class
+ * Orion NGSIAPIv1 Class
  *  
  * @package      Orion
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
@@ -47,41 +46,7 @@ use Orion\Utils\HttpRequest as HTTPClient;
  * @property \Orion\Context  Context Controller
  * @property \Orion\Utils    Http Requiest Utils
  */
-class NGSIAPIv1 {
-
-    /**
-     * @var string
-     */
-    protected $ip;
-
-    /**
-     * @var string
-     */
-    protected $apiversion;
-
-    /**
-     * @var mixed
-     */
-    protected $port;
-
-    /**
-     * @var string
-     */
-    protected $url; //Full URL with NGSI reference
-    /**
-     * @var string
-     */
-    protected $serverUrl;
-
-    /**
-     * @var object[\Utils\HttpRequest]
-     */
-    protected $restReq;
-
-    /**
-     * @var Float
-     */
-    protected $_orionVersion;
+class NGSIAPIv1 extends AbstractNGSI implements NGSIInterface {
 
     /**
      * Constructor
@@ -91,212 +56,14 @@ class NGSIAPIv1 {
      * @param  array $headers Array With headers key:value 
      */
     public function __construct($ServerAddress, $port = '1026', $type = "application/json", $headers = array()) {
-        $this->ip = (string) $ServerAddress;
-        $this->port = $port;
         $this->apiversion = "v1";
-        $this->serverUrl = $ServerAddress . ":" . $port . "/";
-        $this->url = "{$this->serverUrl}v1/";
-
-        //Setup Http Requests
-        $this->restReq = new HTTPClient();
-        $this->restReq->setAcceptType($type);
-        $this->restReq->setContentType($type);
-        
-        if(!is_array($headers)){
-            $headers = (array) $headers;
-        }
-        
-        if(count($headers) > 0){
-            foreach ($headers as $header => $value) {
-               $this->restReq->addCustonHeader($header, $value); 
-            }
-        }
-        
+        parent::__construct($ServerAddress, $port, $type, $headers);        
     }
     
-     /**
-     * 
-     * eg: X-Auth-Token: HLcJPAliV55X5zI68DfDZgVI-by2MBR0s3QhJF7WwwOU0u5AO3f85ycMouzxr3UWGfbCjO3ODcaM6ybt4wUdbV
-     * 
-     * @param string $header Name of Header Key
-     * @param string $value Token
-     */
-    public function setHeader($header, $value) {
-        $this->restReq->addCustonHeader($header, $value);
-    }
-    
-
     /**
-     * ******** Deprecated ********
-     * Experimental Authentication for Orion Context Broker
-     * 
-     * eg: X-Auth-Token: HLcJPAliV55X5zI68DfDZgVI-by2MBR0s3QhJF7WwwOU0u5AO3f85ycMouzxr3UWGfbCjO3ODcaM6ybt4wUdbV
-     * 
-     * @param string $key Name of Header Key
-     * @param string $token Token
-     */
-    public function setToken($key, $token) {
-        $this->restReq->addCustonHeader($key, $token);
-    }
-
-    /**
-     * 
-     * This method will run rest requests to Orion API and return the response
-     * If Orion API returns a Ok Status, such 200
-     * Otherwise, the response body is ignored. 
-     *
-     * @param  strinq  $url should contains https:// or https://
-     * @param  string  $method GET/POST/DELETE/PUT
-     * @param  /Orion/Context  $reqBody Context Object
-     * @return string  json string
-     */
-    private function restRequest($url, $method = "GET", $reqBody = "") {
-        try {
-            if (is_array($reqBody) || is_object($reqBody)) {
-                $reqBody = json_encode($reqBody, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            }
-
-            $this->restReq->setUrl($url);
-            $this->restReq->setmethod($method);
-            $this->restReq->buildPostBody($reqBody);
-            $this->restReq->execute(); // Run the request...
-
-            return $this->restReq->getResponseBody();
-        } catch (Exception $e) {
-//            var_dump($e); //Ungly Debug
-            return "";
-        }
-    }
-
-    /**
-     * 
-     * This method checks IP connectivity using a socket connection.
-     * Is used a timeout very low to not delay responses that use it 
-     * Any authentication will be ignored.
-     * If a Firewall is applied may this test will fail.
-     *
-     * On CentOS fsockopen needs permition to network connect, to allow use this cmd:
-     *  setsebool -P httpd_can_network_connect 1
-     * http://yml.com/fv-b-1-619/selinux--apache-httpd--php-establishing-socket-connections-using-fsockopen---et-al.html
-     * 
-     * @param  strinq  $ip IPv4 or Hostname
-     * @param  string  $port GET/POST/DELETE/PUT
-     * @return boolean  
-     */
-    public function checkStatus($ip = false, $port = false) {
-        $ip = ($ip) ? $ip : $this->ip;
-        $port = ($port) ? $port : $this->port;
-
-        $fp = @\fsockopen($ip, $port, $errno, $errstr, 2);
-        $status = !!$fp; //Force boolean Type
-
-        if ($status) {
-            fclose($fp);
-        }
-        return (bool) $status;
-    }
-
-    /**
-     * 
-     * This method retrieves server information using convenience /version response
-     *
-     * @return array  
-     */
-    public function serverInfo() {
-        try {
-            if ($this->checkStatus()) {
-                $url = $this->ip . ":" . $this->port;
-                $ret = $this->restRequest($url . "/version", 'GET');
-                $info = array();
-                $VersionContext = new Context\Context($ret);
-                $Version = $VersionContext->__toObject();
-                if (null != $Version) {
-                    $info["version"] = $Version->orion->version;
-                    $info["uptime"] = $Version->orion->uptime;
-//
-//                    $StatisticsContext = new Context\Context($fixjson2);
-//                    $Statistics = $StatisticsContext->__toObject();
-//                    $info["statistics"] = $Statistics;
-                } else {
-//                    //issue #428 : https://github.com/telefonicaid/fiware-orion/issues/428
-//                    $ret2 = $this->restRequest($url . "/statistics", 'GET');
-//                    $fixjson2 = str_replace('"orion" : ', "", trim($ret2)); //fix to json_decode
-
-                    $fixjson = str_replace('"orion" : ', "", trim($ret)); //fix to json_decode
-                    $VersionContext = new Context\Context($fixjson);
-                    $Version = $VersionContext->__toObject();
-                    if(isset($Version) && is_object($Version)){
-                    $info["version"] = $Version->version;
-                    $info["uptime"] = $Version->uptime;
-                    }else{
-                         $info["version"] = null;
-                         $info["uptime"] = null;
-//                        echo "<pre>"; var_dump($Version);exit;
-                }
-                }
-                $this->_orionVersion = floatval($info["version"]);
-
-                return $info;
-            } else {
-                return array("version"=>null,"uptime"=>null);
-            }
-        } catch (\Exception $e) {
-            return array("version"=>null,"uptime"=>null, "error"=> $e);
-        }
-    }
-
-    /**
-     * 
-     * This method checks server version with a determined logical operation
-     * 
-     *
-     * @param  mixed  $version String or Float Version eg. "0.15.0" or 0.15
-     * @param  string  $op Logical Operations to compare versions
-     * @return boolean  
-     */
-    public function checkVersion($version, $op = false) {
-        try {
-            if (is_string($version)) {
-                $version = floatval($version);
-            }
-            if (isset($this->_orionVersion)) {
-//                var_dump($this->_orionVersion >= $version);
-                switch ($op) {
-                    case "=":
-                        return $this->_orionVersion == $version;
-                    case "!=":
-                        return $this->_orionVersion != $version;
-                    case ">":
-                        return $this->_orionVersion > $version;
-                    case ">=":
-                        return $this->_orionVersion >= $version;
-                    case "<":
-                        return $this->_orionVersion < $version;
-                    case "<=":
-                        return $this->_orionVersion <= $version;
-                    default:
-                        return $this->_orionVersion == $version;
-                }
-            } else {
-                if ($this->serverInfo()) {
-                    $this->checkVersion($version, $op);
-                } else {
-                    return false;
-                }
-            }
-        } catch (Exception $e) {
-            return FALSE;
-        }
-    }
-
-    /**
-     * 
+     * MUST BE FIXED TO RETURN ONLY TYPES
      * This method get all entity types
      * Since version 0.15.0 Is possible to get entity types using v1/contextTypes
-     *
-     * @param  mixed  $version String or Float Version eg. "0.15.0" or 0.15
-     * @param  string  $op Logical Operations to compare versions
-     * @return boolean  
      */
     public function getEntityTypes($type = false) {
         //Check if server version is 0.15 or Greater 
@@ -309,7 +76,7 @@ class NGSIAPIv1 {
                 }else{
                     $url = $this->serverUrl . $this->apiversion . "/contextTypes";
                 }
-                $ret = $this->restRequest($url, 'GET');
+                $ret = $this->restRequest($url, 'GET')->getResponseBody();
 
                 $Context = new Context\Context($ret);
                 if (is_object($Context->__toObject()) && isset($Context->__toObject()->types)) {
@@ -337,7 +104,7 @@ class NGSIAPIv1 {
      * @return Context object  
      * 
      */
-    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = "on") {
+    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = true) {
         $Entities = array();
         $Columns = array();
 
@@ -346,9 +113,11 @@ class NGSIAPIv1 {
         } else {
             $url = $this->url . "contextEntities";
         }
-
+        
+        $_details = ($details)? "on" : "off";
+        
         //Need improvments sinse paging was implemented
-        $ret = $this->restRequest($url . "?offset=$offset&limit=$limit&details=$details", 'GET');
+        $ret = $this->restRequest($url . "?offset=$offset&limit=$limit&details=$_details", 'GET')->getResponseBody();
 
         $Context = new Context\Context($ret);
 
@@ -436,7 +205,7 @@ class NGSIAPIv1 {
             $url = $this->url . "contextEntities/";
         }
 
-        $ret = $this->restRequest($url . "?offset=$offset&limit=$limit&details=$details", 'GET');
+        $ret = $this->restRequest($url . "?offset=$offset&limit=$limit&details=$details", 'GET')->getResponseBody();
         $Context = (new Context\Context($ret))->get();
         $Entities = [];
         
@@ -485,7 +254,7 @@ class NGSIAPIv1 {
     public function convenienceGet($url) {
         try {
             $url = $this->url . $url;
-            return  new Context\Context($this->restRequest($url, 'GET'));
+            return  new Context\Context($this->restRequest($url, 'GET')->getResponseBody());
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -501,7 +270,7 @@ class NGSIAPIv1 {
     public function conveniencePOST($url, $reqBody) {
         try {
             $url = $this->url . $url;
-            return  new Context\Context($this->restRequest($url, 'POST', $reqBody));
+            return  new Context\Context($this->restRequest($url, 'POST', $reqBody)->getResponseBody());
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -517,7 +286,7 @@ class NGSIAPIv1 {
     public function conveniencePUT($url, $reqBody) {
         try {
             $url = $this->url . $url;
-            return  new Context\Context($this->restRequest($url, 'PUT', $reqBody));
+            return  new Context\Context($this->restRequest($url, 'PUT', $reqBody)->getResponseBody());
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -532,7 +301,7 @@ class NGSIAPIv1 {
     public function convenienceDELETE($url) {
         try {
             $url = $this->url . $url;
-            return  new Context\Context($this->restRequest($url, 'DELETE'));
+            return  new Context\Context($this->restRequest($url, 'DELETE')->getResponseBody());
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -551,7 +320,7 @@ class NGSIAPIv1 {
     public function registerContext($reqBody) {
         try {
             $url = $this->url . "registerContext";
-            return $this->restRequest($url, 'POST', $reqBody);
+            return $this->restRequest($url, 'POST', $reqBody)->getResponseBody();
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -566,7 +335,7 @@ class NGSIAPIv1 {
     public function updateContext(Context\Context $reqBody) {
         try {
             $url = $this->url . "updateContext";
-            return $this->restRequest($url, 'POST', $reqBody->get());
+            return $this->restRequest($url, 'POST', $reqBody->get())->getResponseBody();
         } catch (\ErrorException $e) {
             echo $e->__toString();
             $erro = array("erro" => $e->getMessage());
@@ -583,7 +352,7 @@ class NGSIAPIv1 {
     public function subscribeContext(Context\Context $reqBody) {
         try {
             $url = $this->url . "subscribeContext";
-            return $this->restRequest($url, 'POST', $reqBody->get());
+            return $this->restRequest($url, 'POST', $reqBody->get())->getResponseBody();
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -600,11 +369,11 @@ class NGSIAPIv1 {
             $url = $this->url . "unsubscribeContext";
             $context = new \Orion\Context\ContextFactory();
             $context->put("subscriptionId", $subscriptionId);
-            $reqBody = $context->getContext();
+            $reqBody = $context->get();
             
-            $ret = $this->restRequest($url, 'POST', $reqBody);
+            $ret = $this->restRequest($url, 'POST', $reqBody)->getResponseBody();
             return new Context\Context($ret);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             var_dump($e);
         }
     }
@@ -622,7 +391,7 @@ class NGSIAPIv1 {
         try {
             $urldetails = ($details) ? "on" : "off";
             $url = $this->url . "queryContext?offset=$offset&limit=$limit&details=$urldetails";
-            return $this->restRequest($url, 'POST', $reqBody->get());
+            return $this->restRequest($url, 'POST', $reqBody->get())->getResponseBody();
         } catch (Exception $e) {
             var_dump($e);
         }
@@ -637,7 +406,7 @@ class NGSIAPIv1 {
     public function updateContextSubscription(Context\Context $reqBody) {
         try {
             $url = $this->url . "updateContextSubscription";
-            return $this->restRequest($url, 'POST', $reqBody->get());
+            return $this->restRequest($url, 'POST', $reqBody->get())->getResponseBody();
         } catch (Exception $e) {
             var_dump($e);
         }

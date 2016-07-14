@@ -45,6 +45,6 @@ namespace Orion\Exception;
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
  * @since      1.0.0
  */
-class EntityNotFound extends GeneralException{
+class InvalidModification extends GeneralException{
     
 }

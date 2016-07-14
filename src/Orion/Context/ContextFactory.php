@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Orion Context Explorer FrameWork - a PHP 5 framework for Orion Context Broker
  *
@@ -49,10 +50,13 @@ class ContextFactory {
     private $_context;
 
     /**
-     * Constructor
+     * Create a context object, 
+     * if the base context was setted the context will be create from array structure:
+     *  keys will become properties with their respective value
+     * @param array $base
      */
-    public function __construct() {
-        $this->_context = new \stdClass();
+    public function __construct(array $base = []) {
+        $this->_context = (object) $base;
     }
 
     /**
@@ -70,6 +74,20 @@ class ContextFactory {
     }
 
     /**
+     * This convenience method create a Entity NGSIv2 attribute format.
+     * @param type $name
+     * @param type $value
+     * @param type $type
+     */
+    public function addAttribute($name, $value, $type = "Integer") {
+        $attr = (object) [
+                    "value" => $value,
+                    "type" => $type
+        ];
+        $this->put($name, $attr);
+    }
+
+    /**
      * 
      * Get values based on known key
      *
@@ -77,9 +95,13 @@ class ContextFactory {
      * @return mixed  
      */
     public function get($key = null) {
-        if(null != $key){
-            return $this->_context->$key;
-        }else{
+        if (null != $key) {
+            if (isset($this->_context->$key)) {
+                return $this->_context->$key;
+            } else {
+                return null;
+            }
+        } else {
             return $this->_context;
         }
     }
@@ -89,7 +111,7 @@ class ContextFactory {
      * @return \Orion\Context\Context
      */
     public function getContext() {
-        return $this->_context;
+        return new Context($this->_context);
     }
 
 }
