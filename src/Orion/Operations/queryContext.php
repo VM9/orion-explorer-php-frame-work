@@ -141,7 +141,7 @@ class queryContext  implements operationsInterface {
         $this->_context->put("entities", $this->_elements);
         $this->_context->put("attributes", $this->_attributes);
 
-        return new \Orion\Context\Context($this->_context->getContext());
+        return $this->_context->getContext();
     }
 
     public function send(\Orion\NGSIAPIv1 $orionconn) {

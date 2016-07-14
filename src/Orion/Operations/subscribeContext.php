@@ -149,7 +149,7 @@ class subscribeContext implements operationsInterface {
         $context->put("type", $type);
         $context->put("condValues", $condValues);
 
-        $this->_notifyConditions[] = $context->getContext();
+        $this->_notifyConditions[] = $context->get();
         return $this;
     }
 
@@ -188,7 +188,7 @@ class subscribeContext implements operationsInterface {
         $this->_context->put("attributes", $this->_attributes);
         $this->_context->put("notifyConditions", $this->_notifyConditions);
 
-        return new \Orion\Context\Context($this->_context->getContext());
+        return $this->_context->getContext();
     }
 
     public function send(\Orion\NGSIAPIv1 $orionconn) {

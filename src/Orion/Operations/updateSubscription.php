@@ -100,9 +100,11 @@ class updateSubscription  implements operationsInterface {
      * @return stdClass
      */
     public function getRequest() {
-        $this->_context->put("notifyConditions", $this->_notifyConditions);
+        if(count($this->_notifyConditions) > 0){
+            $this->_context->put("notifyConditions", $this->_notifyConditions);
+        }
 
-        return new \Orion\Context\Context($this->_context->getContext());
+        return $this->_context->getContext();
     }
     
     /**

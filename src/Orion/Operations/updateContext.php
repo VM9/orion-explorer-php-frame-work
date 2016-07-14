@@ -126,7 +126,7 @@ class updateContext implements operationsInterface {
      * 
      */
     public function addAttrinbute($name, $type, $value, \Orion\Context\ContextFactory $metadata = null) {
-        $this->_currentelement->addAttrinbute($name, $type, $value,$metadata);
+        $this->_currentelement->addAttrinbute($name, $type, $value, $metadata);
         return $this;
     }
 
@@ -172,8 +172,7 @@ class updateContext implements operationsInterface {
 
         $this->_context->put("contextElements", $this->_elements);
         $this->_context->put("updateAction", $this->_action);
-
-        return new \Orion\Context\Context($this->_context->getContext());
+        return $this->_context->getContext();
     }
     
     /**
@@ -183,7 +182,6 @@ class updateContext implements operationsInterface {
      */
     public function send(\Orion\NGSIAPIv1 $orionconn){
         $reqBody = $this->getRequest();
-//        var_dump($reqBody->get(),$this->_context);exit;
         $ret = $orionconn->updateContext($reqBody);
         $Context = new \Orion\Context\Context($ret);
 //        $ResponseObject = $Context->get();
