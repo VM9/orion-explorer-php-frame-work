@@ -93,7 +93,7 @@ class contextElement {
             $attribute->put("metadatas", $metadata);
         }
 
-        $this->_attributes[] = $attribute->getContext();
+        $this->_attributes[] = $attribute->get();
         return $this;
     }
 
@@ -108,7 +108,7 @@ class contextElement {
         if ($appendattributes) {
             $this->_contextElement->put("attributes", $this->_attributes);
         }
-        return $this->_contextElement->getContext();
+        return $this->_contextElement->get();
     }
 
 }

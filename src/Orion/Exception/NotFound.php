@@ -31,7 +31,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Orion;
+namespace Orion\Exception;
 
 /**
  * Orion Exception
@@ -45,9 +45,6 @@ namespace Orion;
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
  * @since      1.0.0
  */
-class Exception extends \Exception{
+class NotFound extends GeneralException{
     
-    public function __construct ($message, $code, $previous) {
-        parent::__construct($message, $code, $previous);
-    }
 }

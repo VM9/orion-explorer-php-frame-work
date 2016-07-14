@@ -12,10 +12,23 @@
         padding:0em 1em;
         overflow:auto;
     }
+    code{
+        display:block;
+        font:normal 12px/22px Monaco,Monospace !important;
+        background-color:#dcdcdc;
+        background-image:-webkit-repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
+        background-image:-moz-repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
+        background-image:-ms-repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
+        background-image:-o-repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
+        background-image:repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
+        padding:0em 1em;
+        overflow:auto;
+    }
 </style>
+<a href="../example">Back</a>
 <?php
 //Autoloader compatible with psr-0  for example scripts
-$base = dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
+$base =  getcwd() . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
 set_include_path("{$base}src" . PATH_SEPARATOR . "{$base}lib" . PATH_SEPARATOR . get_include_path());
 
 //https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md

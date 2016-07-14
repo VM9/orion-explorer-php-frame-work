@@ -172,4 +172,7 @@ try {
     echo "<h1>", get_class($e), "</h1><h3>", $e->getMessage(), "</h3>";
     echo $e->getFile(), " [", $e->getLine(), "]<br>";
     echo "<pre>", $e->getTraceAsString(), "</pre>";
+    if(method_exists($e, "getResponse")){
+       echo "<pre>Orion Response:",PHP_EOL , $e->getResponse(),"</pre>";
+    }
 }
