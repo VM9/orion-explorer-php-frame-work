@@ -102,6 +102,11 @@ class HttpRequest {
     protected $response_body;
 
     /**
+     * @var array 
+     */
+    protected $response_headers;
+
+    /**
      * @var string 
      */
     protected $response_info;
@@ -162,8 +167,8 @@ class HttpRequest {
      */
     public function execute() {
         $ch = curl_init();
-        $this->setAuth($ch);
 
+        $this->setAuth($ch);
         try {
             switch (strtoupper($this->method)) {
                 case 'GET':
@@ -174,6 +179,9 @@ class HttpRequest {
                     break;
                 case 'PUT':
                     $this->executePut($ch);
+                    break;
+                case 'PATCH':
+                    $this->executePatch($ch);
                     break;
                 case 'DELETE':
                     $this->executeDelete($ch);
@@ -316,6 +324,22 @@ class HttpRequest {
     }
 
     /**
+     * Run PATCH request 
+     * @param \CURL $ch
+     */
+    protected function executePatch($ch) {
+
+        if (!is_string($this->request_body)) {
+            $this->buildPostBody();
+        }
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request_body);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+
+        $this->doExecute($ch);
+    }
+
+    /**
      * Run DELETE request 
      * @param \CURL $ch
      */
@@ -332,7 +356,34 @@ class HttpRequest {
      */
     protected function doExecute(&$curlHandle) {
         $this->setCurlOpts($curlHandle);
-        $this->response_body = curl_exec($curlHandle);
+        $response = curl_exec($curlHandle);
+
+        $header_size = curl_getinfo($curlHandle, CURLINFO_HEADER_SIZE);
+
+        $this->response_body = substr($response, $header_size);
+
+        $this->response_headers = [];
+
+        $lines = explode("\r\n", substr($response, 0, $header_size));
+        foreach ($lines as $i => $line) {
+            if ($i === 0){
+                $piece = explode (" ", $line);
+                $this->response_headers['http_code'] = $line;
+                $this->response_headers['protocol'] = $piece[0];
+                $this->response_headers['status_code'] = $piece[1];
+                array_splice($piece, 0, 2);//Remove protocol and code
+                $this->response_headers['reason_phrase'] = implode(" ", $piece);
+            } else {
+                $piece = explode(': ', $line, 2);
+                if (count($piece) == 2) {
+                    list ($key, $value) = $piece;
+
+                    if (trim($key) !== "") {
+                        $this->response_headers[$key] = trim($value);
+                    }
+                }
+            }
+        }
         $this->response_info = curl_getinfo($curlHandle);
 
         curl_close($curlHandle);
@@ -347,6 +398,8 @@ class HttpRequest {
         curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10);
         curl_setopt($curlHandle, CURLOPT_URL, $this->url);
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curlHandle, CURLOPT_VERBOSE, true);
+        curl_setopt($curlHandle, CURLOPT_HEADER, true);
         curl_setopt($curlHandle, CURLOPT_COOKIEFILE, '/dev/null');
         curl_setopt($curlHandle, CURLOPT_HTTPHEADER, $this->getDefaultHeader());
     }
@@ -358,7 +411,7 @@ class HttpRequest {
     protected function getDefaultHeader() {
         $default = array('Content-Type: ' . $this->content_type,
             'Accept: ' . $this->accept_type);
-        
+
         return array_merge($default, $this->custonHeader);
     }
 
@@ -367,10 +420,10 @@ class HttpRequest {
      * @param type $key
      * @param type $value
      */
-    public function addCustonHeader($key, $value){        
-        $header = $key . ": ".$value;
+    public function addCustonHeader($key, $value) {
+        $header = $key . ": " . $value;
 
-        array_push( $this->custonHeader, $header);
+        array_push($this->custonHeader, $header);
     }
 
     /**
@@ -473,6 +526,14 @@ class HttpRequest {
     }
 
     /**
+     * Get Response Header
+     * @return type
+     */
+    public function getResponseHeader() {
+        return $this->response_headers;
+    }
+
+    /**
      * Get URL
      * @return string
      */
@@ -509,7 +570,7 @@ class HttpRequest {
      * Get HTTP request method
      * @return string
      */
-    public function getmethod() {
+    public function getMethod() {
         return $this->method;
     }
 
@@ -518,7 +579,7 @@ class HttpRequest {
      * Only GET, POST, PUT, DELETE, POST_MP and PUT_MP is supported
      * @param type $method
      */
-    public function setmethod($method) {
+    public function setMethod($method) {
         $this->method = $method;
     }
 
