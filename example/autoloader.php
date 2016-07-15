@@ -3,24 +3,24 @@
         display:block;
         font:normal 12px/22px Monaco,Monospace !important;
         color:#CFDBEC;
-        background-color:#2f2f2f;
-        background-image:-webkit-repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
-        background-image:-moz-repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
-        background-image:-ms-repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
-        background-image:-o-repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
-        background-image:repeating-linear-gradient(top, #444 0px, #444 22px, #2f2f2f 22px, #2f2f2f 44px);
+        background-color:#272821;
+        background-image:-webkit-repeating-linear-gradient(top, #444 0px, #444 22px, #272821 22px, #272821 44px);
+        background-image:-moz-repeating-linear-gradient(top, #444 0px, #444 22px, #272821 22px, #272821 44px);
+        background-image:-ms-repeating-linear-gradient(top, #444 0px, #444 22px, #272821 22px, #272821 44px);
+        background-image:-o-repeating-linear-gradient(top, #444 0px, #444 22px, #272821 22px, #272821 44px);
+        background-image:repeating-linear-gradient(top, #444 0px, #444 22px, #272821 22px, #272821 44px);
         padding:0em 1em;
         overflow:auto;
     }
     code{
         display:block;
         font:normal 12px/22px Monaco,Monospace !important;
-        background-color:#dcdcdc;
-        background-image:-webkit-repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
-        background-image:-moz-repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
-        background-image:-ms-repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
-        background-image:-o-repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
-        background-image:repeating-linear-gradient(top, #CFDBEC 0px, #CFDBEC 22px, #dcdcdc 22px, #dcdcdc 44px);
+        background-color:#676360;
+        background-image:-webkit-repeating-linear-gradient(top, #272821 0px, #272821 22px, #272822 22px, #272822 44px);
+        background-image:-moz-repeating-linear-gradient(top, #272821 0px, #272821 22px, #272822 22px, #272822 44px);
+        background-image:-ms-repeating-linear-gradient(top, #272821 0px, #272821 22px, #272822 22px, #272822 44px);
+        background-image:-o-repeating-linear-gradient(top, #272821 0px, #272821 22px, #272822 22px, #272822 44px);
+        background-image:repeating-linear-gradient(top, #272821 0px, #272821 22px, #272822 22px, #272822 44px);
         padding:0em 1em;
         overflow:auto;
     }

@@ -9,7 +9,6 @@ echo "Running Operations:",PHP_EOL;
     $EntityContext->_setId($RandomEntityID);
     $EntityContext->_setType("Room");
 **/
-$EntityContext = new \Orion\Context\Entity($orion,$RandomEntityID,"Room");
 
 echo "Update Attribute data(pressure, change UOM to atm):",PHP_EOL;
 $requestPres = $EntityContext->updateAttribute("pressure",["value"=>1.0321,"metadata" => [
