@@ -106,9 +106,7 @@ class SubscriptionEntity {
         if(!isset($this->_id) || null == $this->_id){
             throw new \Exception("You must especify an Id to perform subscription updates");
         }
-        $request = null;
-        $this->_orion->delete($this->getBaseURI(),$request);
-        return $request;
+        return $this->_orion->delete($this->getBaseURI());
     }
     
     /**
