@@ -1,6 +1,6 @@
 <?php
 
-$subscription = new Orion\Context\SubscriptionFactory($OrionConn, "OrionPHPSubscription");
+$subscription = new Orion\Context\SubscriptionFactory($orion, "OrionPHPSubscription");
 $subscription->setExpiration((time() + 72000)); //You can use unix format also, to use function time you must configure your timezone on php.ini
 //Like walkthrough api v2 example:
 $subscriptionRequest = null; //A countainer for the HttpClient

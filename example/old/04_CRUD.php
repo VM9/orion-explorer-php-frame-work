@@ -14,12 +14,12 @@ include './autoloader.php';
 $ip = "192.168.1.20";
 echo "<pre>";
 try {
-    $OrionConn = new Orion\ContextBroker($ip);
-    $OrionStatus = ($OrionConn->checkStatus() ? "Up" : "Down");
+    $orion = new Orion\ContextBroker($ip);
+    $OrionStatus = ($orion->checkStatus() ? "Up" : "Down");
 
     echo "Service Status {$OrionStatus}", PHP_EOL;
 
-    $ServerInfo = $OrionConn->serverInfo();
+    $ServerInfo = $orion->serverInfo();
     echo "Version: {$ServerInfo['version']}", PHP_EOL;
     echo "Uptime: {$ServerInfo['uptime']}", PHP_EOL,PHP_EOL;
 
@@ -31,14 +31,14 @@ try {
             ->addAttrinbute("temperature", "centigrade", rand(10, 999))
             ->addAttrinbute("pressure", "mmHg", rand(10, 999))
             ->setAction("UPDATE")
-            ->send($OrionConn);
+            ->send($orion);
    echo PHP_EOL,"UpdatecontextResponses: ",PHP_EOL;
    var_dump($contextResponses->get());
     
     echo "queryContext .* Room : ",PHP_EOL;
     $queryContext = new Orion\Operations\queryContext();
     $queryResponse = $queryContext->addElement(".*", "Room", true)
-                                  ->send($OrionConn); 
+                                  ->send($orion); 
     $responseData = $queryResponse->get();
 //    var_dump($responseData);
 //    exit;
@@ -63,9 +63,9 @@ try {
 //var_dump($reqBody);exit;
 //From Orion Connection you need use updateContext passing your request body.
 //Its will return a raw data from server, depends of your chose about type will return XML or JSON string, by default JSON is used
-//$raw_return = $OrionConnection->updateContext($reqBody);
+//$raw_return = $orionection->updateContext($reqBody);
     echo "List ALL Entities",PHP_EOL;
-    $ServerEntities = $OrionConn->getEntities();
+    $ServerEntities = $orion->getEntities();
 //    var_dump($ServerEntities);
     $lastType = "";
     foreach ($ServerEntities as  $type => $entities) {
@@ -163,14 +163,14 @@ exit;
 
  */
 
-var_dump($OrionConn->checkStatus());
+var_dump($orion->checkStatus());
 
 
 /**
  * Return some info about your connection
  * This method uses /version from API 
  */
-var_dump($OrionConn->serverInfo());
+var_dump($orion->serverInfo());
 //exit;
 
 /**
@@ -178,12 +178,12 @@ var_dump($OrionConn->serverInfo());
  * 
  * This method checks server version with a determined logical operation
  */
-$OrionConn->checkVersion("0.15.0", "="); //IF version is equals to 0.15.0 ( You can omit op string for equal operations)
-$OrionConn->checkVersion("0.15.0", "!="); //IF version is NOT equals to 0.15.0
-$OrionConn->checkVersion("0.15.0", ">"); //IF version is greater than 0.15.0
-$OrionConn->checkVersion("0.15.0", ">="); //IF version is greater or equals to 0.15.0
-$OrionConn->checkVersion("0.15.0", "<"); //IF version is less than 0.15.0
-$OrionConn->checkVersion("0.15.0", "<="); //IF version is greater or equals to 0.15.0
+$orion->checkVersion("0.15.0", "="); //IF version is equals to 0.15.0 ( You can omit op string for equal operations)
+$orion->checkVersion("0.15.0", "!="); //IF version is NOT equals to 0.15.0
+$orion->checkVersion("0.15.0", ">"); //IF version is greater than 0.15.0
+$orion->checkVersion("0.15.0", ">="); //IF version is greater or equals to 0.15.0
+$orion->checkVersion("0.15.0", "<"); //IF version is less than 0.15.0
+$orion->checkVersion("0.15.0", "<="); //IF version is greater or equals to 0.15.0
 
 
 
@@ -191,10 +191,10 @@ $OrionConn->checkVersion("0.15.0", "<="); //IF version is greater or equals to 0
  * Get Entities from your Server Connection
  */
 //Get All Entities
-var_dump($OrionConn->getEntities());
+var_dump($orion->getEntities());
 exit;
 //Get entities from "Entitytype" with offset 10 and limit of 100, with details OFF
-$OrionConn->getEntities('EntityType', 10, 100, "off");
+$orion->getEntities('EntityType', 10, 100, "off");
 
 
 /**
@@ -202,24 +202,24 @@ $OrionConn->getEntities('EntityType', 10, 100, "off");
  *  ID are colums with their respective values as rows for each entity
  * With this way is possible shows entity context type as database tables
  */
-$OrionConn->getEntityAttributeView();
+$orion->getEntityAttributeView();
 
-$OrionConn->getEntities('EntityType', 10, 100, "off");
+$orion->getEntities('EntityType', 10, 100, "off");
 
 //Get a list of All Entity Types Only Suported by Orion Context Broker version 0.15.0 or greater
 
-$OrionConn->getEntityTypes();
+$orion->getEntityTypes();
 
 
 /**
  * NGSI10 Standard Operations will be explained in their own examples
  */
 //
-//$OrionConn->updateContext($reqBody);
-//$OrionConn->queryContext($reqBody, $limit, $offset, $details);
-//$OrionConn->subscribeContext($reqBody);
-//$OrionConn->unsubscribeContext($subscriptionId);
-//$OrionConn->updateContextSubscription($reqBody);
+//$orion->updateContext($reqBody);
+//$orion->queryContext($reqBody, $limit, $offset, $details);
+//$orion->subscribeContext($reqBody);
+//$orion->unsubscribeContext($subscriptionId);
+//$orion->updateContextSubscription($reqBody);
 
 
 
@@ -230,10 +230,10 @@ $OrionConn->getEntityTypes();
 $reqBody = ""; //Should be a json or XML sting
 /**
  * 
-$OrionConn->convenienceDELETE("contextSubscriptions/{subscriptionID}"); //Execute a DELETE Request
-$OrionConn->convenienceGet("contextEntities"); // Execute a DELETE request
-$OrionConn->conveniencePOST("contextEntities", $reqBody); //Execute a POST request
-$OrionConn->conveniencePUT("contextEntities/{EntityID*}", $reqBody); //Execute a PUT request
+$orion->convenienceDELETE("contextSubscriptions/{subscriptionID}"); //Execute a DELETE Request
+$orion->convenienceGet("contextEntities"); // Execute a DELETE request
+$orion->conveniencePOST("contextEntities", $reqBody); //Execute a POST request
+$orion->conveniencePUT("contextEntities/{EntityID*}", $reqBody); //Execute a PUT request
  * 
 */
 

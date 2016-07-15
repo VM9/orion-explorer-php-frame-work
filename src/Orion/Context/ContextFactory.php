@@ -79,11 +79,16 @@ class ContextFactory {
      * @param type $value
      * @param type $type
      */
-    public function addAttribute($name, $value, $type = "Integer") {
+    public function addAttribute($name, $value, $type = "Integer", $metadata = null) {
         $attr = (object) [
                     "value" => $value,
                     "type" => $type
         ];
+        
+        if(null != $metadata){
+            $attr->metadata = (object) $metadata;
+        }
+        
         $this->put($name, $attr);
     }
 

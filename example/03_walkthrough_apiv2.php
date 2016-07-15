@@ -16,11 +16,11 @@ $ip = "192.168.1.20";
 
 try {
     //First of all we need create a instance of "Orion ContextBroker Connection"
-    $OrionConn = new Orion\NGSIAPIv2($ip);
-    $OrionStatus = ($OrionConn->checkStatus() ? "Up" : "Down");
+    $orion = new Orion\NGSIAPIv2($ip);
+    $OrionStatus = ($orion->checkStatus() ? "Up" : "Down");
 
     echo "<h1>Service Status {$OrionStatus}</h1>", PHP_EOL;
-    $ServerInfo = $OrionConn->serverInfo();
+    $ServerInfo = $orion->serverInfo();
     echo "<p>";
     echo "Version: {$ServerInfo['version']}<br>", PHP_EOL;
     echo "Uptime: {$ServerInfo['uptime']}", PHP_EOL, PHP_EOL;
@@ -50,7 +50,7 @@ try {
     echo "<h2>Basic</h2>";
     echo "<h3>Request : </h3>", PHP_EOL;
     echo "<pre>";
-    echo "GET ", $OrionConn->getUrl("entities/$RandomEntityID?type=Room"); //Just return the url to be executed
+    echo "GET ", $orion->getUrl("entities/$RandomEntityID?type=Room"); //Just return the url to be executed
     echo "</pre><code>";
     include './codeblock/v2_basic_query_.php'; //execute
     highlight_file('./codeblock/v2_basic_query_.php'); //Displays
@@ -66,10 +66,10 @@ try {
     //With attribute params
     echo "<h2>With specified attribute and  options</h2>";
 
-    $queryresponseDataAttr = $OrionConn->get("entities/$RandomEntityID?options=values&attrs=temperature,pressure");
+    $queryresponseDataAttr = $orion->get("entities/$RandomEntityID?options=values&attrs=temperature,pressure");
     echo "<h3>Request(with attribute): </h3>", PHP_EOL;
     echo "<pre>";
-    echo $OrionConn->getUrl("entities/$RandomEntityID?options=values&attrs=temperature,pressure");
+    echo $orion->getUrl("entities/$RandomEntityID?options=values&attrs=temperature,pressure");
     echo "</pre>";
     echo "<h3>Response (with attribute): </h3>", PHP_EOL;
     echo "<pre>";
@@ -95,15 +95,15 @@ try {
      * Ref: https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv2/index.html#update-entity
      */
     echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv2/index.html#update-entity' target='_blank'>Update Entity:</a></h1>", PHP_EOL;
-    include './codeblock/v2_update_entity.php'; //Execute
+    include './codeblock/v2_entity_update.php'; //Execute
     echo "<h3>Code: </h3>", PHP_EOL;
     echo "<code>";
-    highlight_file('./codeblock/v2_update_entity.php'); //Displays
+    highlight_file('./codeblock/v2_entity_update.php'); //Displays
     echo "</code>";
 
     echo "<h3>Request : </h3>", PHP_EOL;
     echo "<pre>";
-    echo "PATCH ", $OrionConn->getUrl("entities/$RandomEntityID/attrs"), PHP_EOL; //Just return the url to be executed
+    echo "PATCH ", $orion->getUrl("entities/$RandomEntityID/attrs"), PHP_EOL; //Just return the url to be executed
     $updateEntity->getContext()->prettyPrint();
     echo "</pre><code>";
     include './codeblock/v2_basic_query_.php'; //execute

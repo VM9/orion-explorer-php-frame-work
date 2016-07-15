@@ -4,7 +4,7 @@ include './autoloader.php';
 
 $ip = "0.0.0.0";
 
-$OrionConnection = new Orion\ContextBroker($ip);
+$orionection = new Orion\ContextBroker($ip);
 
 
 /**
@@ -98,7 +98,7 @@ $SUBSCRIPTIONS->addElement("Room1", "Room")
 $reqBody = $SUBSCRIPTIONS->getRequest();
 
 //And send to server using Orion Conection instance
-$raw_return = $OrionConnection->subscribeContext($reqBody);
+$raw_return = $orionection->subscribeContext($reqBody);
 
 //A successfull response should looks like that:
 $return_expected = <<<EOF
@@ -150,4 +150,4 @@ $UPDATESUBSCRIPTION->notifyConditions("ONTIMEINTERVAL", "PT5S");
 //UnsubscribeContext
 // To unsubscribe a context you need send subscription ID using unsubscribeContext method on Orion Conection instance
 
-$return = $OrionConnection->unsubscribeContext("538ce3419890cd828b9127b5");
+$return = $orionection->unsubscribeContext("538ce3419890cd828b9127b5");

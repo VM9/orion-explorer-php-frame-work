@@ -16,11 +16,11 @@ $ip = "192.168.1.20";
 
 try {
     //First of all we need create a instance of "Orion ContextBroker Connection"
-    $OrionConn = new Orion\NGSIAPIv1($ip);
-    $OrionStatus = ($OrionConn->checkStatus() ? "Up" : "Down");
+    $orion = new Orion\NGSIAPIv1($ip);
+    $OrionStatus = ($orion->checkStatus() ? "Up" : "Down");
 
     echo "<h1>Service Status {$OrionStatus}</h1>", PHP_EOL;
-    $ServerInfo = $OrionConn->serverInfo();
+    $ServerInfo = $orion->serverInfo();
     echo "<p>";
     echo "Version: {$ServerInfo['version']}<br>", PHP_EOL;
     echo "Uptime: {$ServerInfo['uptime']}", PHP_EOL, PHP_EOL;
@@ -38,8 +38,8 @@ try {
             ->addAttrinbute("temperature", "float", "23")
             ->addAttrinbute("pressure", "integer", "720")
             ->setAction("APPEND")
-            ->send($OrionConn); //To send it you must give the orion connection as parameter
-//            $UPDATE->send($OrionConn2);//You also can work with 2 connections using this way, sending same entity to 2 different instances
+            ->send($orion); //To send it you must give the orion connection as parameter
+//            $UPDATE->send($orion2);//You also can work with 2 connections using this way, sending same entity to 2 different instances
     
     $Create->getRequest()->prettyPrint();//The contextElements sent to orion context broker in json format
     echo "</pre>";
@@ -59,7 +59,7 @@ try {
     echo "<pre>";
     $queryContext = new Orion\Operations\queryContext();
     $queryResponse = $queryContext->addElement("Room1", "Room")
-            ->send($OrionConn);
+            ->send($orion);
     $responseData = $queryResponse->get();
 
 
@@ -75,7 +75,7 @@ try {
     $queryContextAttr = new Orion\Operations\queryContext();
     $queryResponseAttr = $queryContextAttr->addElement("Room1", "Room")
             ->addAttr("temperature")
-            ->send($OrionConn);
+            ->send($orion);
     $responseDataAttr = $queryResponseAttr->get();
     echo "<h3>Request(with attribute): </h3>", PHP_EOL;
     echo "<pre>";
@@ -91,7 +91,7 @@ try {
     $queryContextAttr = new Orion\Operations\queryContext();
     $queryResponseAttr = $queryContextAttr->addElement(".*", "Room")
             ->addAttr("temperature")
-            ->send($OrionConn);
+            ->send($orion);
     $responseDataAttr = $queryResponseAttr->get();
     echo "<h3>Request: </h3>", PHP_EOL;
     echo "<pre>";
@@ -113,8 +113,8 @@ try {
             ->addAttrinbute("temperature", "float", "26.5")
             ->addAttrinbute("pressure", "integer", "763")
             ->setAction("UPDATE")
-            ->send($OrionConn); //To send it you must give the orion connection as parameter
-//            $UPDATE->send($OrionConn2);//You also can work with 2 connections using this way, sending same entity to 2 different instances
+            ->send($orion); //To send it you must give the orion connection as parameter
+//            $UPDATE->send($orion2);//You also can work with 2 connections using this way, sending same entity to 2 different instances
     echo "<h3>Request: </h3>", PHP_EOL;
     echo "<pre>";
     $UPDATE->getRequest()->prettyPrint();
@@ -134,7 +134,7 @@ try {
             ->addAttr("temperature")
             ->notifyConditions("ONCHANGE", ["pressure"])
             ->setThrottling("PT5S")
-            ->send($OrionConn);
+            ->send($orion);
     echo "<h3>Request: </h3>", PHP_EOL;
     echo "<pre>";
     $subscribeContext->getRequest()->prettyPrint();
@@ -148,7 +148,7 @@ try {
     $subscriptionId = $subscribeResponse->get()->subscribeResponse->subscriptionId;
     echo "<h2>Subscription ID: {$subscriptionId}</h2>",PHP_EOL;
     $UPDATEsubscribeContext = new Orion\Operations\updateSubscription($subscribeResponse->get()->subscribeResponse->subscriptionId);
-    $UPDATEsubscribeResponse = $UPDATEsubscribeContext->setDuration("P1M")->send($OrionConn);
+    $UPDATEsubscribeResponse = $UPDATEsubscribeContext->setDuration("P1M")->send($orion);
 
     echo "<h3>Request: </h3>", PHP_EOL;
     echo "<pre>";
@@ -163,7 +163,7 @@ try {
     echo "<h3>Response: </h3>", PHP_EOL;
     echo "<pre>";
     
-    $OrionConn->unsubscribeContext($subscriptionId)->prettyPrint();
+    $orion->unsubscribeContext($subscriptionId)->prettyPrint();
     echo "</pre>";
 
 
