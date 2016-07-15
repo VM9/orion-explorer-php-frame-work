@@ -125,9 +125,9 @@ class updateSubscription  implements operationsInterface {
         return $this;
     }
 
-    public function send(\Orion\NGSIAPIv1 $orionconn) {
+    public function send(\Orion\NGSIAPIv1 $orion) {
         $reqBody = $this->getRequest();
-        $ret = $orionconn->updateContextSubscription($reqBody);
+        $ret = $orion->updateContextSubscription($reqBody);
         return new \Orion\Context\Context($ret);
     }
 }

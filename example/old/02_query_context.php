@@ -5,7 +5,7 @@ include './autoloader.php';
 $ip = "0.0.0.0";
 $ip = "orion.fi-guardian.com";
 
-$OrionConnection = new Orion\ContextBroker($ip);
+$orionection = new Orion\ContextBroker($ip);
 
 
 /**
@@ -37,7 +37,7 @@ $reqBody = $QUERY->addElement(".*", "Room", true)
 //        ->addAttr("temperature")
         ->getRequest();
 
-$raw_return = $OrionConnection->queryContext($reqBody);
+$raw_return = $orionection->queryContext($reqBody);
 
 //A successfull response should looks like that:
 $return_expected = <<<EOF
@@ -202,7 +202,7 @@ $queryPolygon->addElement(".*", "City", true)
 
 $reqBodyPolygonQuery = $queryPolygon->getRequest();
 
-$dataPolygon = $OrionConnection->queryContext($reqBodyPolygonQuery); //Do stuffs with returned data
+$dataPolygon = $orionection->queryContext($reqBodyPolygonQuery); //Do stuffs with returned data
 //With Circles:
 //GEO-Query with circle, sample:
 
@@ -249,4 +249,4 @@ $query->addElement(".*", "City", true)
 
 $reqBodyCircleQuery = $query->getRequest();
 
-$dataCircle = $OrionConnection->queryContext($reqBodyCircleQuery); //Do stuffs with returned data
+$dataCircle = $orionection->queryContext($reqBodyCircleQuery); //Do stuffs with returned data

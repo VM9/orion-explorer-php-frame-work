@@ -15,18 +15,18 @@ $ip = "192.168.1.20";
 
 try {
     //First of all we need create a instance of "Orion ContextBroker Connection"
-    $OrionConn = new Orion\NGSIAPIv1($ip);
-    $OrionStatus = ($OrionConn->checkStatus() ? "Up" : "Down");
+    $orion = new Orion\NGSIAPIv1($ip);
+    $OrionStatus = ($orion->checkStatus() ? "Up" : "Down");
 
     echo "<h1>Service Status {$OrionStatus}</h1>", PHP_EOL;
-    $ServerInfo = $OrionConn->serverInfo();
+    $ServerInfo = $orion->serverInfo();
     echo "<p>";
     echo "Version: {$ServerInfo['version']}<br>", PHP_EOL;
     echo "Uptime: {$ServerInfo['uptime']}", PHP_EOL, PHP_EOL;
     echo "<p>";
 
     echo "<h1>List ALL Entities</h1>",PHP_EOL;
-    $ServerEntities = $OrionConn->getEntities();
+    $ServerEntities = $orion->getEntities();
 //    var_dump($ServerEntities);
     $lastType = "";
     echo "<pre>";

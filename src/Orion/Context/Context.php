@@ -138,7 +138,7 @@ class Context {
     }
     
     public function prettyPrint(){
-        echo json_encode($this->__toObject(),JSON_PRETTY_PRINT);
+        echo json_encode($this->__toObject(),JSON_PRETTY_PRINT),PHP_EOL;
     }
 
 }

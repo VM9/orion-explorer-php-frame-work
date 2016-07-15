@@ -177,12 +177,12 @@ class updateContext implements operationsInterface {
     
     /**
      * 
-     * @param \Orion\NGSIAPIv1 $orionconn
+     * @param \Orion\NGSIAPIv1 $orion
      * @return type
      */
-    public function send(\Orion\NGSIAPIv1 $orionconn){
+    public function send(\Orion\NGSIAPIv1 $orion){
         $reqBody = $this->getRequest();
-        $ret = $orionconn->updateContext($reqBody);
+        $ret = $orion->updateContext($reqBody);
         $Context = new \Orion\Context\Context($ret);
 //        $ResponseObject = $Context->get();
         

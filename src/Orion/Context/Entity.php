@@ -56,7 +56,55 @@ class Entity {
         }
         return $this->_orion->get($url);
     }
-    
+
+    /**
+     * 
+     * @return type
+     */
+    public function delete() {
+        $url = "entities";
+
+        if ($this->_id) {
+            $url .= "/{$this->_id}";
+        }
+
+        if ($this->_type) {
+            $url .= "?type={$this->_type}";
+        }
+        
+        return $this->_orion->delete($url);
+    }
+
+    /**
+     * Get Attribute Data
+     * @param type $attr
+     * @return type
+     */
+    public function getAttribute($attr) {
+        $url = "entities/{$this->_id}/attrs/$attr";
+
+        if ($this->_type) {
+            $url .= "?type={$this->_type}";
+        }
+
+        return $this->_orion->get($url);
+    }
+
+    /**
+     * Get Attribute Value
+     * @param type $attr
+     * @return type
+     */
+    public function getAttributeValue($attr, &$request = null) {
+        $url = "entities/{$this->_id}/attrs/$attr/value";
+
+        if ($this->_type) {
+            $url .= "?type={$this->_type}";
+        }
+
+        return $this->_orion->get($url, $request, false);
+    }
+
     /**
      * 
      * @param type $attr
@@ -81,19 +129,124 @@ class Entity {
         }
         if (count($options) > 0) {
             $prefix = ($this->_type) ? "&" : "?";
-            $url .= $prefix . http_build_query($options);
+            $url .= $prefix . urldecode(http_build_query($options));
         }
 
         return $this->_orion->get($url);
     }
+    
+    /**
+     * Update Attributes
+     * @param array $attrs 
+     * @return type
+     */
+    public function updateAttribute($attr, $body = []) {
+        $url = "entities/{$this->_id}/attrs/$attr";
 
-    
-    
-    public function updateAttributes(){
-        
+        if ($this->_type) {
+            $url .= "?type={$this->_type}";
+        }
+
+        $updateEntity = new ContextFactory($body);
+        return $this->_orion->put($url, $updateEntity);
     }
+
+    /**
+     * 
+     * @param type $attr
+     * @param type $value
+     * @param type $metadata
+     * @return type
+     */
+    public function updateAttributeValue($attr, $value, $metadata = null) {
+        $url = "entities/{$this->_id}/attrs/$attr/value";
+
+        if ($this->_type) {
+            $url .= "?type={$this->_type}";
+        }
+
+        $attrUpdate = [
+            "value" => $value
+        ];
+
+        if (null != $metadata) {
+            $attrUpdate['metadata'] = (object) $metadata;
+        }
+
+        $updateEntityContext = new ContextFactory($attrUpdate);
+        return $this->_orion->put($url, $updateEntityContext);
+    }
+
+    /**
+     * Remove a single attribute
+     * @param type $attr
+     * @return type
+     */
+    public function deleteAttribute($attr) {
+        $url = "entities/{$this->_id}/attrs/$attr";
+
+        if ($this->_type) {
+            $url .= "?type={$this->_type}";
+        }
+
+        return $this->_orion->delete($url);
+    }
+
+    /**
+     * Update Attributes
+     * @param array $attrs 
+     * @return type
+     */
+    public function updateAttributes(array $attrs) {
+        $url = "entities/{$this->_id}/attrs";
+
+        if ($this->_type) {
+            $url .= "?type={$this->_type}";
+        }
+
+        $updateEntity = new ContextFactory($attrs);
+        return $this->_orion->patch($url, $updateEntity);
+    }
+
+    /**
+     * Replace all entity Attributes
+     * @param array $attrs 
+     * @return type
+     */
+    public function replaceAttributes(array $attrs) {
+        $url = "entities/{$this->_id}/attrs";
+
+        if ($this->_type) {
+            $url .= "?type={$this->_type}";
+        }
+
+        $updateEntity = new ContextFactory($attrs);
+        return $this->_orion->put($url, $updateEntity);
+    }
+
+   
     
-    
+    /**
+     * Update or Append new attributes
+     * @param array $attrs
+     * @return type
+     */
+    public function appendAttribute(array $attrs, $options = ["option" => "append"]) {
+        $url = "entities/{$this->_id}/attrs";
+
+        if ($this->_type) {
+            $url .= "?type={$this->_type}";
+        }
+
+        if (count($options) > 0) {
+            $prefix = ($this->_type) ? "&" : "?";
+            $url .= $prefix . urldecode(http_build_query($options));
+        }
+
+        $updateEntity = new ContextFactory($attrs);
+        return $this->_orion->post($url, $updateEntity->get());
+    }
+
     public function _setId($entityId) {
         $this->_id = $entityId;
         return $this;
@@ -107,6 +260,32 @@ class Entity {
     public function _setType($entityType) {
         $this->_type = $entityType;
         return $this;
+    }
+
+    /**
+     * 
+     * @param type $id
+     * @param type $entityType
+     * @param type $attrs
+     * @return \Orion\Utils\HttpRequest
+     */
+    public function create($id, $entityType = null, $attrs = []) {
+        $context = new ContextFactory(['id' => $id]);
+        if (null != $entityType) {
+            $context->put('type', $entityType);
+        }
+
+        if (count($attrs) > 0) {
+            foreach ($attrs as $name => $attr) {
+                $attr = (object) $attr;
+                $metadata = (isset($attr->metadata)) ? $attr->metadata : null;
+                $context->addAttribute($name, $attr->value, $attr->type, $metadata);
+            }
+        }
+        $request = $this->_orion->create("entities", $context);
+        $this->_setId($id);
+        $this->_setType($entityType);
+        return $request;
     }
 
 }

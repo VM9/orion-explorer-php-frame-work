@@ -151,11 +151,15 @@ abstract class AbstractNGSI {
      * @return HTTPClient
      * @throws Exception\GeneralException
      */
-    public function restRequest($url, $method = "GET", $reqBody = "", $reuse = true) {
+    public function restRequest($url, $method = "GET", $reqBody = "", $mime = false) {
         try {
             
             $restReq = new HTTPClient();
-            $restReq->setAcceptType($this->_contentType);
+            if($mime){
+                $restReq->setAcceptType($mime);
+            }else{
+                $restReq->setAcceptType($this->_contentType);
+            }
             $restReq->setContentType($this->_contentType);
 
 

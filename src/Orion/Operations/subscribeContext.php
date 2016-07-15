@@ -191,9 +191,9 @@ class subscribeContext implements operationsInterface {
         return $this->_context->getContext();
     }
 
-    public function send(\Orion\NGSIAPIv1 $orionconn) {
+    public function send(\Orion\NGSIAPIv1 $orion) {
         $reqBody = $this->getRequest();
-        $ret = $orionconn->subscribeContext($reqBody);
+        $ret = $orion->subscribeContext($reqBody);
         return new \Orion\Context\Context($ret);
     }
 

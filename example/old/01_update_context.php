@@ -4,7 +4,7 @@ include './autoloader.php';
 
 $ip = "0.0.0.0";
 
-$OrionConnection = new Orion\ContextBroker($ip);
+$orionection = new Orion\ContextBroker($ip);
 
 
 /**
@@ -50,13 +50,13 @@ $context = $UPDATE->addElement("Room1", "Room", false)
         ->addAttrinbute("temperature", "centigrade", "26.5")
         ->addAttrinbute("pressure", "mmHg", "763")
         ->setAction("UPDATE")
-        ->send($OrionConnection); 
+        ->send($orionection); 
 
 
 //From Orion Connection you need use updateContext passing your request body.
 //Its will return a raw data from server, depends of your chose about type will return XML or JSON string, by default JSON is used
 $reqBody = $UPDATE->getRequest(); //Its Necessary get the request body from build elements 
-$raw_return = $OrionConnection->updateContext($reqBody);
+$raw_return = $orionection->updateContext($reqBody);
 
 //If request return a successful response like  that you can do process this information using some tools
 
@@ -158,7 +158,7 @@ $APPEND->setAction("APPEND");
 //Its Necessary get the request body from build elements 
 $reqBodyAPPEND = $APPEND->getRequest();
 
-$OrionConnection->updateContext($reqBodyAPPEND); //I can use the same instance of orion connection
+$orionection->updateContext($reqBodyAPPEND); //I can use the same instance of orion connection
 
 
 
@@ -176,4 +176,4 @@ $reqBody = $DELETE->getRequest();
 
 //From Orion Connection you need use updateContext passing your request body.
 //Its will return a raw data from server, depends of your chose about type will return XML or JSON string, by default JSON is used
-$raw_return = $OrionConnection->updateContext($reqBody);
+$raw_return = $orionection->updateContext($reqBody);
