@@ -22,33 +22,6 @@ http://orionexplorer.com/
 PHP 5.6+ with the cURL extension installed
 
 
-
-## Basic Example ##
-See the examples/ directory for examples of the key client features.
-```PHP
-<?php
-  require_once 'examples/autoloader.php'; // or other way to load classes
-  $OrionConn = new Orion\NGSIAPIv1("127.0.0.1");
-
-    //Build your query Context
-    $queryContext = new Orion\Operations\queryContext();
-    $queryResponse = $queryContext->addElement(".*", "Room",true)
-            ->send($OrionConn);
-
-    $responseData = $queryResponse->get();
-
-    //Simple
-    echo "<h2>Basic</h2>";
-    echo "<h3>Request : </h3>", PHP_EOL;
-    echo "<pre>";
-    $queryContext->getRequest()->prettyPrint();
-    echo "</pre>";
-    echo "<h3>Response: </h3>", PHP_EOL;
-    echo "<pre>";
-    $queryResponse->prettyPrint();
-    echo "</pre>";
-```
-
 #Running Examples:
 - You can use native php server 
 ```

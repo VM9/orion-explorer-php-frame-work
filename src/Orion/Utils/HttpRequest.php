@@ -366,13 +366,15 @@ class HttpRequest {
 
         $lines = explode("\r\n", substr($response, 0, $header_size));
         foreach ($lines as $i => $line) {
-            if ($i === 0){
-                $piece = explode (" ", $line);
+            if ($i === 0) {
                 $this->response_headers['http_code'] = $line;
-                $this->response_headers['protocol'] = $piece[0];
-                $this->response_headers['status_code'] = $piece[1];
-                array_splice($piece, 0, 2);//Remove protocol and code
-                $this->response_headers['reason_phrase'] = implode(" ", $piece);
+                $piece = explode(" ", $line);
+                if (count($piece) > 1) {
+                    $this->response_headers['protocol'] = $piece[0];
+                    $this->response_headers['status_code'] = $piece[1];
+                    array_splice($piece, 0, 2); //Remove protocol and code
+                    $this->response_headers['reason_phrase'] = implode(" ", $piece);
+                }
             } else {
                 $piece = explode(': ', $line, 2);
                 if (count($piece) == 2) {
@@ -529,8 +531,14 @@ class HttpRequest {
      * Get Response Header
      * @return type
      */
-    public function getResponseHeader() {
-        return $this->response_headers;
+    public function getResponseHeader($key = null) {
+        if (null != $key) {
+            if (array_key_exists($key, $this->response_headers)) {
+                return $this->response_headers[$key];
+            }
+        } else {
+            return $this->response_headers;
+        }
     }
 
     /**

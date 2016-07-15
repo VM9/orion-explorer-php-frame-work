@@ -151,7 +151,7 @@ abstract class AbstractNGSI {
      * @return HTTPClient
      * @throws Exception\GeneralException
      */
-    protected function restRequest($url, $method = "GET", $reqBody = "", $reuse = true) {
+    public function restRequest($url, $method = "GET", $reqBody = "", $reuse = true) {
         try {
             
             $restReq = new HTTPClient();

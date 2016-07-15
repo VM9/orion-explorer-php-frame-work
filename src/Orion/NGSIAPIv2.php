@@ -74,10 +74,27 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
 
     //API V2 Operations
 
-
-    public function create($url, Context\ContextFactory $context) {
+    /**
+     * Generic Post Request
+     * @param type $url
+     * @param type $requestBody
+     * @return HTTPClient
+     */
+    public function post($url, $requestBody = null) {
         $posturl = $this->url . $url;
-        $restReq = $this->restRequest($posturl, 'POST', $context->get());
+        return $this->restRequest($posturl, 'POST', $requestBody);
+    }
+
+    /**
+     * 
+     * @param type $url
+     * @param \Orion\Context\ContextFactory $context
+     * @return HTTPClient
+     * @throws type
+     * @throws Exception\GeneralException
+     */
+    public function create($url, Context\ContextFactory $context) {
+        $restReq = $this->post($url, $context->get());
         $ret = $restReq->getResponseBody();
         $retInfo = $restReq->getResponseInfo();
         if (is_array($retInfo) && array_key_exists("http_code", $retInfo) && $retInfo['http_code'] == 201 //Te httpd request has executed with success
@@ -100,17 +117,16 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
 //                $Entity = new Context\Entity($this, $context->get('id'), $context->get('type'));
 //                $responseContext = $Entity->getContext();
 //            }
-            
         }
 
         $responseContext = new Context\Context($ret);
         if (isset($responseContext->get()->error)) {
             $errorResponse = $responseContext->get();
-            $exception_name = "Exception\\{$errorResponse->error}";
+            $exception_name = "\\Orion\\Exception\\{$errorResponse->error}";
             if (class_exists($exception_name)) {
                 throw new $exception_name($errorResponse->description, 500, null, $restReq);
             } else {
-                throw new Exception\GeneralException($context->get()->error . " : " . $errorResponse->description, 500, null, $restReq);
+                throw new \Orion\Exception\GeneralException($errorResponse->error . " : " . $errorResponse->description, 500, null, $restReq);
             }
         }
         return $restReq;
@@ -124,7 +140,7 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
             var_dump($e);
         }
     }
-    
+
     /**
      * 
      * @param type $url
@@ -133,62 +149,57 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      * @throws Exception\GeneralException
      */
     public function patch($url, Context\ContextFactory $context) {
-        try {
-            $patchUrl = $this->getUrl($url);
-            $restReq = $this->restRequest($patchUrl, 'PATCH', $context->get());
-            $ret = $restReq->getResponseBody();
-            $retInfo = $restReq->getResponseInfo();
+        $patchUrl = $this->getUrl($url);
+        $restReq = $this->restRequest($patchUrl, 'PATCH', $context->get());
+        $ret = $restReq->getResponseBody();
+        $retInfo = $restReq->getResponseInfo();
 
 
-            if ($url == "entities" //Is entity endpoint
-                    && null != $context->get('id')//Have a valid Id on context
-                    && is_array($retInfo) && array_key_exists("http_code", $retInfo) && $retInfo['http_code'] == 201 //Te httpd request has executed with success
-            ) {
+        if ($url == "entities" //Is entity endpoint
+                && null != $context->get('id')//Have a valid Id on context
+                && is_array($retInfo) && array_key_exists("http_code", $retInfo) && $retInfo['http_code'] == 201 //Te httpd request has executed with success
+        ) {
 
-                /**
-                 * "Upon receipt of this request, the broker updates the values for the
-                 * entity attributes in its internal database and responds with 204 No Content."
-                 */
-            }
-
-            $responseContext = new Context\Context($ret);
-            if (isset($responseContext->get()->error)) {
-                $errorResponse = $responseContext->get();
-                $exception_name = "Exception\\{$errorResponse->error}";
-                if (class_exists($exception_name)) {
-                    throw new $exception_name($errorResponse->description, 500, null, $restReq);
-                } else {
-                    throw new Exception\GeneralException($context->get()->error . " : " . $errorResponse->description, 500, null, $restReq);
-                }
-            }
-            return $restReq;
-        } catch (\Exception $e) {
-            var_dump($e);
+            /**
+             * "Upon receipt of this request, the broker updates the values for the
+             * entity attributes in its internal database and responds with 204 No Content."
+             */
         }
+
+        $responseContext = new Context\Context($ret);
+        if (isset($responseContext->get()->error)) {
+            $errorResponse = $responseContext->get();
+            $exception_name = "\\Orion\\Exception\\{$errorResponse->error}";
+            if (class_exists($exception_name)) {
+                throw new $exception_name($errorResponse->description, 500, null, $restReq);
+            } else {
+                throw new \Orion\Exception\GeneralException($errorResponse->error . " : " . $errorResponse->description, 500, null, $restReq);
+            }
+        }
+        return $restReq;
     }
 
     /**
-     * 
+     * Generic get
      * @param type $url
      * @return \Orion\Context\Context
      */
-    public function get($url) {
-        try {
-            $url = $this->getUrl($url);
-            $request = $this->restRequest($url);
-            return new Context\Context($request->getResponseBody());
-        } catch (\Exception $e) {
-            var_dump($e);
-        }
+    public function get($url, &$request = null) {
+        $geturl = $this->getUrl($url);
+        $request = $this->restRequest($geturl);
+        return new Context\Context($request->getResponseBody());
     }
-
-    public function delete($url) {
-        try {
-            $url = $this->getUrl($url);
-            return new Context\Context($this->restRequest($url, "DELETE"));
-        } catch (\Exception $e) {
-            var_dump($e);
-        }
+    
+    /**
+     * 
+     * @param type $url
+     * @param type $request
+     * @return \Orion\Context\Context
+     */
+    public function delete($url, &$request = null) {
+        $deleteurl = $this->getUrl($url);
+        $request = $this->restRequest($deleteurl,"DELETE");
+        return new Context\Context($request->getResponseBody());
     }
 
 }

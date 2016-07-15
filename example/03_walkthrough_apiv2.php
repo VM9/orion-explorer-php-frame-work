@@ -36,7 +36,7 @@ try {
 
     echo "<h3>Code: </h3>", PHP_EOL;
     echo "<code>";
-        highlight_file('./codeblock/v2_entitycreation_.php'); //Displays
+    highlight_file('./codeblock/v2_entitycreation_.php'); //Displays
     echo "</code>";
     /**
      * Query Context operation
@@ -44,13 +44,13 @@ try {
      */
     echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv2/index.html#query-entity' target='_blank'>Query Context operation</a></h1>", PHP_EOL;
 
-    
+
 
     //Simple
     echo "<h2>Basic</h2>";
     echo "<h3>Request : </h3>", PHP_EOL;
     echo "<pre>";
-    echo "GET ", $OrionConn->getUrl("entities/$RandomEntityID?type=Room");//Just return the url to be executed
+    echo "GET ", $OrionConn->getUrl("entities/$RandomEntityID?type=Room"); //Just return the url to be executed
     echo "</pre><code>";
     include './codeblock/v2_basic_query_.php'; //execute
     highlight_file('./codeblock/v2_basic_query_.php'); //Displays
@@ -58,7 +58,7 @@ try {
     echo "</pre>";
     echo "<h3>Response: </h3>", PHP_EOL;
     echo "<pre>";
-        $queryResponse->prettyPrint();
+    $queryResponse->prettyPrint();
     echo "</pre>";
 
 
@@ -100,10 +100,10 @@ try {
     echo "<code>";
     highlight_file('./codeblock/v2_update_entity.php'); //Displays
     echo "</code>";
-    
+
     echo "<h3>Request : </h3>", PHP_EOL;
     echo "<pre>";
-    echo "PATCH ", $OrionConn->getUrl("entities/$RandomEntityID/attrs"),PHP_EOL;//Just return the url to be executed
+    echo "PATCH ", $OrionConn->getUrl("entities/$RandomEntityID/attrs"), PHP_EOL; //Just return the url to be executed
     $updateEntity->getContext()->prettyPrint();
     echo "</pre><code>";
     include './codeblock/v2_basic_query_.php'; //execute
@@ -111,56 +111,62 @@ try {
     echo "<h3>Response Header: </h3>", PHP_EOL;
     echo "<pre>";
     foreach ($request->getResponseHeader() as $key => $value) {
-        echo "$key:$value",PHP_EOL;
+        echo "$key:$value", PHP_EOL;
     }
     echo "</pre>";
     echo "<h3>Updated Entity: </h3>", PHP_EOL;
     echo "<pre>";
-        $queryResponse->prettyPrint();
+    $queryResponse->prettyPrint();
     echo "</pre>";
-    exit;
+
     /**
      * Context subscriptions
      * Ref: https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv2/index.html#subscriptions
      */
     echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv2/index.html#subscriptions' target='_blank'>Context subscriptions</a></h1>", PHP_EOL;
-    $subscribeContext = new \Orion\Operations\subscribeContext("http://localhost:1028/accumulate", "P1M");
-    $subscribeResponse = $subscribeContext->addElement("Room1", "Room", false)
-            ->addAttr("temperature")
-            ->notifyConditions("ONCHANGE", ["pressure"])
-            ->setThrottling("PT5S")
-            ->send($OrionConn);
+
+
+    include './codeblock/v2_subscription_creation.php'; //Execute
+    echo "<h3>Code: </h3>", PHP_EOL;
+    echo "<code>";
+    highlight_file('./codeblock/v2_subscription_creation.php'); //Displays
+    echo "</code>";
+
     echo "<h3>Request: </h3>", PHP_EOL;
     echo "<pre>";
-    $subscribeContext->getRequest()->prettyPrint();
+    $subscription->prettyPrint();
     echo "</pre>";
     echo "<h3>Response: </h3>", PHP_EOL;
     echo "<pre>";
-    $subscribeResponse->prettyPrint();
+    echo "Subscription Location:", $subscriptionRequest->getResponseHeader("Location"), PHP_EOL;
+    echo "Subscription Entity:", PHP_EOL;
+    $subscriptionEntity->getContext()->prettyPrint();
     echo "</pre>";
-    
-    EXIT;
+
     
     echo "<h1>Update subscription </h1>", PHP_EOL;
-    $subscriptionId = $subscribeResponse->get()->subscribeResponse->subscriptionId;
+    include './codeblock/v2_subscription_update.php'; //Execute
     echo "<h2>Subscription ID: {$subscriptionId}</h2>", PHP_EOL;
-    $UPDATEsubscribeContext = new Orion\Operations\updateSubscription($subscribeResponse->get()->subscribeResponse->subscriptionId);
-    $UPDATEsubscribeResponse = $UPDATEsubscribeContext->setDuration("P1M")->send($OrionConn);
-
-    echo "<h3>Request: </h3>", PHP_EOL;
+    echo "<h3>Code: </h3>", PHP_EOL;
+    echo "<code>";
+    highlight_file('./codeblock/v2_subscription_update.php'); //Displays
+    echo "</code>";
+    
+    echo "<h3>Updated Subscription: </h3>", PHP_EOL;
     echo "<pre>";
-    $UPDATEsubscribeContext->getRequest()->prettyPrint();
-    echo "</pre>";
-    echo "<h3>Response: </h3>", PHP_EOL;
-    echo "<pre>";
-    $UPDATEsubscribeResponse->prettyPrint();
+    $subscriptionEntity->getContext()->prettyPrint();
     echo "</pre>";
 
-    echo "<h1>Context Unsubscribe subscription </h1>", PHP_EOL;
+    
+    echo "<h1>Subscription delete </h1>", PHP_EOL;
+    include './codeblock/v2_subscription_delete.php'; //Execute
+    echo "<h3>Code: </h3>", PHP_EOL;
+    echo "<code>";
+    highlight_file('./codeblock/v2_subscription_delete.php'); //Displays
+    echo "</code>";
     echo "<h3>Response: </h3>", PHP_EOL;
-    echo "<pre>";
-
-    $OrionConn->unsubscribeContext($subscribeResponse->get()->subscribeResponse->subscriptionId)->prettyPrint();
+    echo "<pre>";   
+    var_dump($httpRequest->getResponseInfo());    
     echo "</pre>";
 
 
