@@ -46,5 +46,7 @@ namespace Orion\Exception;
  * @since      1.0.0
  */
 class TooManyResults extends GeneralException{
+    protected $message = "There are several results that match with the resource identification";
+    protected $code = 409;
     
 }

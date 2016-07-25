@@ -45,7 +45,7 @@ namespace Orion\Exception;
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
  * @since      1.0.0
  */
-class BadRequest extends GeneralException{
-    protected $message = "The incoming request is invalid in this context.";
-    protected $code = 400;
+class NoResourcesAvailable extends GeneralException{
+    protected $message = "There are no server resources to fulfill the client request.";
+    protected $code = 413;
 }

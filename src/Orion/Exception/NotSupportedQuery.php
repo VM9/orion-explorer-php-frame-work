@@ -45,7 +45,7 @@ namespace Orion\Exception;
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
  * @since      1.0.0
  */
-class BadRequest extends GeneralException{
-    protected $message = "The incoming request is invalid in this context.";
-    protected $code = 400;
+class NotSupportedQuery extends GeneralException{
+    protected $message = "The implementation does not support the query issued.";
+    protected $code = 422;
 }

@@ -46,5 +46,6 @@ namespace Orion\Exception;
  * @since      1.0.0
  */
 class NotFound extends GeneralException{
-    
+    protected $message = "The resource (entity, subscription, etc.) referred in the request has not been found.";
+    protected $code = 400;
 }

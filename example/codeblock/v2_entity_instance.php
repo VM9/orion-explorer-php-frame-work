@@ -1,7 +1,4 @@
 <?php
-function print_request($request){
-  echo $request->getMethod()," ",$request->getResponseInfo()['url'], " Status ",$request->getResponseInfo()['http_code'],PHP_EOL,$request->getResponseBody();  
-}
 echo "Running Operations:",PHP_EOL;
 /**  
     It's possible to instanciate another entity but, for this example we will use the fresh created entity 
@@ -11,25 +8,26 @@ echo "Running Operations:",PHP_EOL;
 **/
 
 echo "Update Attribute data(pressure, change UOM to atm):",PHP_EOL;
-$requestPres = $EntityContext->updateAttribute("pressure",["value"=>1.0321,"metadata" => [
-            "name" => "atm",
-            "type" => "UOM"
-        ]]);
+$EntityContext->updateAttribute("pressure",["value"=>1.0321,"metadata" => [
+            "uom"=>[
+                    "type" => "String",
+                    "value" => "bar"
+                ]
+        ]])->debug("Preassure Value & Metadata Update");
+
 echo "Get attribute data:",PHP_EOL;
 $EntityContext->getAttribute("pressure")->prettyPrint();
-print_request($requestPres);
+
 
 echo "Update attribute temperature to 27.5 :",PHP_EOL;
-$requestTemp = $EntityContext->updateAttributeValue("temperature", "27.5");
-print_request($requestTemp);
+$EntityContext->updateAttributeValue("temperature", "27.5")->debug("Update Temperature Value");
 
 echo "Get attribute value:",PHP_EOL;
 $EntityContext->getAttributeValue("temperature")->prettyPrint();
 
 
 echo "Append new attribute:",PHP_EOL;
-$requestAdd = $EntityContext->appendAttribute(["ref"=>["value"=>"abc","type"=>"string"]]);
-print_request($requestAdd);
+$EntityContext->appendAttributes(["ref"=>["value"=>"abc","type"=>"string"]])->debug("Append attribute ref");
 
 echo "Get Fresh created attribute:",PHP_EOL;
 $EntityContext->getAttribute("ref")->prettyPrint();
@@ -39,10 +37,9 @@ echo "Get Entity: ",PHP_EOL;
 $EntityContext->getContext()->prettyPrint();
 
 echo "Delete Fresh created attribute:",PHP_EOL;
-$requestDeleteAttr = $EntityContext->deleteAttribute("ref");
-print_request($requestDeleteAttr);
+$EntityContext->deleteAttribute("ref")->debug("Delete ref attribute");
+
 
 
 echo "Delete Entity:",PHP_EOL;
-$requestDelete = $EntityContext->delete();
-print_request($requestDelete);
+$EntityContext->delete()->debug("Delete Entity");

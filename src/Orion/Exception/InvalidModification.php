@@ -46,5 +46,6 @@ namespace Orion\Exception;
  * @since      1.0.0
  */
 class InvalidModification extends GeneralException{
-    
+    protected $message = "Some piece of information is missing in payload.";
+    protected $code = 422;
 }

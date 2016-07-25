@@ -45,7 +45,7 @@ namespace Orion\Exception;
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
  * @since      1.0.0
  */
-class BadRequest extends GeneralException{
-    protected $message = "The incoming request is invalid in this context.";
-    protected $code = 400;
+class UnsupportedMediaType extends GeneralException{
+    protected $message = "Request content type is not supported.";
+    protected $code = 415;
 }

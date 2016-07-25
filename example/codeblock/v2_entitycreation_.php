@@ -3,20 +3,20 @@
 $RandomEntityID = "Room1" . rand(1, 3000); //On V2 entities must be uniq for creation, on v1 if an entity excists it will be updated
 $EntityContext = new \Orion\Context\Entity($orion);
 $request = $EntityContext->create($RandomEntityID, "Room", [
-    "pressure" => [
-        "value" => 720,
-        "type" => "Float",
-        "metadata" => [
-            "measure" => [
-                "name" => "bar",
-                "type" => "UOM"
+            "pressure" => [
+                "value" => 720,
+                "type" => "Float",
+                "metadata" => [
+                    "measure" => [
+                        "value" => "bar",
+                        "type" => "UOM"
+                    ]
+                ]
+            ],
+            "temperature" => [
+                "value" => 23,
+                "type" => "Float"
             ]
-        ]
-    ],
-    "temperature" => [
-        "value" => 23,
-        "type" => "Float"
-    ]
         ]);
 
 /**

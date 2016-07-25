@@ -95,6 +95,7 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      */
     public function create($url, Context\ContextFactory $context) {
         $restReq = $this->post($url, $context->get());
+//        $context->getContext()->prettyPrint();exit;
         $ret = $restReq->getResponseBody();
         $retInfo = $restReq->getResponseInfo();
         if (is_array($retInfo) && array_key_exists("http_code", $retInfo) && $retInfo['http_code'] == 201 //Te httpd request has executed with success
@@ -137,7 +138,6 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      * @param type $url
      * @param \Orion\Context\ContextFactory $context
      * @return HTTPClient
-     * @throws type
      * @throws \Orion\Exception\GeneralException
      */
     public function put($url, Context\ContextFactory $context) {

@@ -28,8 +28,7 @@ try {
     echo "</code>";
     echo "<h3>Response</h3>",PHP_EOL;
     echo "<pre>";
-    $requestInfo  = $request->getResponseInfo();
-    echo $request->getMethod()," ",$requestInfo['url'], " Status ",$requestInfo['http_code'],PHP_EOL;
+    $request->debug("Entity Creation request");
     echo "</pre>";
     
     echo "<h1>Entity Instance Methods</h1>";

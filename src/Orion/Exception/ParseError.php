@@ -46,5 +46,6 @@ namespace Orion\Exception;
  * @since      1.0.0
  */
 class ParseError extends GeneralException{
-    
+    protected $message = "The incoming JSON payload cannot be parsed.";
+    protected $code = 400;
 }

@@ -58,8 +58,8 @@ class Entity {
     }
 
     /**
-     * 
-     * @return type
+     * Delete current Entity
+     * @return \Orion\Utils\HttpRequest
      */
     public function delete() {
         $url = "entities";
@@ -78,7 +78,7 @@ class Entity {
     /**
      * Get Attribute Data
      * @param type $attr
-     * @return type
+     * @return \Orion\Context\Context
      */
     public function getAttribute($attr) {
         $url = "entities/{$this->_id}/attrs/$attr";
@@ -93,7 +93,7 @@ class Entity {
     /**
      * Get Attribute Value
      * @param type $attr
-     * @return type
+     * @return \Orion\Context\Context
      */
     public function getAttributeValue($attr, &$request = null) {
         $url = "entities/{$this->_id}/attrs/$attr/value";
@@ -109,7 +109,7 @@ class Entity {
      * 
      * @param type $attr
      * @param type $options
-     * @return type
+     * @return \Orion\Context\Context
      * @throws Orion\Exception\GeneralException
      */
     public function getAttributes($attr = null, $options = []) {
@@ -138,7 +138,7 @@ class Entity {
     /**
      * Update Attributes
      * @param array $attrs 
-     * @return type
+     * @return \Orion\Utils\HttpRequest
      */
     public function updateAttribute($attr, $body = []) {
         $url = "entities/{$this->_id}/attrs/$attr";
@@ -156,7 +156,7 @@ class Entity {
      * @param type $attr
      * @param type $value
      * @param type $metadata
-     * @return type
+     * @return \Orion\Utils\HttpRequest
      */
     public function updateAttributeValue($attr, $value, $metadata = null) {
         $url = "entities/{$this->_id}/attrs/$attr/value";
@@ -180,7 +180,7 @@ class Entity {
     /**
      * Remove a single attribute
      * @param type $attr
-     * @return type
+     * @return \Orion\Utils\HttpRequest
      */
     public function deleteAttribute($attr) {
         $url = "entities/{$this->_id}/attrs/$attr";
@@ -195,7 +195,7 @@ class Entity {
     /**
      * Update Attributes
      * @param array $attrs 
-     * @return type
+     * @return \Orion\Utils\HttpRequest
      */
     public function updateAttributes(array $attrs) {
         $url = "entities/{$this->_id}/attrs";
@@ -211,7 +211,7 @@ class Entity {
     /**
      * Replace all entity Attributes
      * @param array $attrs 
-     * @return type
+     * @return \Orion\Utils\HttpRequest
      */
     public function replaceAttributes(array $attrs) {
         $url = "entities/{$this->_id}/attrs";
@@ -229,7 +229,7 @@ class Entity {
     /**
      * Update or Append new attributes
      * @param array $attrs
-     * @return type
+     * @return \Orion\Utils\HttpRequest
      */
     public function appendAttributes(array $attrs, $options = ["option" => "append"]) {
         $url = "entities/{$this->_id}/attrs";
@@ -282,6 +282,7 @@ class Entity {
                 $context->addAttribute($name, $attr->value, $attr->type, $metadata);
             }
         }
+//        var_dump($context->get());exit;
         $request = $this->_orion->create("entities", $context);
         $this->_setId($id);
         $this->_setType($entityType);

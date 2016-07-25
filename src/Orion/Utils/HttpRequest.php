@@ -166,7 +166,7 @@ class HttpRequest {
      * @throws \InvalidArgumentException
      */
     public function execute() {
-        $ch = curl_init();
+        $ch = \curl_init();
 
         $this->setAuth($ch);
         try {
@@ -199,10 +199,10 @@ class HttpRequest {
                     throw new \InvalidArgumentException('Current method (' . $this->method . ') is an invalid REST method.');
             }
         } catch (\InvalidArgumentException $e) {
-            curl_close($ch);
+            \curl_close($ch);
             throw $e;
         } catch (\Exception $e) {
-            curl_close($ch);
+            \curl_close($ch);
             throw $e;
         }
     }
@@ -237,12 +237,12 @@ class HttpRequest {
             $this->buildPostBody();
         }
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        \curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: .' . $this->content_type
         ));
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request_body);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        \curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request_body);
+        \curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 
         $this->doExecute($ch);
     }
@@ -262,16 +262,16 @@ class HttpRequest {
             $uri_string => '@' . $file_name . ';filename=' . basename($file_name)
         );
 
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        \curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        \curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        \curl_setopt($ch, CURLOPT_URL, $this->url);
+        \curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $this->response_body = curl_exec($ch);
-        $this->response_info = curl_getinfo($ch);
+        $this->response_body = \curl_exec($ch);
+        $this->response_info = \curl_getinfo($ch);
 
-        curl_close($ch);
+        \curl_close($ch);
     }
 
     /**
@@ -295,16 +295,16 @@ class HttpRequest {
             );
         }
 
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        \curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        \curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        \curl_setopt($ch, CURLOPT_URL, $this->url);
+        \curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $this->response_body = curl_exec($ch);
-        $this->response_info = curl_getinfo($ch);
+        $this->response_body = \curl_exec($ch);
+        $this->response_info = \curl_getinfo($ch);
 
-        curl_close($ch);
+        \curl_close($ch);
     }
 
     /**
@@ -317,8 +317,8 @@ class HttpRequest {
             $this->buildPostBody();
         }
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request_body);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        \curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request_body);
+        \curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 
         $this->doExecute($ch);
     }
@@ -333,8 +333,8 @@ class HttpRequest {
             $this->buildPostBody();
         }
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request_body);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+        \curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request_body);
+        \curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
 
         $this->doExecute($ch);
     }
@@ -344,7 +344,7 @@ class HttpRequest {
      * @param \CURL $ch
      */
     protected function executeDelete($ch) {
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        \curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 
         $this->doExecute($ch);
     }
@@ -356,9 +356,9 @@ class HttpRequest {
      */
     protected function doExecute(&$curlHandle) {
         $this->setCurlOpts($curlHandle);
-        $response = curl_exec($curlHandle);
+        $response = \curl_exec($curlHandle);
 
-        $header_size = curl_getinfo($curlHandle, CURLINFO_HEADER_SIZE);
+        $header_size = \curl_getinfo($curlHandle, CURLINFO_HEADER_SIZE);
 
         $this->response_body = substr($response, $header_size);
 
@@ -386,9 +386,9 @@ class HttpRequest {
                 }
             }
         }
-        $this->response_info = curl_getinfo($curlHandle);
+        $this->response_info = \curl_getinfo($curlHandle);
 
-        curl_close($curlHandle);
+        \curl_close($curlHandle);
     }
 
     /**
@@ -397,13 +397,13 @@ class HttpRequest {
      * @param object $curlHandle
      */
     protected function setCurlOpts(&$curlHandle) {
-        curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10);
-        curl_setopt($curlHandle, CURLOPT_URL, $this->url);
-        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curlHandle, CURLOPT_VERBOSE, true);
-        curl_setopt($curlHandle, CURLOPT_HEADER, true);
-        curl_setopt($curlHandle, CURLOPT_COOKIEFILE, '/dev/null');
-        curl_setopt($curlHandle, CURLOPT_HTTPHEADER, $this->getDefaultHeader());
+        \curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10);
+        \curl_setopt($curlHandle, CURLOPT_URL, $this->url);
+        \curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($curlHandle, CURLOPT_VERBOSE, true);
+        \curl_setopt($curlHandle, CURLOPT_HEADER, true);
+        \curl_setopt($curlHandle, CURLOPT_COOKIEFILE, '/dev/null');
+        \curl_setopt($curlHandle, CURLOPT_HTTPHEADER, $this->getDefaultHeader());
     }
 
     /**
@@ -434,10 +434,10 @@ class HttpRequest {
      */
     protected function setAuth(&$curlHandle) {
         if ($this->username !== null && $this->password !== null) {
-            curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($curlHandle, CURLOPT_USERPWD, base64_encode($this->username . ':' . $this->password));
-//                        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-//                        curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+            \curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            \curl_setopt($curlHandle, CURLOPT_USERPWD, base64_encode($this->username . ':' . $this->password));
+//                        \curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+//                        \curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
         }
     }
 

@@ -45,7 +45,7 @@ namespace Orion\Exception;
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
  * @since      1.0.0
  */
-class BadRequest extends GeneralException{
-    protected $message = "The incoming request is invalid in this context.";
-    protected $code = 400;
+class RequestEntityTooLarge extends GeneralException{
+    protected $message = "Zero/No Content-Length in PUT/POST/PATCH request.";
+    protected $code = 413;
 }
