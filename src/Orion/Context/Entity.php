@@ -50,7 +50,7 @@ class Entity {
             $url .= "?type={$this->_type}";
         }
 
-        if (count($options) > 0) {
+        if (is_array($options) && count($options) > 0) {
             $prefix = ($this->_type) ? "&" : "?";
             $url .= $prefix . urldecode(http_build_query($options));
         }
@@ -231,7 +231,7 @@ class Entity {
      * @param array $attrs
      * @return type
      */
-    public function appendAttribute(array $attrs, $options = ["option" => "append"]) {
+    public function appendAttributes(array $attrs, $options = ["option" => "append"]) {
         $url = "entities/{$this->_id}/attrs";
 
         if ($this->_type) {

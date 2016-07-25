@@ -590,5 +590,17 @@ class HttpRequest {
     public function setMethod($method) {
         $this->method = $method;
     }
+    
+    /**
+     * Debug
+     */
+    public function debug($label = ""){
+        echo "[", date("Y-m-d H:i:s"), "]", $this->getMethod(), " ", $this->getResponseInfo()['url'], " Status ", $this->getResponseInfo()['http_code'];
+        if($label != ""){
+            echo " ($label)";
+        }        
+        echo PHP_EOL, $this->getResponseBody();
+        return $this;
+    }
 
 }
