@@ -38,8 +38,8 @@ try {
 
 
     //Append Geo Location attribute
-    $lat = -22.3038667;
-    $lng = -42.518335;
+    $lat = -22.3006726;
+    $lng = -42.5124478;
     $EntityContext->appendAttributes([
         "vm9:location" => [
             "value" => [
@@ -49,6 +49,13 @@ try {
             "type" => "geo:json"
         ]
     ])->debug("Append Geo-Loc");
+    
+//    $EntityContext->appendAttributes([
+//        "vm9:location_Point" => [
+//            "value" => implode(", ", [$lng, $lat]),
+//            "type" => "geo:point"
+//        ]
+//    ])->debug("Append Geo-Loc(point)");
 
     //Append network attributes (which networks this context is included)
     $EntityContext->appendAttributes([

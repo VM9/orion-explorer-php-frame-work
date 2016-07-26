@@ -1,4 +1,5 @@
 <?php
+
 include './autoloader.php';
 
 /**
@@ -25,39 +26,47 @@ try {
     echo "Uptime: {$ServerInfo['uptime']}", PHP_EOL, PHP_EOL;
     echo "<p>";
 
-    echo "<h1>List ALL Entities</h1>",PHP_EOL;
+    echo "<h1>List ALL Entities</h1>", PHP_EOL;
     $ServerEntities = $orion->getEntities();
 //    var_dump($ServerEntities);
     $lastType = "";
     echo "<pre>";
-    echo "Raw:",PHP_EOL;
+    echo "Raw:", PHP_EOL;
     $ServerEntities->prettyPrint();
-    echo PHP_EOL,"Tab:",PHP_EOL;
-    foreach ($ServerEntities->get() as  $type => $entities) {
-        
-        if($lastType != $type){
-            echo "\tType:",$type,PHP_EOL;
+    echo PHP_EOL, "Tab:", PHP_EOL;
+    foreach ($ServerEntities->get() as $type => $entities) {
+
+        if ($lastType != $type) {
+            echo "\tType:", $type, PHP_EOL;
             $lastType = $type;
         }
-        
-        if(count($entities) > 0 ){
+
+        if (count($entities) > 0) {
             foreach ($entities as $entityId => $attributes) {
-                  echo "\t  ID:",$entityId,PHP_EOL;
-                  if(count($attributes)>0){
-                      echo "\t   Name | Type | Value",PHP_EOL;
-                      foreach ($attributes as $attr) {
-                          echo "\t   {$attr->name} | {$attr->type} | {$attr->value}",PHP_EOL;
-                      }
-                  }else{
-                      echo "\t\t No attributes",PHP_EOL;
-                  }
+                echo "\t  ID:", $entityId, PHP_EOL;
+                if (count($attributes) > 0) {
+                    echo "\t   Name | Type | Value", PHP_EOL;
+                    foreach ($attributes as $attr) {
+                        echo "\t   {$attr->name} | {$attr->type} | ";
+                        switch (gettype($attr->value)) {
+                            case "object":
+                            case "array":
+                            case "NULL":
+                                echo json_encode($attr->value);
+                                break;
+                            default:
+                                echo $attr->value;
+                                break;
+                        }
+                        echo PHP_EOL;
+                    }
+                } else {
+                    echo "\t\t No attributes", PHP_EOL;
+                }
             }
-        }else{
+        } else {
             echo "\tNo Entities";
         }
-    
-    
-    echo "</pre>";
 //        
 //        
 //        echo "Entity ID: ", $contextElement->contextElement->id, PHP_EOL;
