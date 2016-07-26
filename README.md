@@ -23,12 +23,11 @@ PHP 5.6+ with the cURL extension installed
 
 
 #Running Examples:
-- You can use native php server 
+- Start native php server  on root directory of this repository
 ```
-cd example
 php -S  localhost:8000
 ```
-- And access http://localhost:8000
+- And access http://localhost:8000/example
 
 
 You will find all the information on Orion Context Broker in its page in the FI-WARE Catalogue:
