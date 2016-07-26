@@ -217,7 +217,19 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     public function get($url, &$request = null, $mime = false) {
         $geturl = $this->getUrl($url);
         $request = $this->restRequest($geturl,"GET",null,$mime);
-        return new Context\Context($request->getResponseBody());
+        
+        $responseContext = new Context\Context($request->getResponseBody());
+        if (isset($responseContext->get()->error)) {
+            $errorResponse = $responseContext->get();
+            $exception_name = "\\Orion\\Exception\\{$errorResponse->error}";
+            if (class_exists($exception_name)) {
+                throw new $exception_name($errorResponse->description, 500, null, $request);
+            } else {
+                throw new \Orion\Exception\GeneralException($errorResponse->error . " : " . $errorResponse->description, 500, null, $request);
+            }
+        }
+        
+        return $responseContext;
     }
 
     /**
@@ -228,7 +240,18 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      */
     public function delete($url) {
         $deleteurl = $this->getUrl($url);
-        return $this->restRequest($deleteurl, "DELETE");
+        $request =  $this->restRequest($deleteurl, "DELETE");
+        $responseContext = new Context\Context($request->getResponseBody());
+        if (isset($responseContext->get()->error)) {
+            $errorResponse = $responseContext->get();
+            $exception_name = "\\Orion\\Exception\\{$errorResponse->error}";
+            if (class_exists($exception_name)) {
+                throw new $exception_name($errorResponse->description, 500, null, $request);
+            } else {
+                throw new \Orion\Exception\GeneralException($errorResponse->error . " : " . $errorResponse->description, 500, null, $request);
+            }
+        }
+        return $request;
     }
 
 }
