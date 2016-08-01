@@ -170,11 +170,12 @@ class SubscriptionFactory {
      * Only one URL can be included per subscription.
      *  However, you can have several subscriptions on the same context elements 
      * (i.e. same entity and attribute) without any problem."
-     * @param type $url
+     * @param type $url  URL referencing the service to be invoked when a notification is generated. An NGSIv2 compliant server must support the  URL schema. Other schemas could also be supported.
      * @param string $schema http or httpCustom
-     * @param type $qs
-     * @param array $headers
-     * @param type $method
+     * @param type $qs  (optional): a key-map of URI queryString parameters that are included in notification messages
+     * @param array $headers  (optional): a key-map of HTTP headers that are included in notification messages.
+     * @param type $method  (optional): the method to use when sending the notification (default is POST). Only valid HTTP methods are allowed. On specifying an invalid HTTP method, a 400 Bad Request error is returned.
+     * @param type $payload (optional): the payload to be used in notifications. If omitted, the default payload (see "Notification Messages" sections on http://telefonicaid.github.io/fiware-orion/api/v2/stable/) is used.
      * @return \Orion\Context\Subscription
      */
     public function setNotificationURL($url, $schema = "http", $qs = null, array $headers = null, $method = "POST", $payload = null) {
@@ -189,6 +190,27 @@ class SubscriptionFactory {
                 unset($this->_subscription->notification->httpCustom);
             }
         } elseif ($schema == "httpCustom") {
+            /**
+            <code>"httpCustom": {
+              "url": "http://foo.com/entity/${id}",
+              "headers": {
+                "Content-Type": "text/plain"
+              },
+              "method": "PUT",
+              "qs": {
+                "type": "${type}"
+              },
+              "payload": "The temperature is ${temperature} degrees"
+            }
+            </code>
+            will send this request
+            <code>PUT http://foo.com/entity/DC_S1-D41?type=Room
+            Content-Type: text/plain
+            Content-Length: 31
+            
+            The temperature is 23.4 degrees
+            </code>
+            **/
             if (isset($this->_subscription->notification->http)) {
                 unset($this->_subscription->notification->http);
             }
@@ -197,9 +219,18 @@ class SubscriptionFactory {
             if (null != $qs) {
                 $this->_subscription->notification->httpCustom->qs = $qs;
             }
+            //a key-map of HTTP headers that are included in notification messages
+            if (null != $qs) {
+                $this->_subscription->notification->httpCustom->headers = $headers;
+            }
             //the method to use when sending the notification (default is POST).
             $this->_subscription->notification->httpCustom->method = $method;
 
+            
+            if (null != $qs) {
+                $this->_subscription->notification->httpCustom->qs = $qs;
+            }
+            
             //the payload to be used in notification. If omitted, the default paload is used
             if (null != $payload) {
                 $this->_subscription->notification->httpCustom->payload = $payload;
