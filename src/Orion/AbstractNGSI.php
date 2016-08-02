@@ -47,6 +47,8 @@ use Orion\Utils\HttpRequest as HTTPClient;
  * @property \Orion\Utils    Http Requiest Utils
  */
 abstract class AbstractNGSI {
+    
+    const FORBIDDEN_CHARACTERS = "/(<|>|\"|'|=|;|,|\(|\(|^geo:distance$|\s|#|\?|\/|%|&|orderby|!|^id$|^type$)/i"; //REGEX contains all forbiden characters
 
     /**
      * @var string
