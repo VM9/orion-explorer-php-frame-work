@@ -594,12 +594,14 @@ class HttpRequest {
     /**
      * Debug
      */
-    public function debug($label = ""){
+    public function debug($label = "", $body = true){
         echo "[", date("Y-m-d H:i:s"), "]", $this->getMethod(), " ", $this->getResponseInfo()['url'], " Status ", $this->getResponseInfo()['http_code'];
         if($label != ""){
             echo " ($label)";
         }        
-        echo PHP_EOL, $this->getResponseBody();
+        if($body){
+            echo PHP_EOL, $this->getResponseBody();
+        }
         return $this;
     }
 

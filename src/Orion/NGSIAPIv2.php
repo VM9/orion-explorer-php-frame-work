@@ -212,7 +212,11 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     /**
      * Generic get
      * @param type $url
+     * @param \Orion\Utils\HttpRequest $request
+     * @param type $mime
      * @return \Orion\Context\Context
+     * @throws type
+     * @throws \Orion\Exception\GeneralException
      */
     public function get($url, &$request = null, $mime = false) {
         $geturl = $this->getUrl($url);

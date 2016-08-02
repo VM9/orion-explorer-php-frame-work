@@ -34,12 +34,12 @@ class Entity {
     }
 
     /**
-     * Executes OPERATIONS IN THE NGSIv2 RC 2016.05
-     * 
-     * @param array $options Array of options compatible to operation described in https://docs.google.com/spreadsheets/d/1f4m624nmO3jRjNalGE11lFLQixnfCENMV6dc54wUCCg/edit#gid=50130961
+     * Method to easy perform GET v2/entities[..] endpoint
+     * @param array $options key map of aditional parameters (limit,offset,attrs,orderBy,options[count*,keyValues*,values*]) can be any URI param, it will be converted to querystring.
+     * @param \Orion\Utils\HttpRequest $request
      * @return \Orion\Context\Context
      */
-    public function getContext($options = []) {
+    public function getContext($options = [], &$request = null) {
         $url = "entities";
 
         if ($this->_id) {
@@ -54,7 +54,7 @@ class Entity {
             $prefix = ($this->_type) ? "&" : "?";
             $url .= $prefix . urldecode(http_build_query($options));
         }
-        return $this->_orion->get($url);
+        return $this->_orion->get($url, $request);
     }
 
     /**
@@ -71,7 +71,7 @@ class Entity {
         if ($this->_type) {
             $url .= "?type={$this->_type}";
         }
-        
+
         return $this->_orion->delete($url);
     }
 
@@ -107,8 +107,8 @@ class Entity {
 
     /**
      * 
-     * @param type $attr
-     * @param type $options
+     * @param string $attr Attribute or attribute list
+     * @param type $options Aditional parameters: limit,offset,attrs,orderBy,options[count*,keyValues*,values*]
      * @return \Orion\Context\Context
      * @throws Orion\Exception\GeneralException
      */
@@ -134,7 +134,7 @@ class Entity {
 
         return $this->_orion->get($url);
     }
-    
+
     /**
      * Update Attributes
      * @param array $attrs 
@@ -224,8 +224,6 @@ class Entity {
         return $this->_orion->put($url, $updateEntity);
     }
 
-   
-    
     /**
      * Update or Append new attributes
      * @param array $attrs
@@ -245,6 +243,116 @@ class Entity {
 
         $updateEntity = new ContextFactory($attrs);
         return $this->_orion->post($url, $updateEntity->get());
+    }
+
+    private function coordsQueryString(array $coords) {
+        $count = count($coords);
+        //If is a simple lat long array
+        if ($count == 2) {
+            if (is_numeric($coords[0]) && is_numeric($coords[1])) {
+                return implode(',', $coords);
+            } elseif (is_array($coords[0]) && is_array($coords[1])) { //Maybe is a 2 points line
+                foreach ($coords[0] as $key => $coord) {
+                    $coords[0][$key] = implode(',', $coord);
+                }
+                return implode(";", $coords[0]);
+            }
+        }
+        //If is a polygon  geometry, multiple polygons aren't supported
+        if ($count == 1 && is_array($coords[0]) && count($coords[0]) >= 3) {
+            foreach ($coords[0] as $key => $coord) {
+                $coords[0][$key] = implode(',', $coord);
+            }
+            return implode(";", $coords[0]);
+        }
+
+        //Maybe is a 3 points + line:
+        if ($count > 2) {
+            $first = $coords[0];
+            $last = end($coords);
+            reset($coords);
+
+            //but just maybe, be a good developer with me or sugest a new function to do that.
+            if (is_array($first) && is_array($last)) {
+                foreach ($coords as $key => $coord) {
+                    $coords[$key] = implode(',', $coord);
+                }
+                return implode(";", $coords);
+            }
+        }
+        
+        throw new \LogicException("You got me! :( Please report it to https://github.com/VM9/orion-explorer-php-frame-work/issues ");
+    }
+
+    /**
+     * 
+     * @param string $georel Spatial relationship (a predicate) between matching entities and a referenced shape ($geoJson)
+     * @param string|array|stdClass $geoJson
+     * @param array $modifiers
+     * @param array $options
+     * @param type $request
+     * @return \Orion\Context\Context
+     * @throws \Exception
+     */
+    public function geoQuery($georel, $geoJson, array $modifiers = [], array $options = [], &$request = null) {
+        if (is_string($geoJson)) {
+            $geoJson = json_decode($geoJson);
+        } elseif (is_array($geoJson)) {
+            $geoJson = (object) $geoJson;
+        }
+
+        if ($geoJson == null) {
+            throw new \Exception('$geoJson Param should be a valid GeoJson object or string');
+        }
+
+        array_unshift($modifiers, $georel);
+
+        $options["georel"] = implode(";", $modifiers);
+        $options["geometry"] = strtolower($geoJson->type);
+        $options["coords"] = $this->coordsQueryString($geoJson->coordinates);
+
+        return $this->getContext($options, $request);
+    }
+
+    /**
+     * Matching entities must be located from a specified distance(max,min) from center (point)
+     * @param float $latitude
+     * @param float $longitude
+     * @param int $maxDistance  Expresses, in meters, the maximum distance at which matching entities must be located.
+     * @param int $minDistance  Expresses, in meters, the minimum distance at which matching entities must be located.
+     * @param array $options Aditional parameters: limit,offset,attrs,orderBy,options[count*,keyValues*,values*]
+     * @param pointer $request
+     * @return \Orion\Context\Context
+     */
+    public function getNearOfPoint($latitude, $longitude, $maxDistance = 1000, $minDistance = null, array $options = [], &$request = null) {
+        $modifiers = [];
+        if ($minDistance != null) {
+            $modifiers[] = "minDistance:$minDistance";
+        }
+        if ($maxDistance != null) {
+            $modifiers[] = "maxDistance:$maxDistance";
+        }
+
+        //Build GeoJson Syntax
+        $geoJson = (object) [
+                    "type" => "Point",
+                    "coordinates" => [$longitude, $latitude]
+        ];
+
+        return $this->geoQuery("near", $geoJson, $modifiers, $options, $request);
+    }
+
+    /**
+     * Denotes that matching entities are those that exist entirely within the reference geometry.
+     * When resolving a query of this type, the border of the shape must be considered to be part of the shape
+     * @param GeoJson $geoJson
+     * @param array $modifiers
+     * @param array $options
+     * @param pointer $request
+     * @return type
+     */
+    public function getCoveredBy($geoJson, array $modifiers = [], array $options = [], &$request) {        
+        return $this->geoQuery("coveredBy", $geoJson, $modifiers, $options, $request);
     }
 
     public function _setId($entityId) {
