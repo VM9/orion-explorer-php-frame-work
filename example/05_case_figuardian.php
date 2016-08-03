@@ -7,7 +7,6 @@ $ip = "192.168.1.20";
 try {
     $orion = new Orion\NGSIAPIv2($ip);
     $OrionStatus = ($orion->checkStatus() ? "Up" : "Down");
-
     echo "<h1>Service Status {$OrionStatus}</h1>", PHP_EOL;
     $ServerInfo = $orion->serverInfo();
     echo "<p>";
@@ -16,7 +15,7 @@ try {
     echo "<p>";
 
 
-    $RandomEntityID = "Device" . rand(1, 3000); //AutoIncrementID
+    $RandomEntityID = hash("crc32b", "O" . 1) . hash("crc32b", "D" . rand(1, 3000)); //AutoIncrementID
     $institutionId = 1;
     $clientId = "xpto123465";
     $EntityContext = new \Orion\Context\Entity($orion); //
@@ -59,12 +58,20 @@ try {
 
     //Append network attributes (which networks this context is included)
     $EntityContext->appendAttributes([
-        "vm9:branch" => [
-            "value" => [1, 2, 3, 4, 5, 60],
-            "type" => "vm9:net"]
+        "device:network" => [
+            "value" => [rand(1,3), rand(5,9)],
+            "type" => "branch_id"]
     ])->debug("Append Branch");
 
-
+    
+    $EntityContext->appendAttributes([
+        "rand".rand(1,22) => [
+            "value" => rand(1,3e10),
+            "type" => "randon_type".rand(1,22)
+        ]
+    ])->debug("Append Random Attribute");
+    
+    
     //Append new transducers:    
     $EntityContext->appendAttributes([
         "temperature" => [
@@ -84,10 +91,10 @@ try {
     ])->debug("Append transducer");
 
 //    $EntityContext
-
+    
     $EntityContext->getContext()->prettyPrint();
     echo "Delete Entity:", PHP_EOL;
-    $EntityContext->delete()->debug("Delete Entity");
+//    $EntityContext->delete()->debug("Delete Entity");
     echo "</pre>";
 } catch (\Exception $e) {
     echo "<h1>", get_class($e), "</h1><h3>", $e->getMessage(), "</h3>";
@@ -97,3 +104,10 @@ try {
         echo "<pre>", $e->getResponse(), "</pre>";
     }
 }
+
+$time = microtime();
+$time = explode(' ', $time);
+$time = $time[1] + $time[0];
+$finish = $time;
+$total_time = round(($finish - $start), 4);
+echo 'Execution time: '.$total_time.' seconds.';

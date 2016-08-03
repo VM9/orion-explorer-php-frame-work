@@ -285,7 +285,7 @@ class Entity {
     }
 
     /**
-     * 
+     * Geo Spatial handler method
      * @param string $georel Spatial relationship (a predicate) between matching entities and a referenced shape ($geoJson)
      * @param string|array|stdClass $geoJson
      * @param array $modifiers
@@ -351,9 +351,47 @@ class Entity {
      * @param pointer $request
      * @return type
      */
-    public function getCoveredBy($geoJson, array $modifiers = [], array $options = [], &$request) {        
+    public function getCoveredBy($geoJson, array $modifiers = [], array $options = [], &$request = null) {        
         return $this->geoQuery("coveredBy", $geoJson, $modifiers, $options, $request);
     }
+    
+    /**
+     * Denotes that matching entities are those intersecting with the reference geometry
+     * @param GeoJson $geoJson
+     * @param array $modifiers
+     * @param array $options
+     * @param pointer $request
+     * @return type
+     */
+    public function getIntersections($geoJson, array $modifiers = [], array $options = [], &$request = null) {        
+        return $this->geoQuery("intersects", $geoJson, $modifiers, $options, $request);
+    }
+    
+    /**
+     * Denotes that matching entities are those intersecting with the reference geometry
+     * @param GeoJson $geoJson
+     * @param array $modifiers
+     * @param array $options
+     * @param pointer $request
+     * @return type
+     */
+    public function getDisjoints($geoJson, array $modifiers = [], array $options = [], &$request = null) {        
+        return $this->geoQuery("disjoint", $geoJson, $modifiers, $options, $request);
+    }
+    
+    /**
+     * The geometry associated to the position of matching entities and the reference geometry must be exactly the same
+     * @param GeoJson $geoJson
+     * @param array $modifiers
+     * @param array $options
+     * @param type $request
+     * @return type
+     */
+    public function getGeoEquals($geoJson, array $modifiers = [], array $options = [], &$request) {        
+        return $this->geoQuery("equals", $geoJson, $modifiers, $options, $request);
+    }
+    
+    
 
     public function _setId($entityId) {
         $this->_id = $entityId;

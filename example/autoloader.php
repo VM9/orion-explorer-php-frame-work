@@ -1,3 +1,9 @@
+<?php
+$time = microtime();
+$time = explode(' ', $time);
+$time = $time[1] + $time[0];
+$start = $time;
+?>
 <style>
     pre {
         display:block;
@@ -49,7 +55,7 @@ spl_autoload_register(function ($class) use ($base) {
     if ($is_module || $is_lib) {
         require_once $classname;
     } else {
-        die("Class Not Found {$classname} in {$base}");
+//        die("Class Not Found {$classname} in {$base}");
     }
 });
 
