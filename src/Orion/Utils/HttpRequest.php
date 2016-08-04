@@ -411,9 +411,12 @@ class HttpRequest {
      * @return type
      */
     protected function getDefaultHeader() {
-        $default = array('Content-Type: ' . $this->content_type,
-            'Accept: ' . $this->accept_type);
-
+        $default = ['Accept: ' . $this->accept_type];
+        //Orion accepts no payload for GET/DELETE requests. HTTP header Content-Type is thus forbidden
+        if($this->method != "GET" && $this->method != "DELETE"){
+            array_unshift($default, 'Content-Type: ' . $this->content_type);
+        }
+        
         return array_merge($default, $this->custonHeader);
     }
 

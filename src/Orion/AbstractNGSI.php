@@ -162,7 +162,12 @@ abstract class AbstractNGSI {
             }else{
                 $restReq->setAcceptType($this->_contentType);
             }
-            $restReq->setContentType($this->_contentType);
+            //Orion accepts no payload for GET/DELETE requests. HTTP header Content-Type is thus forbidden
+            if($method != "GET" || $method != "DELETE"){
+                $restReq->setContentType($this->_contentType);
+            }else{
+                 $restReq->setContentType(null);
+            }
 
 
             if (count($this->_headers) > 0) {
