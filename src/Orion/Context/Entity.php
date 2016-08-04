@@ -245,15 +245,28 @@ class Entity {
         return $this->_orion->post($url, $updateEntity->get());
     }
 
+    /**
+     * Method thats allow to convert geoJson coordinate format into Orion coords query strinng format.
+     * @param array $coords a valid geoJson coordinate array
+     * @return type
+     * @throws \LogicException
+     */
     private function coordsQueryString(array $coords) {
         $count = count($coords);
         //If is a simple lat long array
         if ($count == 2) {
             if (is_numeric($coords[0]) && is_numeric($coords[1])) {
-                return implode(',', $coords);
+                 /**
+                  * Orion uses Lat/Lng value instead Lng/Lat as GeoJson format,
+                  *  since a geoJson is passed it should be reversed to fit on Orion Format.
+                  * All function of array_reverse uses
+                  */
+                return implode(',', array_reverse($coords));
+//                return implode(',', $coords);
             } elseif (is_array($coords[0]) && is_array($coords[1])) { //Maybe is a 2 points line
                 foreach ($coords[0] as $key => $coord) {
-                    $coords[0][$key] = implode(',', $coord);
+                    $coords[0][$key] = implode(',', array_reverse($coord));                   
+//                    $coords[0][$key] = implode(',', $coord);
                 }
                 return implode(";", $coords[0]);
             }
@@ -261,7 +274,8 @@ class Entity {
         //If is a polygon  geometry, multiple polygons aren't supported
         if ($count == 1 && is_array($coords[0]) && count($coords[0]) >= 3) {
             foreach ($coords[0] as $key => $coord) {
-                $coords[0][$key] = implode(',', $coord);
+                $coords[0][$key] = implode(',', array_reverse($coord));
+//                $coords[0][$key] = implode(',', $coord);
             }
             return implode(";", $coords[0]);
         }
@@ -272,7 +286,7 @@ class Entity {
             $last = end($coords);
             reset($coords);
 
-            //but just maybe, be a good developer with me or sugest a new function to do that.
+            //but just maybe, be kind with me or sugest a new function to do that.
             if (is_array($first) && is_array($last)) {
                 foreach ($coords as $key => $coord) {
                     $coords[$key] = implode(',', $coord);
@@ -287,7 +301,7 @@ class Entity {
     /**
      * Geo Spatial handler method
      * @param string $georel Spatial relationship (a predicate) between matching entities and a referenced shape ($geoJson)
-     * @param string|array|stdClass $geoJson
+     * @param string|array|stdClass $geoJson http://geojson.org/geojson-spec.html
      * @param array $modifiers
      * @param array $options
      * @param type $request
@@ -336,7 +350,7 @@ class Entity {
         //Build GeoJson Syntax
         $geoJson = (object) [
                     "type" => "Point",
-                    "coordinates" => [$longitude, $latitude]
+                    "coordinates" => [$longitude, $latitude] //ref. http://geojson.org/geojson-spec.html
         ];
 
         return $this->geoQuery("near", $geoJson, $modifiers, $options, $request);
@@ -345,7 +359,7 @@ class Entity {
     /**
      * Denotes that matching entities are those that exist entirely within the reference geometry.
      * When resolving a query of this type, the border of the shape must be considered to be part of the shape
-     * @param GeoJson $geoJson
+     * @param GeoJson $geoJson http://geojson.org/geojson-spec.html
      * @param array $modifiers
      * @param array $options
      * @param pointer $request
@@ -357,7 +371,7 @@ class Entity {
     
     /**
      * Denotes that matching entities are those intersecting with the reference geometry
-     * @param GeoJson $geoJson
+     * @param GeoJson $geoJson http://geojson.org/geojson-spec.html
      * @param array $modifiers
      * @param array $options
      * @param pointer $request
@@ -368,8 +382,8 @@ class Entity {
     }
     
     /**
-     * Denotes that matching entities are those intersecting with the reference geometry
-     * @param GeoJson $geoJson
+     * Denotes that matching entities are those not intersecting with the reference geometry
+     * @param GeoJson $geoJson http://geojson.org/geojson-spec.html
      * @param array $modifiers
      * @param array $options
      * @param pointer $request
@@ -381,7 +395,7 @@ class Entity {
     
     /**
      * The geometry associated to the position of matching entities and the reference geometry must be exactly the same
-     * @param GeoJson $geoJson
+     * @param GeoJson $geoJson http://geojson.org/geojson-spec.html
      * @param array $modifiers
      * @param array $options
      * @param type $request

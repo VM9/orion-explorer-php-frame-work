@@ -29,7 +29,7 @@ interface NGSIInterface {
      * @return Context object  
      * 
      */    
-    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = true);
+    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = null);
     
     /**
      * This method returns ALL Context Entities
@@ -40,5 +40,5 @@ interface NGSIInterface {
      * @param type $details
      * @return  Entities object  
      */
-    public function getEntities($type = false, $offset = 0, $limit = 1000, $details = "on");
+    public function getEntities($type = false, $offset = 0, $limit = 1000, $details = null);
 }

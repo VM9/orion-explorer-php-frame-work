@@ -1,4 +1,4 @@
-<h1><strong>Fi-Guardian Context Case</strong></h1>
+<h1><strong>Fi-Guardian Context Quering Case</strong></h1>
 <?php
 include './autoloader.php';
 $ip = "192.168.1.20";
@@ -20,11 +20,31 @@ try {
     $clientId = "xpto123465";
     $EntityContext = new \Orion\Context\Entity($orion);
     $EntityContext->_setType('Devices'); //Reduce scope only for a specific Enity type
+   
+    echo "<h1> Simple Queries</h1>";
+    
+        $offset = 0;
+        $limit = 1;
+    
+        
+       $ContextQuery = $EntityContext->getContext(["offset"=>$offset,"limit"=>$limit,"options"=>"count",'q'=>"device:network==1"], $request);
+     echo "<h2> Request: </h2>";
+     echo "<pre>";
+        $request->debug("Simple Query", false);
+     echo "</pre>";
+    echo "<h2> Response: </h2>";
+    echo "<pre>";
+        echo "Total Entities: ",$request->getResponseHeader("Fiware-Total-Count"),PHP_EOL;
+        echo "Returned Entities: ",count($ContextQuery->get()),PHP_EOL;
+        $ContextQuery->prettyPrint();
+    echo "</pre>";
+    
+    echo "<h1> Geo Queries</h1>";
     echo "<pre>";
     //Geo Spatial Query
     $request = null; //Pointer to store query request
 //        georel=coveredBy&geometry=polygon&coords=25.774,-80.190;18.466,-66.118;32.321,-64.757;25.774,-80.190
-    $line = '{"type":"LineString","coordinates":[[-42.510518431663506,-22.29866590991994],[-42.50978618860245,-22.29899348463585],[-42.51053184270859,-22.29883466062708],[-42.50992298126221,-22.29913493711663],[-42.510628402233124,-22.29888181152353],[-42.51014828681946,-22.299259018122225],[-42.51078397035599,-22.298916554279145],[-42.51023143529892,-22.299430249728946],[-42.51100927591324,-22.299058006837825],[-42.51031726598739,-22.299611407577157],[-42.51111924648285,-22.299286315928658],[-42.51037359237671,-22.29971811688465]]}}';
+    $line = '{"type":"LineString","coordinates":[[-42.510518431663506,-22.29866590991994],[-42.50978618860245,-22.29899348463585],[-42.51053184270859,-22.29883466062708],[-42.50992298126221,-22.29913493711663],[-42.510628402233124,-22.29888181152353],[-42.51014828681946,-22.299259018122225],[-42.51078397035599,-22.298916554279145],[-42.51023143529892,-22.299430249728946],[-42.51100927591324,-22.299058006837825],[-42.51031726598739,-22.299611407577157],[-42.51111924648285,-22.299286315928658],[-42.51037359237671,-22.29971811688465]]}';
     
     $point = json_decode('{
                 "type": "Point",
@@ -70,13 +90,15 @@ try {
                 ]
     ];
 
-//    $Context = $EntityContext->getNearOfPoint(-22.3007,-42.5124, 1000, null, [], $request);
-//    $Context = $EntityContext->getCoveredBy($polygon, [], [], $request);
-//    $Context = $EntityContext->getIntersections($polygon, [], [], $request);
+//    $Context = $EntityContext->getNearOfPoint(-22.3007,-42.5124, 1000, null, [], $request);//get entities located from a specified distance(max,min) from center (point)
+//    $Context = $EntityContext->getIntersections($polygon, [], [], $request);//get entities those intersect the reference geometry
+//    $Context = $EntityContext->getCoveredBy($polygon, [], ["offset"=>0,"limit"=>1000,"options"=>"count",'q'=>"device:network==1"], $request);//with some options and filters
 //    $Context = $EntityContext->getIntersections($point, [], [], $request);
-    $Context = $EntityContext->getIntersections($line, [], [], $request);
+//    $Context = $EntityContext->getIntersections($polygon, [], [], $request);
+       $Context = $EntityContext->getDisjoints($polygon, [], [], $request); //get entities those not intersect with the reference geometry
+    
+    echo json_encode($Context->toGeoJson(), JSON_PRETTY_PRINT),PHP_EOL;
     $request->debug("Geo Query", false);
-
     echo PHP_EOL;
     $Context->prettyPrint();
     echo "</pre>";

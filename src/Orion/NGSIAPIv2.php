@@ -60,16 +60,36 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
         parent::__construct($ServerAddress, $port, $type, $headers, $protocol);
     }
 
-    public function getEntities($type = false, $offset = 0, $limit = 1000, $details = "on") {
+    /**
+     * 
+     * @param type $type
+     * @param type $offset
+     * @param type $limit
+     * @param type $options attrs,orderBy,options[count*,keyValues*,values*]
+     * @return \Orion\Context\Context
+     */
+    public function getEntities($type = false, $offset = 0, $limit = 1000,  $ptions = []) {
+        $Entities  = new Context\Entity($this);
         
+        if($type){
+            $Entities->_setType($type);
+        }
+        $options["offset"] = $offset;
+        $options["limit"] = $limit;       
+                
+        return $Entities->getContext($options);
     }
 
     public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = true) {
         
     }
 
+    /**
+     * 
+     * @return \Orion\Context\Context
+     */
     public function getEntityTypes() {
-        
+        return $this->get("types");
     }
 
     //API V2 Operations

@@ -51,7 +51,7 @@ try {
     
 //    $EntityContext->appendAttributes([
 //        "vm9:location_Point" => [
-//            "value" => implode(", ", [$lng, $lat]),
+//            "value" => implode(", ", [$lat, $lng]),
 //            "type" => "geo:point"
 //        ]
 //    ])->debug("Append Geo-Loc(point)");
@@ -59,7 +59,7 @@ try {
     //Append network attributes (which networks this context is included)
     $EntityContext->appendAttributes([
         "device:network" => [
-            "value" => [rand(1,3), rand(5,9)],
+            "value" => [111,rand(3,7), rand(12,20)],
             "type" => "branch_id"]
     ])->debug("Append Branch");
 

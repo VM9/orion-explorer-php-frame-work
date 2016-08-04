@@ -597,11 +597,18 @@ class HttpRequest {
     /**
      * Debug
      */
-    public function debug($label = "", $body = true){
+    public function debug($label = "", $body = true, $header = true){
         echo "[", date("Y-m-d H:i:s"), "]", $this->getMethod(), " ", $this->getResponseInfo()['url'], " Status ", $this->getResponseInfo()['http_code'];
         if($label != ""){
             echo " ($label)";
         }        
+        
+        if($header){
+            echo PHP_EOL;
+            foreach ($this->response_headers as $key => $value) {
+                echo $key, " : ",$value,PHP_EOL;
+            }
+        }
         if($body){
             echo PHP_EOL, $this->getResponseBody();
         }
