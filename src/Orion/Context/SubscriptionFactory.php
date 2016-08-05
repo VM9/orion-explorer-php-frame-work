@@ -117,8 +117,7 @@ class SubscriptionFactory {
      * "You can include filtering expressions in conditions. 
      * For example, to get notified not only if pressure changes,
      *  but if it changes within the range 700-800. 
-     * This is an advanced topic, s
-     * ee the "Subscriptions" section in the NGSIv2 specification.
+     * This is an advanced topic, see the "Subscriptions" section in the NGSIv2 specification.
      * [http://telefonicaid.github.io/fiware-orion/api/v2/stable/]"
      * 
      * @param string $id

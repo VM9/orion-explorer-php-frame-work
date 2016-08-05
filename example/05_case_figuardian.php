@@ -14,16 +14,17 @@ try {
     echo "Uptime: {$ServerInfo['uptime']}", PHP_EOL, PHP_EOL;
     echo "<p>";
 
-
-    $RandomEntityID = hash("crc32b", "O" . 1) . hash("crc32b", "D" . rand(1, 3000)); //AutoIncrementID
+    $id = rand(1, 3000);
+    $RandomEntityID = hash("crc32b", "O" . 1) . hash("crc32b", "D" . $id); //AutoIncrementID
+    $EntityType = hash("crc32b", "O" . 1) . hash("crc32b", "C" . 1);
     $institutionId = 1;
     $clientId = "xpto123465";
     $EntityContext = new \Orion\Context\Entity($orion); //
 
     echo "<pre>";
     //Create Entity Context
-    $EntityContext->create($RandomEntityID, "Devices", [
-        "vm9:instituition" => [
+    $EntityContext->create($RandomEntityID, $EntityType, [
+        "device:owner" => [
             "value" => $institutionId,
             "type" => "Integer",
             "metadata" => [
@@ -40,12 +41,16 @@ try {
     $lat = -22.3006726;
     $lng = -42.5124478;
     $EntityContext->appendAttributes([
-        "vm9:location" => [
+        "device:location" => [
             "value" => [
                 "type" => "Point",
                 "coordinates" => [$lng, $lat],
             ],
             "type" => "geo:json"
+        ],
+        "device:label" =>[
+            "value" => "Device".$id,
+            "type" => "String"
         ]
     ])->debug("Append Geo-Loc");
     
@@ -64,21 +69,25 @@ try {
     ])->debug("Append Branch");
 
     
-    $EntityContext->appendAttributes([
-        "rand".rand(1,22) => [
-            "value" => rand(1,3e10),
-            "type" => "randon_type".rand(1,22)
-        ]
-    ])->debug("Append Random Attribute");
-    
+//    $EntityContext->appendAttributes([
+//        "rand".rand(1,22) => [
+//            "value" => rand(1,3e10),
+//            "type" => "randon_type".rand(1,22)
+//        ]
+//    ])->debug("Append Random Attribute");
+//    
     
     //Append new transducers:    
     $EntityContext->appendAttributes([
         "temperature" => [
             "value" => "27.1",
-            "type" => "vm9:datapoint",
+            "type" => "datapoint",
             "metadata" => [
-                "transducer_type" => [
+                "datapoint_id" => [
+                    "type" => "Integer",
+                    "value" => 1
+                ],
+                "datapoint_type" => [
                     "type" => "Integer",
                     "value" => 1
                 ],

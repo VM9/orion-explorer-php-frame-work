@@ -96,7 +96,7 @@ class Context {
     /**
      * 
      * This method will retirn a Standard Class from json object string
-     * @return stdClass
+     * @return \stdClass
      */
     public function __toObject() {
         $this->_context = json_decode($this->_rawcontext);
@@ -138,7 +138,7 @@ class Context {
 
     /**
      * Return Context as a GeoJson FeatureCollection, only compatible with NGSIv2API
-     * @return GeoJSON
+     * @return \stdClass
      */
     public function toGeoJson() {
         $Context = $this->__toObject();

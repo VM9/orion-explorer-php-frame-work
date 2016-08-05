@@ -92,7 +92,7 @@ try {
 
 //    $Context = $EntityContext->getNearOfPoint(-22.3007,-42.5124, 1000, null, [], $request);//get entities located from a specified distance(max,min) from center (point)
 //    $Context = $EntityContext->getIntersections($polygon, [], [], $request);//get entities those intersect the reference geometry
-    $Context = $EntityContext->getCoveredBy($polygon, [], ["offset"=>0,"limit"=>1000,"options"=>"count",'q'=>"device:network==1"], $request);//with some options and filters
+    $Context = $EntityContext->getCoveredBy($polygon, [], ["offset"=>0,"limit"=>1,"options"=>"count",'q'=>"device:network==1"], $request);//with some options and filters
 //    $Context = $EntityContext->getIntersections($point, [], [], $request);
 //    $Context = $EntityContext->getIntersections($polygon, [], [], $request);
 //    $Context = $EntityContext->getDisjoints($polygon, [], [], $request); //get entities those not intersect with the reference geometry
