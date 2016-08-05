@@ -17,6 +17,9 @@ try {
 
     $RandomEntityID = hash("crc32b", "O" . 1) . hash("crc32b", "D" . rand(1, 3000)); //AutoIncrementID
     $institutionId = 1;
+    
+    $orion->setHeader("Fiware-Service", "i_$id");
+    
     $clientId = "xpto123465";
     $EntityContext = new \Orion\Context\Entity($orion);
     $EntityContext->_setType('Devices'); //Reduce scope only for a specific Enity type

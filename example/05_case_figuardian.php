@@ -5,7 +5,7 @@ $ip = "192.168.1.20";
 
 
 try {
-    $orion = new Orion\NGSIAPIv2($ip);
+    $orion = new Orion\NGSIAPIv2($ip);    
     $OrionStatus = ($orion->checkStatus() ? "Up" : "Down");
     echo "<h1>Service Status {$OrionStatus}</h1>", PHP_EOL;
     $ServerInfo = $orion->serverInfo();
@@ -20,6 +20,8 @@ try {
     $institutionId = 1;
     $clientId = "xpto123465";
     $EntityContext = new \Orion\Context\Entity($orion); //
+    
+    $orion->setHeader("Fiware-Service", "i_$id");
 
     echo "<pre>";
     //Create Entity Context
