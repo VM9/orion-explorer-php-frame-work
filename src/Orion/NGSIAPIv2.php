@@ -160,14 +160,19 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      * @return HTTPClient
      * @throws \Orion\Exception\GeneralException
      */
-    public function put($url, Context\ContextFactory $context) {
+    public function put($url, Context\ContextFactory $context = null, $raw = null) {
         $patchUrl = $this->getUrl($url);
-        $restReq = $this->restRequest($patchUrl, 'PUT', $context->get());
+        if(null != $raw){
+            $restReq = $this->restRequest($patchUrl, 'PUT', $raw, "text/plain");
+        }else{
+            $restReq = $this->restRequest($patchUrl, 'PUT', $context->get());
+        }        
         $ret = $restReq->getResponseBody();
         $retInfo = $restReq->getResponseInfo();
 
 
         if ($url == "entities" //Is entity endpoint
+                && null != $context
                 && null != $context->get('id')//Have a valid Id on context
                 && is_array($retInfo) && array_key_exists("http_code", $retInfo) && $retInfo['http_code'] == 204 //Te httpd request has executed with success
         ) {

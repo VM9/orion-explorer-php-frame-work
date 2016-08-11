@@ -148,7 +148,7 @@ class Entity {
         }
 
         $updateEntity = new ContextFactory($body);
-        return $this->_orion->put($url, $updateEntity);
+        return $this->_orion->patch($url, $updateEntity);
     }
 
     /**
@@ -165,16 +165,12 @@ class Entity {
             $url .= "?type={$this->_type}";
         }
 
-        $attrUpdate = [
-            "value" => $value
-        ];
-
-        if (null != $metadata) {
-            $attrUpdate['metadata'] = (object) $metadata;
+        if (is_object($value) || is_array($value)) {
+            $updateEntityContext = new ContextFactory($value);
+            return $this->_orion->put($url, $updateEntityContext);
+        } else {
+            return $this->_orion->put($url, null, $value);
         }
-
-        $updateEntityContext = new ContextFactory($attrUpdate);
-        return $this->_orion->put($url, $updateEntityContext);
     }
 
     /**
@@ -225,6 +221,27 @@ class Entity {
     }
 
     /**
+     * Update or Append new attribute
+     * @param type $attr
+     * @param type $value
+     * @param type $metadata
+     * @return \Orion\Utils\HttpRequest
+     */
+    public function appendAttribute($attr, $value, $type, $metadata = null, $options = []) {
+        $attrs = [
+            $attr => [
+                "value" => $value,
+                "type" => $type
+            ]
+        ];
+
+        if ($metadata != null) {
+            $attrs['metadata'] = $metadata;
+        }
+        return $this->appendAttributes($attrs, $options);
+    }
+
+    /**
      * Update or Append new attributes
      * @param array $attrs
      * @return \Orion\Utils\HttpRequest
@@ -256,16 +273,16 @@ class Entity {
         //If is a simple lat long array
         if ($count == 2) {
             if (is_numeric($coords[0]) && is_numeric($coords[1])) {
-                 /**
-                  * Orion uses Lat/Lng value instead Lng/Lat as GeoJson format,
-                  *  since a geoJson is passed it should be reversed to fit on Orion Format.
-                  * All function of array_reverse uses
-                  */
+                /**
+                 * Orion uses Lat/Lng value instead Lng/Lat as GeoJson format,
+                 *  since a geoJson is passed it should be reversed to fit on Orion Format.
+                 * All function of array_reverse uses
+                 */
                 return implode(',', array_reverse($coords));
 //                return implode(',', $coords);
             } elseif (is_array($coords[0]) && is_array($coords[1])) { //Maybe is a 2 points line
                 foreach ($coords[0] as $key => $coord) {
-                    $coords[0][$key] = implode(',', array_reverse($coord));                   
+                    $coords[0][$key] = implode(',', array_reverse($coord));
 //                    $coords[0][$key] = implode(',', $coord);
                 }
                 return implode(";", $coords[0]);
@@ -294,7 +311,7 @@ class Entity {
                 return implode(";", $coords);
             }
         }
-        
+
         throw new \LogicException("You got me! :( Please report it to https://github.com/VM9/orion-explorer-php-frame-work/issues ");
     }
 
@@ -365,10 +382,10 @@ class Entity {
      * @param pointer $request
      * @return type
      */
-    public function getCoveredBy($geoJson, array $modifiers = [], array $options = [], &$request = null) {        
+    public function getCoveredBy($geoJson, array $modifiers = [], array $options = [], &$request = null) {
         return $this->geoQuery("coveredBy", $geoJson, $modifiers, $options, $request);
     }
-    
+
     /**
      * Denotes that matching entities are those intersecting with the reference geometry
      * @param GeoJson $geoJson http://geojson.org/geojson-spec.html
@@ -377,10 +394,10 @@ class Entity {
      * @param pointer $request
      * @return type
      */
-    public function getIntersections($geoJson, array $modifiers = [], array $options = [], &$request = null) {        
+    public function getIntersections($geoJson, array $modifiers = [], array $options = [], &$request = null) {
         return $this->geoQuery("intersects", $geoJson, $modifiers, $options, $request);
     }
-    
+
     /**
      * Denotes that matching entities are those not intersecting with the reference geometry
      * @param GeoJson $geoJson http://geojson.org/geojson-spec.html
@@ -389,10 +406,10 @@ class Entity {
      * @param pointer $request
      * @return type
      */
-    public function getDisjoints($geoJson, array $modifiers = [], array $options = [], &$request = null) {        
+    public function getDisjoints($geoJson, array $modifiers = [], array $options = [], &$request = null) {
         return $this->geoQuery("disjoint", $geoJson, $modifiers, $options, $request);
     }
-    
+
     /**
      * The geometry associated to the position of matching entities and the reference geometry must be exactly the same
      * @param GeoJson $geoJson http://geojson.org/geojson-spec.html
@@ -401,11 +418,9 @@ class Entity {
      * @param type $request
      * @return type
      */
-    public function getGeoEquals($geoJson, array $modifiers = [], array $options = [], &$request) {        
+    public function getGeoEquals($geoJson, array $modifiers = [], array $options = [], &$request) {
         return $this->geoQuery("equals", $geoJson, $modifiers, $options, $request);
     }
-    
-    
 
     public function _setId($entityId) {
         $this->_id = $entityId;

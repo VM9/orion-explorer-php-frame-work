@@ -48,7 +48,7 @@ use Orion\Utils\HttpRequest as HTTPClient;
  */
 abstract class AbstractNGSI {
     
-    const FORBIDDEN_CHARACTERS = "/(<|>|\"|'|=|;|,|\(|\(|^geo:distance$|\s|#|\?|\/|%|&|orderby|!|^id$|^type$)/i"; //REGEX contains all forbiden characters
+    const FORBIDDEN_CHARACTERS = "/(<|>|\"|'|=|;|,|\(|\(|^geo:distance$|\s|#|\?|\/|%|&|^orderby$|!|^id$|^type$)/i"; //This REGEX contains all forbiden characters for attribute names
 
     /**
      * @var string
@@ -135,6 +135,14 @@ abstract class AbstractNGSI {
     }
     
     /**
+     * Set Fiware Service if multitenancy is active 
+     * @param type $name
+     */
+    public function setService($name){
+        $this->setHeader("Fiware-Service", $name);
+    }
+    
+    /**
      * Get Orion URL
      * @param string $path
      */
@@ -157,14 +165,14 @@ abstract class AbstractNGSI {
         try {
             
             $restReq = new HTTPClient();
-            if($mime){
-                $restReq->setAcceptType($mime);
-            }else{
-                $restReq->setAcceptType($this->_contentType);
-            }
+            
             //Orion accepts no payload for GET/DELETE requests. HTTP header Content-Type is thus forbidden
             if($method != "GET" || $method != "DELETE"){
-                $restReq->setContentType($this->_contentType);
+                if($mime){
+                    $restReq->setContentType($mime);
+                }else{
+                    $restReq->setContentType($this->_contentType);
+                }
             }else{
                  $restReq->setContentType(null);
             }

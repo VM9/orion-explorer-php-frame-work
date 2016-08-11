@@ -216,7 +216,7 @@ class HttpRequest {
         $reqBody = ($data !== null) ? $data : $this->request_body;
 
 
-        $this->request_body = $reqBody;
+        $this->request_body = (string) $reqBody;
     }
 
     /**
@@ -312,7 +312,6 @@ class HttpRequest {
      * @param \CURL $ch
      */
     protected function executePut($ch) {
-
         if (!is_string($this->request_body)) {
             $this->buildPostBody();
         }
@@ -416,7 +415,6 @@ class HttpRequest {
         if($this->method != "GET" && $this->method != "DELETE"){
             array_unshift($default, 'Content-Type: ' . $this->content_type);
         }
-        
         return array_merge($default, $this->custonHeader);
     }
 
@@ -612,6 +610,10 @@ class HttpRequest {
         if($body){
             echo PHP_EOL, $this->getResponseBody();
         }
+//        var_dump($this->getAcceptType());
+//        var_dump($this->getContentType());
+//        var_dump($this->getDefaultHeader());
+//        var_dump($this->request_body);
         return $this;
     }
 

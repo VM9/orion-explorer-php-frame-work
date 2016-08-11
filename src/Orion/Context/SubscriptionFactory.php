@@ -23,7 +23,7 @@ class SubscriptionFactory {
      */
     public $_subscription;
 
-    public function __construct(\Orion\NGSIAPIv2 $orion, $description = null, $expires = null) {
+    public function __construct(\Orion\NGSIAPIv2 $orion = null, $description = null, $expires = null) {
         $this->_orion = $orion;
         $this->_subscription = (object) [];
         if (null != $expires) {
@@ -80,11 +80,10 @@ class SubscriptionFactory {
      */
     public function addEntitySubject($id, $type = null, $idType = "id") {
         if(!isset($this->_subscription->subject)){
-            $this->_subscription->subject = (object) [];
-        }
-        
-        if(!isset($this->_subscription->subject->entities)){
-            $this->_subscription->subject->entities = [];
+            $this->_subscription->subject = (object) [
+                "entities" => [],
+                "condition" => (object) ["attrs" => []],
+            ];
         }
         
         
@@ -343,12 +342,12 @@ class SubscriptionFactory {
             return new SubscriptionEntity($this->_orion,$subscriptionID);
         }
         
-        $responseContext = new Context\Context($request->getResponseBody());
+        $responseContext = new Context($request->getResponseBody());
         if (isset($responseContext->get()->error)) {
             $errorResponse = $responseContext->get();
             $exception_name = "\\Orion\\Exception\\{$errorResponse->error}";
             if (class_exists($exception_name)) {
-                throw new $exception_name($errorResponse->description, 500, null, $restReq);
+                throw new $exception_name($errorResponse->description, 500, null, $request);
             } else {
                 throw new \Orion\Exception\GeneralException($errorResponse->error . " : " . $errorResponse->description, 500, null, $restReq);
             }
