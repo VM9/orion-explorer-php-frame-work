@@ -140,15 +140,16 @@ class Context {
      * Return Context as a GeoJson FeatureCollection, only compatible with NGSIv2API
      * @return \stdClass
      */
-    public function toGeoJson() {
+        public function toGeoJson() {
         $Context = $this->__toObject();
-
+        
+        
         //If is a invalid object
-        if (null == $Context) {
+        if (null === $Context) {
             return $Context;
         }
 
-
+        
         //If is not an array(query response) and  is a object
         if (!is_array($Context)) {
             //Check if is a valid entity object
@@ -158,15 +159,12 @@ class Context {
                 return null;
             }
         }
-
-        if (count($Context) == 0) {
-            return null;
-        }
-
+        
         $geoJson = (object) ["type" => "FeatureCollection", "features" => []];
-
+        
         //Build FeatureCollection
-        foreach ($Context as $Entity) {
+        if (count($Context) > 0) {
+            foreach ($Context as $Entity) {
             if (isset($Entity->id) && isset($Entity->type)) {
                 $Feature = (object) ["type" => "Feature", "properties" => [], "geometry" => null];
 
@@ -231,7 +229,8 @@ class Context {
                 }
             }
         }
-
+        }
+        
         return $geoJson;
     }
 

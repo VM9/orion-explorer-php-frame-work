@@ -147,8 +147,10 @@ class Entity {
             $url .= "?type={$this->_type}";
         }
 
-        $updateEntity = new ContextFactory($body);
-        return $this->_orion->patch($url, $updateEntity);
+        return $this->updateAttributes([$attr => $body ]);
+        //put method is removing type when its not present on body https://github.com/telefonicaid/fiware-orion/issues/2448
+//        $updateEntity = new ContextFactory($body);
+//        return $this->_orion->put($url, $updateEntity);
     }
 
     /**
@@ -259,7 +261,7 @@ class Entity {
         }
 
         $updateEntity = new ContextFactory($attrs);
-        return $this->_orion->post($url, $updateEntity->get());
+        return $this->_orion->create($url, $updateEntity);
     }
 
     /**
