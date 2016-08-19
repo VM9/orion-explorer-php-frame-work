@@ -39,7 +39,7 @@ class Entity {
      * @param \Orion\Utils\HttpRequest $request
      * @return \Orion\Context\Context
      */
-    public function getContext($options = [], &$request = null) {
+    public function getContext($options = ["options" => "dateModified,dateCreated"], &$request = null) {
         $url = "entities";
 
         if ($this->_id) {
@@ -112,7 +112,7 @@ class Entity {
      * @return \Orion\Context\Context
      * @throws Orion\Exception\GeneralException
      */
-    public function getAttributes($attr = null, $options = []) {
+    public function getAttributes($attr = null, $options = ["options" => "dateModified,dateCreated"]) {
         $url = "entities/{$this->_id}";
         if (is_array($attr) && count($attr) > 1) {
             $options["attrs"] = implode(',', $attr);
