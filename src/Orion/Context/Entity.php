@@ -425,7 +425,7 @@ class Entity {
     }
 
     public function _setId($entityId) {
-        $this->_id = $entityId;
+        $this->_id = (string)  $entityId;
         return $this;
     }
 
@@ -435,7 +435,7 @@ class Entity {
     }
 
     public function _setType($entityType) {
-        $this->_type = $entityType;
+        $this->_type = (string)  $entityType;
         return $this;
     }
 
@@ -447,9 +447,9 @@ class Entity {
      * @return \Orion\Utils\HttpRequest
      */
     public function create($id, $entityType = null, $attrs = []) {
-        $context = new ContextFactory(['id' => $id]);
+        $context = new ContextFactory(['id' => (string) $id]);
         if (null != $entityType) {
-            $context->put('type', $entityType);
+            $context->put('type',  (string) $entityType);
         }
 
         if (count($attrs) > 0) {
