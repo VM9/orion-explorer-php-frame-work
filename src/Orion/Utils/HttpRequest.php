@@ -527,6 +527,11 @@ class HttpRequest {
     public function getResponseInfo() {
         return $this->response_info;
     }
+    
+    
+    public function getStatusCode(){
+        return $this->response_info['http_code'];
+    }
 
     /**
      * Get Response Header

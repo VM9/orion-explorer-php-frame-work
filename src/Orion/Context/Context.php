@@ -163,99 +163,110 @@ class Context {
         $geoJson = (object) ["type" => "FeatureCollection", "features" => []];
 
         //Build FeatureCollection
-        if (count($Context) > 0) {
-            foreach ($Context as $Entity) {
-                if (isset($Entity->id) && isset($Entity->type)) {
-                    $Feature = (object) ["type" => "Feature", "properties" => [], "geometry" => null];
+//        $countContext = count($Context);
+        foreach ($Context as $Entity) { //0.0080490112304688 Seconds
+//        for ($i = 0; $i < $countContext; $i++) { //0.025826215744019 Seconds
+//            $Entity = $Context[$i];
 
+            if (!(isset($Entity->id) && isset($Entity->type))) {
+                continue;
+            }
+            
+            $Feature = (object) ["type" => "Feature", "properties" => [], "geometry" => null];
 
-                    //Roll-out all properties of this feature
-                    foreach ($Entity as $key => $attr) {
-                        switch ($key) {
-                            case "id":
-                            case "type":
-                                $Feature->properties[$key] = $attr;
-                                break;
-                            default:
-                                switch ($attr->type) {
-                                    case "geo:json":
-                                        $Feature->geometry = $attr->value;
-                                        $Feature->geometry->type = ucfirst(strtolower($Feature->geometry->type)); //Normalization of geoJson geometry type name.
-                                        if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
-                                            $Feature->properties['geo_metadata'] = $attr->metadata;
-                                        }
-                                        break;
-                                    case "geo:point":
-                                        $coords = array_reverse(explode(",", $attr->value)); //Change WGS84 Lat Long to Long Lat as GeoJson specifications.
-
-                                        array_filter($coords, function($coord) {
-                                            return floatval(trim($coord));
-                                        });
-
-                                        $Feature->geometry = (object) [
-                                                    "type" => "Point",
-                                                    "coordinates" => $coords
-                                        ];
-
-                                        if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
-                                            $Feature->properties['geo_metadata'] = $attr->metadata;
-                                        }
-                                        break;
-                                    case "geo:box":
-                                        $x = array_reverse(explode(",", $attr->value[0])); //Change WGS84 Lat Long to Long Lat as GeoJson specifications.
-                                        $y = array_reverse(explode(",", $attr->value[1])); //Change WGS84 Lat Long to Long Lat as GeoJson specifications.
-                                        //Convert boundary box to polygon using WKT  format POLYGON(x1 y1, x1 y2, x2 y2, x2 y1, x1 y1)
-                                        $coords = [
-                                            [$x[0], $y[0]], //x1 y1
-                                            [$x[0], $y[1]], //x1 y2
-                                            [$x[1], $y[1]], //x2 y2
-                                            [$x[0], $y[0]], //x2 y1                                      
-                                            [$x[0], $y[0]] //x1 y1
-                                        ];
-
-                                        $Feature->geometry = (object) [
-                                                    "type" => "Polygon",
-                                                    "coordinates" => $coords
-                                        ];
-
-                                        if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
-                                            $Feature->properties['geo_metadata'] = $attr->metadata;
-                                        }
-                                        break;
-                                    case "geo:polygon":
-                                    case "geo:line":
-                                        //Transform Value Pairs to Polygon/Line Coords
-                                        array_filter($attr->value, function($rawvalue) {
-                                            $coords = array_reverse(explode(",", $rawvalue)); //Change WGS84 Lat Long to Long Lat as GeoJson specifications.
-                                            array_filter($coords, function($coord) {
-                                                return floatval(trim($coord));
-                                            });
-                                            return $coords;
-                                        });
-
-                                        $Feature->geometry = (object) [
-                                                    "type" => ($attr->type == "geo:polygon") ? "Polygon" : "LineString",
-                                                    "coordinates" => $coords
-                                        ];
-
-                                        if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
-                                            $Feature->properties['geo_metadata'] = $attr->metadata;
-                                        }
-                                        break;
-                                    default:
-                                        $Feature->properties[$key] = $attr->value;
-                                        break;
+            $entityType = null;
+            $entityID = null;
+            //Roll-out all properties of this feature
+            foreach ($Entity as $key => $attr) {
+                switch ($key) {
+                    case "id":
+                        $entityID = $attr;
+                        $Feature->properties[$key] = $attr;
+                        break;
+                    case "type":
+                        $entityType = $attr;
+                        $Feature->properties[$key] = $attr;
+                        break;
+                    default:
+                        switch ($attr->type) {
+                            case "geo:json":
+                                $Feature->geometry = $attr->value;
+                                $Feature->geometry->type = ucfirst(strtolower($Feature->geometry->type)); //Normalization of geoJson geometry type name.
+                                if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
+                                    $Feature->properties['geo_metadata'] = $attr->metadata;
                                 }
                                 break;
-                        }
-                    }
+                            case "geo:point":
+                                $coords = array_reverse(explode(",", $attr->value)); //Change WGS84 Lat Long to Long Lat as GeoJson specifications.
 
-                    //Finally if this context have a valid geometry append to feature collection
-                    if ($Feature->geometry != null) {
-                        $Feature->properties = (object) $Feature->properties;
-                        array_push($geoJson->features, $Feature);
-                    }
+                                array_filter($coords, function($coord) {
+                                    return floatval(trim($coord));
+                                });
+
+                                $Feature->geometry = (object) [
+                                            "type" => "Point",
+                                            "coordinates" => $coords
+                                ];
+
+                                if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
+                                    $Feature->properties['geo_metadata'] = $attr->metadata;
+                                }
+                                break;
+                            case "geo:box":
+                                $x = array_reverse(explode(",", $attr->value[0])); //Change WGS84 Lat Long to Long Lat as GeoJson specifications.
+                                $y = array_reverse(explode(",", $attr->value[1])); //Change WGS84 Lat Long to Long Lat as GeoJson specifications.
+                                //Convert boundary box to polygon using WKT  format POLYGON(x1 y1, x1 y2, x2 y2, x2 y1, x1 y1)
+                                $coords = [
+                                    [$x[0], $y[0]], //x1 y1
+                                    [$x[0], $y[1]], //x1 y2
+                                    [$x[1], $y[1]], //x2 y2
+                                    [$x[0], $y[0]], //x2 y1                                      
+                                    [$x[0], $y[0]] //x1 y1
+                                ];
+
+                                $Feature->geometry = (object) [
+                                            "type" => "Polygon",
+                                            "coordinates" => $coords
+                                ];
+
+                                if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
+                                    $Feature->properties['geo_metadata'] = $attr->metadata;
+                                }
+                                break;
+                            case "geo:polygon":
+                            case "geo:line":
+                                //Transform Value Pairs to Polygon/Line Coords
+                                array_filter($attr->value, function($rawvalue) {
+                                    $coords = array_reverse(explode(",", $rawvalue)); //Change WGS84 Lat Long to Long Lat as GeoJson specifications.
+                                    array_filter($coords, function($coord) {
+                                        return floatval(trim($coord));
+                                    });
+                                    return $coords;
+                                });
+
+                                $Feature->geometry = (object) [
+                                            "type" => ($attr->type == "geo:polygon") ? "Polygon" : "LineString",
+                                            "coordinates" => $coords
+                                ];
+
+                                if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
+                                    $Feature->properties['geo_metadata'] = $attr->metadata;
+                                }
+                                break;
+                            default:
+                                $Feature->properties[$key] = $attr->value;
+                                break;
+                        }
+                        break;
                 }
+            }
+            
+            $Feature->id = "{$entityType}-{$entityID}";
+
+            //Finally if this context have a valid geometry append to feature collection
+            if ($Feature->geometry != null) {
+                $Feature->properties = (object) $Feature->properties;
+                array_push($geoJson->features, $Feature);
             }
         }
 
