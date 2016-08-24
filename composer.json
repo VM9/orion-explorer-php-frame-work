@@ -1,5 +1,6 @@
 {
     "name": "vm9/orion-explorer-php-frame-work",
+    "type": "library",
     "description": "Fiware Orion Context Explorer PHP Framework",
     "keywords": ["fiware", "orion", "context-broker"],
     "license": [
@@ -23,5 +24,10 @@
          "psr-0": {
              "Orion\\": "src/"
          }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "develope"
+        }
     }
 }
