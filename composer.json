@@ -23,13 +23,5 @@
          "psr-0": {
              "Orion\\": "src/"
          }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "develop",
-            "stable": "v1.5.0",
-            "1.5.0": "v1.5.0",
-            "1.0.0": "v1.0"
-        }
     }
 }
