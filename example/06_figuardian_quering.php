@@ -18,19 +18,19 @@ try {
     $RandomEntityID = hash("crc32b", "O" . 1) . hash("crc32b", "D" . rand(1, 3000)); //AutoIncrementID
     $institutionId = 1;
     
-    $orion->setHeader("Fiware-Service", "i_$id");
+    $orion->setService("i_$institutionId");
     
     $clientId = "xpto123465";
     $EntityContext = new \Orion\Context\Entity($orion);
-    $EntityContext->_setType('Devices'); //Reduce scope only for a specific Enity type
+//    $EntityContext->_setType('Devices'); //Reduce scope only for a specific Enity type
    
     echo "<h1> Simple Queries</h1>";
     
         $offset = 0;
-        $limit = 1;
+        $limit = 10;
     
         
-       $ContextQuery = $EntityContext->getContext(["offset"=>$offset,"limit"=>$limit,"options"=>"count",'q'=>"device:network==1"], $request);
+       $ContextQuery = $EntityContext->getContext(["offset"=>$offset,"limit"=>$limit,"options"=>"count",'q'=>"device:network==1,5"], $request);
      echo "<h2> Request: </h2>";
      echo "<pre>";
         $request->debug("Simple Query", false);

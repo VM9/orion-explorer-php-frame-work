@@ -21,7 +21,7 @@ try {
     $clientId = "xpto123465";
     $EntityContext = new \Orion\Context\Entity($orion); //
     
-    $orion->setHeader("Fiware-Service", "i_$id");
+    $orion->setService("i_$institutionId");
 
     echo "<pre>";
     //Create Entity Context
@@ -66,7 +66,12 @@ try {
     //Append network attributes (which networks this context is included)
     $EntityContext->appendAttributes([
         "device:network" => [
-            "value" => [111,rand(3,7), rand(12,20)],
+            "value" => [
+                1, //Master da rede 1
+                2,// branch da rede 1
+                rand(3,7), 
+                rand(12,20)
+                ],
             "type" => "branch_id"]
     ])->debug("Append Branch");
 
