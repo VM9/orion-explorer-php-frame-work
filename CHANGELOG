@@ -1,0 +1,7 @@
+v 1.5.0 (beta)
+- Several changes to compatibilize NGSIV1 and NGSIV2 operations.
+- Full support of all operations (in an abstract way)
+- new examples code
+- PSR-0 compatibility
+v 1.0.0
+- Initial Public Version
