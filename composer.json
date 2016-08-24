@@ -23,5 +23,11 @@
          "psr-0": {
              "Orion\\": "src/"
          }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "develop",
+            "stable": "master"
+        }
     }
 }
