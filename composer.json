@@ -2,11 +2,26 @@
     "name": "vm9/orion-explorer-php-frame-work",
     "description": "Fiware Orion Context Explorer PHP Framework",
     "keywords": ["fiware", "orion", "context-broker"],
-    "license": "MIT",
+    "license": [
+        "LGPL-2.1",
+        "GPL-3.0+"
+    ],
+    "authors": [
+        {
+            "name": "Leonan Carvalho",
+            "email": "j.leonancarvalho@gmail.com"
+        }
+    ],
     "support": {
         "issues": "https://github.com/vm9/orion-explorer-php-frame-work/issues"
     },
     "require": {
-        "php": "^5.6 || ^7.0"
+        "php": "^5.6 || ^7.0",
+        "ext-curl": "*"
+    },
+    "autoload": {
+         "psr-0": {
+             "Orion\\": "src/"
+         }
     }
 }
