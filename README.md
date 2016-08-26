@@ -3,7 +3,7 @@ Orion Context Explorer PHP Framework
 #### PHP 5 framework for [Fiware Orion Context Broker](https://github.com/telefonicaid/fiware-orion).
 
 This is the code repository for the Orion Context Explorer PHP Framework.
-It's possible see the implementation on [Orion Explorer] (VM9/fiware-orion-explorer)
+It's possible see the implementation on [Orion Explorer] (./VM9/fiware-orion-explorer)
 
 ## Features
 - Make some operations of [Fiware Orion Context Broker](https://github.com/telefonicaid/fiware-orion) [API Operations](https://docs.google.com/spreadsheet/ccc?key=0Aj_S9VF3rt5DdEhqZHlBaGVURmhZRDY3aDRBdlpHS3c#gid=0)  such as create, delete and update Entities.
