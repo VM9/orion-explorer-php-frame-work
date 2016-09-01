@@ -102,7 +102,7 @@ class Entity {
             $url .= "?type={$this->_type}";
         }
 
-        return $this->_orion->get($url, $request, false);
+        return $this->_orion->get($url, $request, "text/plain");
     }
 
     /**
