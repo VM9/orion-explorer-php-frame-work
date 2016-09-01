@@ -68,15 +68,15 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      * @param type $options attrs,orderBy,options[count*,keyValues*,values*]
      * @return \Orion\Context\Context
      */
-    public function getEntities($type = false, $offset = 0, $limit = 1000,  $ptions = []) {
-        $Entities  = new Context\Entity($this);
-        
-        if($type){
+    public function getEntities($type = false, $offset = 0, $limit = 1000, $ptions = []) {
+        $Entities = new Context\Entity($this);
+
+        if ($type) {
             $Entities->_setType($type);
         }
         $options["offset"] = $offset;
-        $options["limit"] = $limit;       
-                
+        $options["limit"] = $limit;
+
         return $Entities->getContext($options);
     }
 
@@ -162,18 +162,17 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      */
     public function put($url, Context\ContextFactory $context = null, $raw = null) {
         $patchUrl = $this->getUrl($url);
-        if(null != $raw){
+        if (null != $raw) {
             $restReq = $this->restRequest($patchUrl, 'PUT', $raw, "text/plain");
-        }else{
+        } else {
             $restReq = $this->restRequest($patchUrl, 'PUT', $context->get());
-        }        
+        }
         $ret = $restReq->getResponseBody();
         $retInfo = $restReq->getResponseInfo();
 
 
         if ($url == "entities" //Is entity endpoint
-                && null != $context
-                && null != $context->get('id')//Have a valid Id on context
+                && null != $context && null != $context->get('id')//Have a valid Id on context
                 && is_array($retInfo) && array_key_exists("http_code", $retInfo) && $retInfo['http_code'] == 204 //Te httpd request has executed with success
         ) {
 
@@ -243,10 +242,10 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      * @throws type
      * @throws \Orion\Exception\GeneralException
      */
-    public function get($url, &$request = null, $mime = false) {
+    public function get($url, &$request = null, $mime = false, $accept = "application/json") {
         $geturl = $this->getUrl($url);
-        $request = $this->restRequest($geturl,"GET",null,$mime);
-        
+        $request = $this->restRequest($geturl, "GET", null, $mime, $accept);
+
         $responseContext = new Context\Context($request->getResponseBody());
         if (isset($responseContext->get()->error)) {
             $errorResponse = $responseContext->get();
@@ -257,7 +256,7 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
                 throw new \Orion\Exception\GeneralException($errorResponse->error . " : " . $errorResponse->description, 500, null, $request);
             }
         }
-        
+
         return $responseContext;
     }
 
@@ -269,7 +268,7 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      */
     public function delete($url) {
         $deleteurl = $this->getUrl($url);
-        $request =  $this->restRequest($deleteurl, "DELETE");
+        $request = $this->restRequest($deleteurl, "DELETE");
         $responseContext = new Context\Context($request->getResponseBody());
         if (isset($responseContext->get()->error)) {
             $errorResponse = $responseContext->get();

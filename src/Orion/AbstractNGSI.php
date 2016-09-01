@@ -161,22 +161,23 @@ abstract class AbstractNGSI {
      * @return HTTPClient
      * @throws Exception\GeneralException
      */
-    public function restRequest($url, $method = "GET", $reqBody = "", $mime = false) {
+    public function restRequest($url, $method = "GET", $reqBody = "", $mime = false, $accept = "application/json") {
         try {
             
             $restReq = new HTTPClient();
-            
             //Orion accepts no payload for GET/DELETE requests. HTTP header Content-Type is thus forbidden
-            if($method != "GET" || $method != "DELETE"){
+            if($method != "GET" && $method != "DELETE"){
                 if($mime){
                     $restReq->setContentType($mime);
                 }else{
                     $restReq->setContentType($this->_contentType);
                 }
+            }elseif($method == "GET" && $mime){
+                 $restReq->setContentType($mime);
+                 $restReq->setAcceptType($accept);
             }else{
-                 $restReq->setContentType(null);
+                $restReq->setContentType(null);
             }
-
 
             if (count($this->_headers) > 0) {
                 foreach ($this->_headers as $header => $value) {
