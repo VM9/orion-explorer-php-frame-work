@@ -114,8 +114,12 @@ class Entity {
      */
     public function getAttributes($attr = null, $options = ["options" => "dateModified,dateCreated"]) {
         $url = "entities/{$this->_id}";
-        if (is_array($attr) && count($attr) > 1) {
-            $options["attrs"] = implode(',', $attr);
+        if (is_array($attr)) {
+           if(count($attr) == 1){
+                $url .= "/attrs/$attr[0]";
+           }else{
+               $options["attrs"] = implode(',', $attr);
+           }
         } elseif (is_string($attr)) {
             $url .= "/attrs/$attr";
         }
