@@ -44,10 +44,10 @@ class SubscriptionEntity {
     public function getContext($options = []) {
         $url = $this->getBaseURI();
 
-//        if (count($options) > 0) {
-//            $prefix = ($this->_type) ? "&" : "?";
-//            $url .= $prefix . urldecode(http_build_query($options));
-//        }
+        if (count($options) > 0) {
+            $prefix = ($this->_type) ? "&" : "?";
+            $url .= $prefix . urldecode(http_build_query($options));
+        }
 
         return $this->_orion->get($url);
     }
