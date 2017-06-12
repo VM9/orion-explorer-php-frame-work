@@ -172,7 +172,7 @@ class Context {
                 continue;
             }
             
-            $Feature = (object) ["type" => "Feature", "properties" => [], "geometry" => null];
+            $Feature = (object) ["type" => "Feature", "properties" => ['__metadata'=>[]], "geometry" => null];
 
             $entityType = null;
             $entityID = null;
@@ -255,6 +255,9 @@ class Context {
                                 break;
                             default:
                                 $Feature->properties[$key] = $attr->value;
+                                if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
+                                    $Feature->properties['__metadata'][$key] = $attr->metadata;
+                                }
                                 break;
                         }
                         break;
