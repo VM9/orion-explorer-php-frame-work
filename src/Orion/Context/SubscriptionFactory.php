@@ -10,18 +10,16 @@ namespace Orion\Context;
 class SubscriptionFactory {
     
     const endPoint = "subscriptions";
-
-    /**
-     * Orion NGSI Connection interface V2
-     * @var \Orion\NGSIAPIv2 
-     */
-    private $_orion;
-
     /**
      * Subject Object
-     * @var \stdClass 
+     * @var \stdClass
      */
     public $_subscription;
+    /**
+     * Orion NGSI Connection interface V2
+     * @var \Orion\NGSIAPIv2
+     */
+    private $_orion;
 
     public function __construct(\Orion\NGSIAPIv2 $orion = null, $description = null, $expires = null) {
         $this->_orion = $orion;
@@ -36,20 +34,12 @@ class SubscriptionFactory {
     }
     
     /**
-     * Set description from subscription
-     * @param type $description
-     */
-    public function setDescription($description){
-        $this->_subscription->description = $description;
-    }
-    
-    /**
      * Set date in ISO8601 format to subscription object
-     * "Subscriptions may have an expiration date (expires field), 
-     * specified using the ISO 8601 standard format. 
-     * Once subscription overpass that date, the subscription is simply ignored 
+     * "Subscriptions may have an expiration date (expires field),
+     * specified using the ISO 8601 standard format.
+     * Once subscription overpass that date, the subscription is simply ignored
      * (however, it is still stored in the broker database and needs to be purged
-     *  using the procedure described in the administration manual). 
+     *  using the procedure described in the administration manual).
      * You can extend the duration of a subscription by updating it,
      *  as described in this document[https://fiware-orion.readthedocs.io/en/develop/user/duration/index.html#extending-duration]"
      * @param string|time $expire_time any supported type of date ref.: http://php.net/manual/en/datetime.construct.php
@@ -64,34 +54,49 @@ class SubscriptionFactory {
         } else {
             $date = new \DateTime($expire_time);
         }
-        
+
         $date->setTimezone(new \DateTimeZone((string)$timezone));
-        
+
         $this->_subscription->expires = $date->format(\DateTime::ISO8601);
         return $this;
+    }
+
+    private function isValidTimeStamp($timestamp)
+    {
+        return ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX);
+    }
+
+    /**
+     * Set description from subscription
+     * @param type $description
+     */
+    public function setDescription($description)
+    {
+        $this->_subscription->description = $description;
     }
 
     /**
      * Add a Entity to subject.entities
      * @param string $id
      * @param string $type
-     * @param string $idType "id"(default) or "idPattern"
+     * @param string $idKey "id"(default) or "idPattern"
+     * @param string $typeKey "type"(default) or "typePattern"
      * @return \Orion\Context\Subscription
      */
-    public function addEntitySubject($id, $type = null, $idType = "id") {
+    public function addEntitySubject($id, $type = null, $idKey = "id", $typeKey = "type")
+    {
         if(!isset($this->_subscription->subject)){
             $this->_subscription->subject = (object) [
                 "entities" => [],
-                "condition" => (object) ["attrs" => []],
+                "condition" => (object)["attrs" => []]
             ];
         }
-        
-        
+
         $entity = (object) [];
-        $entity->$idType = $id;
+        $entity->$idKey = $id;
 
         if (null != $type) {
-            $entity->type = (string) $type;
+            $entity->$typeKey = (string)$type;
         }
 
         $this->_subscription->subject->entities[] = $entity;
@@ -100,25 +105,25 @@ class SubscriptionFactory {
 
     /**
      * Add a Attr to subject.condition.attr
-     * 
-     * "The conditions element defines the "trigger" for the subscription. 
-     * The  attrs field contains a list of attribute names. 
-     * These names define the "triggering attributes", 
+     *
+     * "The conditions element defines the "trigger" for the subscription.
+     * The  attrs field contains a list of attribute names.
+     * These names define the "triggering attributes",
      * i.e. attributes that upon creation/change due to entity creation or
      * update trigger the notification."
-     * 
-     * "The rule is that if at least one of the attributes in the conditions.attrs 
+     *
+     * "The rule is that if at least one of the attributes in the conditions.attrs
      * list changes (e.g. some kind of "OR" condition), then a notification is sent. "
-     * 
-     * "You can leave conditions.attrs empty to make a notification trigger on 
+     *
+     * "You can leave conditions.attrs empty to make a notification trigger on
      * any entity attribute change (regardless of the name of the attribute)."
-     * 
-     * "You can include filtering expressions in conditions. 
+     *
+     * "You can include filtering expressions in conditions.
      * For example, to get notified not only if pressure changes,
-     *  but if it changes within the range 700-800. 
+     *  but if it changes within the range 700-800.
      * This is an advanced topic, see the "Subscriptions" section in the NGSIv2 specification.
      * [http://telefonicaid.github.io/fiware-orion/api/v2/stable/]"
-     * 
+     *
      * @param string $id
      * @param string $type
      * @return \Orion\Context\Subscription
@@ -127,11 +132,11 @@ class SubscriptionFactory {
         if(!isset($this->_subscription->subject)){
             $this->_subscription->subject = (object) [];
         }
-        
+
         if(!isset($this->_subscription->subject->condition)){
             $this->_subscription->subject->condition = (object) [];
         }
-            
+
         if (!isset($this->_subscription->subject->condition->attrs)) {
             $this->_subscription->subject->condition->attrs = [];
         }
@@ -141,8 +146,8 @@ class SubscriptionFactory {
 
     /**
      * Add expression condition
-     * " an expression composed of `q`,`georel`,`geometry`  and `coords` 
-     * 
+     * " an expression composed of `q`,`georel`,`geometry`  and `coords`
+     *
      * http://telefonicaid.github.io/fiware-orion/api/v2/stable/
      * @param string $expression
      * @return \Orion\Context\Subscription
@@ -151,22 +156,21 @@ class SubscriptionFactory {
         if(!isset($this->_subscription->subject)){
             $this->_subscription->subject = (object) [];
         }
-        
+
         if(!isset($this->_subscription->subject->condition)){
             $this->_subscription->subject->condition = (object) [];
         }
-        
-        
-        
+
+
         $this->_subscription->subject->condition->expression = $expression;
         return $this;
     }
 
     /**
      * Set Notification URL.
-     * "The URL where to send notifications is defined with the  url sub-field. 
+     * "The URL where to send notifications is defined with the  url sub-field.
      * Only one URL can be included per subscription.
-     *  However, you can have several subscriptions on the same context elements 
+     *  However, you can have several subscriptions on the same context elements
      * (i.e. same entity and attribute) without any problem."
      * @param type $url  URL referencing the service to be invoked when a notification is generated. An NGSIv2 compliant server must support the  URL schema. Other schemas could also be supported.
      * @param string $schema http or httpCustom
@@ -180,7 +184,7 @@ class SubscriptionFactory {
         if(!isset($this->_subscription->notification)){
             $this->_subscription->notification = (object) [];
         }
-        
+
         $this->_subscription->notification->$schema = (object) [];
         //You can't send both at the same time, It is used to covery parameters for notifications delivered through the http protocol.
         if ($schema == "http") {
@@ -189,25 +193,25 @@ class SubscriptionFactory {
             }
         } elseif ($schema == "httpCustom") {
             /**
-            <code>"httpCustom": {
-              "url": "http://foo.com/entity/${id}",
-              "headers": {
-                "Content-Type": "text/plain"
-              },
-              "method": "PUT",
-              "qs": {
-                "type": "${type}"
-              },
-              "payload": "The temperature is ${temperature} degrees"
-            }
-            </code>
-            will send this request
-            <code>PUT http://foo.com/entity/DC_S1-D41?type=Room
-            Content-Type: text/plain
-            Content-Length: 31
-            
-            The temperature is 23.4 degrees
-            </code>
+            * <code>"httpCustom": {
+              * "url": "http://foo.com/entity/${id}",
+              * "headers": {
+                * "Content-Type": "text/plain"
+              * },
+              * "method": "PUT",
+              * "qs": {
+                * "type": "${type}"
+              * },
+              * "payload": "The temperature is ${temperature} degrees"
+            * }
+            * </code>
+            * will send this request
+            * <code>PUT http://foo.com/entity/DC_S1-D41?type=Room
+            * Content-Type: text/plain
+             * Content-Length: 31
+ *
+* The temperature is 23.4 degrees
+            * </code>
             **/
             if (isset($this->_subscription->notification->http)) {
                 unset($this->_subscription->notification->http);
@@ -224,11 +228,11 @@ class SubscriptionFactory {
             //the method to use when sending the notification (default is POST).
             $this->_subscription->notification->httpCustom->method = $method;
 
-            
+
             if (null != $qs) {
                 $this->_subscription->notification->httpCustom->qs = $qs;
             }
-            
+
             //the payload to be used in notification. If omitted, the default paload is used
             if (null != $payload) {
                 $this->_subscription->notification->httpCustom->payload = $payload;
@@ -249,7 +253,7 @@ class SubscriptionFactory {
         if(!isset($this->_subscription->notification)){
             $this->_subscription->notification = (object) [];
         }
-        
+
         if (!isset($this->_subscription->notification->attrs)) {
             $this->_subscription->notification->attrs = [];
         }
@@ -267,7 +271,7 @@ class SubscriptionFactory {
         if(!isset($this->_subscription->notification)){
             $this->_subscription->notification = (object) [];
         }
-        
+
         if (!isset($this->_subscription->notification->exceptAttrs)) {
             $this->_subscription->notification->exceptAttrs = [];
         }
@@ -277,16 +281,16 @@ class SubscriptionFactory {
 
     /**
      * Set attr format.
-     * attrsFormat(optional): specifies how the entities are represented in notifications. 
+     * attrsFormat(optional): specifies how the entities are represented in notifications.
      * Accepted values:`normalized`(default), `keyValues` or `values`
-     * @param string $format 
+     * @param string $format
      * @return \Orion\Context\Subscription
      */
     public function setNotificationAttrFormat($format = "normalized") {
         if(!isset($this->_subscription->notification)){
             $this->_subscription->notification = (object) [];
         }
-        
+
         $possibleValues = ["normalized", "keyValues", "values"];
         if (!in_array($possibleValues, $format)) {
             throw new \Exception("Not supported format");
@@ -297,16 +301,16 @@ class SubscriptionFactory {
 
     /**
      * Set throttling value
-     * 
-     * "The throttling element is used to specify a minimum inter-notification arrival time. 
-     * So, setting throttling to 5 seconds as in the example above, 
+     *
+     * "The throttling element is used to specify a minimum inter-notification arrival time.
+     * So, setting throttling to 5 seconds as in the example above,
      * makes a notification not to be sent if a previous notification was sent less than 5 seconds ago,
-     *  no matter how many actual changes take place in that period. 
-     * This is to give the notification receptor a means to protect itself 
-     *  against context producers that update attribute values too frequently. 
-     * In multi-CB configurations, take into account that the last-notification 
-     * measure is local to each CB node. Although each node periodically 
-     * synchronizes with the DB in order to get potencially newer values 
+     *  no matter how many actual changes take place in that period.
+     * This is to give the notification receptor a means to protect itself
+     *  against context producers that update attribute values too frequently.
+     * In multi-CB configurations, take into account that the last-notification
+     * measure is local to each CB node. Although each node periodically
+     * synchronizes with the DB in order to get potencially newer values
      * (more on this here it may happen that a particular node has an old value,
      *  so throttling is not 100% accurate.)"
      * @param int $throttling throttling in secconds
@@ -315,10 +319,6 @@ class SubscriptionFactory {
     public function setThrottling($throttling) {
         $this->_subscription->throttling = $throttling;
         return $this;
-    }
-
-    private function isValidTimeStamp($timestamp) {
-        return ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX);
     }
 
     public function prettyPrint() {
