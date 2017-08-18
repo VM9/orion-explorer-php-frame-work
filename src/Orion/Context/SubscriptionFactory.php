@@ -228,11 +228,6 @@ class SubscriptionFactory {
             //the method to use when sending the notification (default is POST).
             $this->_subscription->notification->httpCustom->method = $method;
 
-
-            if (null != $qs) {
-                $this->_subscription->notification->httpCustom->qs = $qs;
-            }
-
             //the payload to be used in notification. If omitted, the default paload is used
             if (null != $payload) {
                 $this->_subscription->notification->httpCustom->payload = $payload;
