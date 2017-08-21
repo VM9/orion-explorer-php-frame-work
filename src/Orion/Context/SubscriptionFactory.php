@@ -222,7 +222,7 @@ class SubscriptionFactory {
                 $this->_subscription->notification->httpCustom->qs = $qs;
             }
             //a key-map of HTTP headers that are included in notification messages
-            if (null != $qs) {
+            if (null != $headers) {
                 $this->_subscription->notification->httpCustom->headers = $headers;
             }
             //the method to use when sending the notification (default is POST).
@@ -344,6 +344,7 @@ class SubscriptionFactory {
             if (class_exists($exception_name)) {
                 throw new $exception_name($errorResponse->description, 500, null, $request);
             } else {
+                $restReq = null;
                 throw new \Orion\Exception\GeneralException($errorResponse->error . " : " . $errorResponse->description, 500, null, $restReq);
             }
         }
