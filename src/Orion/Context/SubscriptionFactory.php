@@ -68,7 +68,7 @@ class SubscriptionFactory {
 
     /**
      * Set description from subscription
-     * @param type $description
+     * @param mixed $description
      */
     public function setDescription($description)
     {
@@ -172,12 +172,12 @@ class SubscriptionFactory {
      * Only one URL can be included per subscription.
      *  However, you can have several subscriptions on the same context elements
      * (i.e. same entity and attribute) without any problem."
-     * @param type $url  URL referencing the service to be invoked when a notification is generated. An NGSIv2 compliant server must support the  URL schema. Other schemas could also be supported.
+     * @param mixed $url URL referencing the service to be invoked when a notification is generated. An NGSIv2 compliant server must support the  URL schema. Other schemas could also be supported.
      * @param string $schema http or httpCustom
-     * @param type $qs  (optional): a key-map of URI queryString parameters that are included in notification messages
+     * @param mixed $qs (optional): a key-map of URI queryString parameters that are included in notification messages
      * @param array $headers  (optional): a key-map of HTTP headers that are included in notification messages.
-     * @param type $method  (optional): the method to use when sending the notification (default is POST). Only valid HTTP methods are allowed. On specifying an invalid HTTP method, a 400 Bad Request error is returned.
-     * @param type $payload (optional): the payload to be used in notifications. If omitted, the default payload (see "Notification Messages" sections on http://telefonicaid.github.io/fiware-orion/api/v2/stable/) is used.
+     * @param mixed $method (optional): the method to use when sending the notification (default is POST). Only valid HTTP methods are allowed. On specifying an invalid HTTP method, a 400 Bad Request error is returned.
+     * @param mixed $payload (optional): the payload to be used in notifications. If omitted, the default payload (see "Notification Messages" sections on http://telefonicaid.github.io/fiware-orion/api/v2/stable/) is used.
      * @return \Orion\Context\Subscription
      */
     public function setNotificationURL($url, $schema = "http", $qs = null, array $headers = null, $method = "POST", $payload = null) {

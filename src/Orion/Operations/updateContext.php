@@ -134,8 +134,8 @@ class updateContext implements operationsInterface {
      * 
      * This method will append Geolocation attributes to Attributes Array
      *
-     * @param type $lat
-     * @param type $lng
+     * @param mixed $lat
+     * @param mixed $lng
      * @return \Orion\Operations\updateContext
      */
     public function addGeolocation($lat, $lng) {

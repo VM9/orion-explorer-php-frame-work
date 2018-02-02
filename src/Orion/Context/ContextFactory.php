@@ -75,9 +75,9 @@ class ContextFactory {
 
     /**
      * This convenience method create a Entity NGSIv2 attribute format.
-     * @param type $name
-     * @param type $value
-     * @param type $type
+     * @param mixed $name
+     * @param mixed $value
+     * @param mixed $type
      */
     public function addAttribute($name, $value, $type = "Integer", $metadata = null) {
         $attr = (object) [

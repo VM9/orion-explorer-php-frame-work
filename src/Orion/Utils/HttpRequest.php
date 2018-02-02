@@ -419,9 +419,9 @@ class HttpRequest {
     }
 
     /**
-     * 
-     * @param type $key
-     * @param type $value
+     *
+     * @param mixed $key
+     * @param mixed $value
      */
     public function addCustonHeader($key, $value) {
         $header = $key . ": " . $value;
@@ -574,7 +574,7 @@ class HttpRequest {
 
     /**
      * Set Username to authentications
-     * @param type $username
+     * @param mixed $username
      */
     public function setUsername($username) {
         $this->username = $username;
@@ -591,7 +591,7 @@ class HttpRequest {
     /**
      * Set HTTP request method
      * Only GET, POST, PUT, DELETE, POST_MP and PUT_MP is supported
-     * @param type $method
+     * @param mixed $method
      */
     public function setMethod($method) {
         $this->method = $method;

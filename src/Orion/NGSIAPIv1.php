@@ -192,10 +192,10 @@ class NGSIAPIv1 extends AbstractNGSI implements NGSIInterface {
     /**
      * This method returns Context Entities
      *
-     * @param type $type Selected Type
-     * @param type $offset
-     * @param type $limit
-     * @param type $details
+     * @param mixed $type Selected Type
+     * @param mixed $offset
+     * @param mixed $limit
+     * @param mixed $details
      * @return  Entities object  
      */
     public function getEntities($type = false, $offset = 0, $limit = 1000, $details = "on") {

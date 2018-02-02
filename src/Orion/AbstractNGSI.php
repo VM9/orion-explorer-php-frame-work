@@ -135,8 +135,8 @@ abstract class AbstractNGSI {
     }
     
     /**
-     * Set Fiware Service if multitenancy is active 
-     * @param type $name
+     * Set Fiware Service if multitenancy is active
+     * @param mixed $name
      */
     public function setService($name){
         $this->setHeader("Fiware-Service", $name);

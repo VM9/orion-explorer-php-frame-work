@@ -77,7 +77,7 @@ class Entity {
 
     /**
      * Get Attribute Data
-     * @param type $attr
+     * @param mixed $attr
      * @return \Orion\Context\Context
      */
     public function getAttribute($attr) {
@@ -92,7 +92,7 @@ class Entity {
 
     /**
      * Get Attribute Value
-     * @param type $attr
+     * @param mixed $attr
      * @return \Orion\Context\Context
      */
     public function getAttributeValue($attr, &$request = null) {
@@ -108,7 +108,7 @@ class Entity {
     /**
      * 
      * @param string $attr Attribute or attribute list
-     * @param type $options Aditional parameters: limit,offset,attrs,orderBy,options[count*,keyValues*,values*]
+     * @param mixed $options Aditional parameters: limit,offset,attrs,orderBy,options[count*,keyValues*,values*]
      * @return \Orion\Context\Context
      * @throws Orion\Exception\GeneralException
      */
@@ -158,10 +158,10 @@ class Entity {
     }
 
     /**
-     * 
-     * @param type $attr
-     * @param type $value
-     * @param type $metadata
+     *
+     * @param mixed $attr
+     * @param mixed $value
+     * @param mixed $metadata
      * @return \Orion\Utils\HttpRequest
      */
     public function updateAttributeValue($attr, $value, $metadata = null) {
@@ -181,7 +181,7 @@ class Entity {
 
     /**
      * Remove a single attribute
-     * @param type $attr
+     * @param mixed $attr
      * @return \Orion\Utils\HttpRequest
      */
     public function deleteAttribute($attr) {
@@ -228,9 +228,9 @@ class Entity {
 
     /**
      * Update or Append new attribute
-     * @param type $attr
-     * @param type $value
-     * @param type $metadata
+     * @param mixed $attr
+     * @param mixed $value
+     * @param mixed $metadata
      * @return \Orion\Utils\HttpRequest
      */
     public function appendAttribute($attr, $value, $type, $metadata = null, $options = []) {
@@ -327,7 +327,7 @@ class Entity {
      * @param string|array|stdClass $geoJson http://geojson.org/geojson-spec.html
      * @param array $modifiers
      * @param array $options
-     * @param type $request
+     * @param mixed $request
      * @return \Orion\Context\Context
      * @throws \Exception
      */
@@ -421,7 +421,7 @@ class Entity {
      * @param GeoJson $geoJson http://geojson.org/geojson-spec.html
      * @param array $modifiers
      * @param array $options
-     * @param type $request
+     * @param mixed $request
      * @return type
      */
     public function getGeoEquals($geoJson, array $modifiers = [], array $options = [], &$request) {
@@ -444,10 +444,10 @@ class Entity {
     }
 
     /**
-     * 
-     * @param type $id
-     * @param type $entityType
-     * @param type $attrs
+     *
+     * @param mixed $id
+     * @param mixed $entityType
+     * @param mixed $attrs
      * @return \Orion\Utils\HttpRequest
      */
     public function create($id, $entityType = null, $attrs = []) {

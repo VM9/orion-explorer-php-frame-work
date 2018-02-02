@@ -61,11 +61,11 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     }
 
     /**
-     * 
-     * @param type $type
-     * @param type $offset
-     * @param type $limit
-     * @param type $options attrs,orderBy,options[count*,keyValues*,values*]
+     *
+     * @param mixed $type
+     * @param mixed $offset
+     * @param mixed $limit
+     * @param mixed $options attrs,orderBy,options[count*,keyValues*,values*]
      * @return \Orion\Context\Context
      */
     public function getEntities($type = false, $offset = 0, $limit = 1000, $ptions = []) {
@@ -96,8 +96,8 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
 
     /**
      * Generic Post Request
-     * @param type $url
-     * @param type $requestBody
+     * @param mixed $url
+     * @param mixed $requestBody
      * @return HTTPClient
      */
     public function post($url, $requestBody = null) {
@@ -106,8 +106,8 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     }
 
     /**
-     * 
-     * @param type $url
+     *
+     * @param mixed $url
      * @param \Orion\Context\ContextFactory $context
      * @return HTTPClient
      * @throws type
@@ -154,8 +154,8 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     }
 
     /**
-     * 
-     * @param type $url
+     *
+     * @param mixed $url
      * @param \Orion\Context\ContextFactory $context
      * @return HTTPClient
      * @throws \Orion\Exception\GeneralException
@@ -196,8 +196,8 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     }
 
     /**
-     * 
-     * @param type $url
+     *
+     * @param mixed $url
      * @param \Orion\Context\ContextFactory $context
      * @return HTTPClient
      * @throws Exception\GeneralException
@@ -235,9 +235,9 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
 
     /**
      * Generic get
-     * @param type $url
+     * @param mixed $url
      * @param \Orion\Utils\HttpRequest $request
-     * @param type $mime
+     * @param mixed $mime
      * @return \Orion\Context\Context
      * @throws type
      * @throws \Orion\Exception\GeneralException
@@ -261,9 +261,9 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     }
 
     /**
-     * 
-     * @param type $url
-     * @param type $request
+     *
+     * @param mixed $url
+     * @param mixed $request
      * @return HTTPClient
      */
     public function delete($url) {
