@@ -1,8 +1,6 @@
 <h1><strong>Fi-Guardian Context Quering Case</strong></h1>
 <?php
 include './autoloader.php';
-$ip = "192.168.1.20";
-
 
 try {
     $orion = new Orion\NGSIAPIv2($ip);
@@ -16,14 +14,14 @@ try {
 
     //Multitenancy
     $institutionId = 1;
-    $orion->setService("i_$institutionId");
+    //$orion->setService("i_$institutionId");
 
     echo "<pre>";
 
     $subscription = new \Orion\Context\SubscriptionFactory($orion, "OrionPHPSubscription");
-    $subscription->addEntitySubject(".*", "Bus", "idPattern")
+    $subscription->addEntitySubject(".*", ".*", "idPattern")
             ->setExpiration("2099-01-01T00:00:00.00Z")
-            ->setNotificationURL("http://localhost:5050/notify")
+        ->setNotificationURL("http://direct.vm9it.com:81")
             ->setThrottling(1);
 
     $request = null;

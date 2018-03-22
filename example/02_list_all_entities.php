@@ -12,7 +12,6 @@ include './autoloader.php';
  * Setup Orion Conection
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
  */
-$ip = "192.168.1.20";
 
 try {
     //First of all we need create a instance of "Orion ContextBroker Connection"

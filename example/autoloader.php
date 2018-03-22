@@ -69,3 +69,5 @@ function getRandLat() {
 function getRandLng() {
     return rand(-178, 179) + (mt_rand() / 10000000000);
 }
+
+$ip = "192.168.1.117";

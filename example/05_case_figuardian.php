@@ -1,7 +1,6 @@
 <h1><strong>Fi-Guardian Context Case</strong></h1>
 <?php
 include './autoloader.php';
-$ip = "192.168.1.20";
 
 
 try {

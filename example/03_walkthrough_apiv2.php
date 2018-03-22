@@ -12,7 +12,7 @@ include './autoloader.php';
  * Setup Orion Conection
  * @author      Leonan Carvalho <j.leonancarvalho@gmail.com>
  */
-$ip = "192.168.1.20";
+$ip = "192.168.1.117";
 
 try {
     //First of all we need create a instance of "Orion ContextBroker Connection"
@@ -124,50 +124,50 @@ try {
      * Ref: https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv2/index.html#subscriptions
      */
     echo "<h1><a href='https://fiware-orion.readthedocs.io/en/develop/user/walkthrough_apiv2/index.html#subscriptions' target='_blank'>Context subscriptions</a></h1>", PHP_EOL;
-
-
-    include './codeblock/v2_subscription_creation.php'; //Execute
-    echo "<h3>Code: </h3>", PHP_EOL;
-    echo "<code>";
-    highlight_file('./codeblock/v2_subscription_creation.php'); //Displays
-    echo "</code>";
-
-    echo "<h3>Request: </h3>", PHP_EOL;
-    echo "<pre>";
-    $subscription->prettyPrint();
-    echo "</pre>";
-    echo "<h3>Response: </h3>", PHP_EOL;
-    echo "<pre>";
-    echo "Subscription Location:", $subscriptionRequest->getResponseHeader("Location"), PHP_EOL;
-    echo "Subscription Entity:", PHP_EOL;
-    $subscriptionEntity->getContext()->prettyPrint();
-    echo "</pre>";
-
-    
-    echo "<h1>Update subscription </h1>", PHP_EOL;
-    include './codeblock/v2_subscription_update.php'; //Execute
-    echo "<h2>Subscription ID: {$subscriptionId}</h2>", PHP_EOL;
-    echo "<h3>Code: </h3>", PHP_EOL;
-    echo "<code>";
-    highlight_file('./codeblock/v2_subscription_update.php'); //Displays
-    echo "</code>";
-    
-    echo "<h3>Updated Subscription: </h3>", PHP_EOL;
-    echo "<pre>";
-    $subscriptionEntity->getContext()->prettyPrint();
-    echo "</pre>";
-
-    
-    echo "<h1>Subscription delete </h1>", PHP_EOL;
-    include './codeblock/v2_subscription_delete.php'; //Execute
-    echo "<h3>Code: </h3>", PHP_EOL;
-    echo "<code>";
-    highlight_file('./codeblock/v2_subscription_delete.php'); //Displays
-    echo "</code>";
-    echo "<h3>Response: </h3>", PHP_EOL;
-    echo "<pre>";   
-    var_dump($httpRequest->getResponseInfo());    
-    echo "</pre>";
+    /**
+     *
+     * include './codeblock/v2_subscription_creation.php'; //Execute
+     * echo "<h3>Code: </h3>", PHP_EOL;
+     * echo "<code>";
+     * highlight_file('./codeblock/v2_subscription_creation.php'); //Displays
+     * echo "</code>";
+     *
+     * echo "<h3>Request: </h3>", PHP_EOL;
+     * echo "<pre>";
+     * $subscription->prettyPrint();
+     * echo "</pre>";
+     * echo "<h3>Response: </h3>", PHP_EOL;
+     * echo "<pre>";
+     * echo "Subscription Location:", $subscriptionRequest->getResponseHeader("Location"), PHP_EOL;
+     * echo "Subscription Entity:", PHP_EOL;
+     * $subscriptionEntity->getContext()->prettyPrint();
+     * echo "</pre>";
+     * /*
+     *
+     * echo "<h1>Update subscription </h1>", PHP_EOL;
+     * include './codeblock/v2_subscription_update.php'; //Execute
+     * echo "<h2>Subscription ID: {$subscriptionId}</h2>", PHP_EOL;
+     * echo "<h3>Code: </h3>", PHP_EOL;
+     * echo "<code>";
+     * highlight_file('./codeblock/v2_subscription_update.php'); //Displays
+     * echo "</code>";
+     *
+     * echo "<h3>Updated Subscription: </h3>", PHP_EOL;
+     * echo "<pre>";
+     * $subscriptionEntity->getContext()->prettyPrint();
+     * echo "</pre>";
+     *
+     *
+     * echo "<h1>Subscription delete </h1>", PHP_EOL;
+     * //include './codeblock/v2_subscription_delete.php'; //Execute
+     * echo "<h3>Code: </h3>", PHP_EOL;
+     * echo "<code>";
+     * highlight_file('./codeblock/v2_subscription_delete.php'); //Displays
+     * echo "</code>";
+     * echo "<h3>Response: </h3>", PHP_EOL;
+     * echo "<pre>";
+     * // var_dump($httpRequest->getResponseInfo());
+     * echo "</pre>";*/
 
 
     //TODO: -> NGSI10 convenience operations

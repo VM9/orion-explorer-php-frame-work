@@ -1,7 +1,6 @@
 <h1><strong>Fi-Guardian Context Quering Case</strong></h1>
 <?php
 include './autoloader.php';
-$ip = "192.168.1.20";
 
 
 try {
@@ -28,9 +27,9 @@ try {
     
         $offset = 0;
         $limit = 10;
-    
-        
-       $ContextQuery = $EntityContext->getContext(["offset"=>$offset,"limit"=>$limit,"options"=>"count",'q'=>"device:network==1,5"], $request);
+
+
+    $ContextQuery = $EntityContext->getContext(["offset" => $offset, "limit" => $limit, "options" => "count", 'q' => "network==1"], $request);
      echo "<h2> Request: </h2>";
      echo "<pre>";
         $request->debug("Simple Query", false);
@@ -95,7 +94,7 @@ try {
 
 //    $Context = $EntityContext->getNearOfPoint(-22.3007,-42.5124, 1000, null, [], $request);//get entities located from a specified distance(max,min) from center (point)
 //    $Context = $EntityContext->getIntersections($polygon, [], [], $request);//get entities those intersect the reference geometry
-    $Context = $EntityContext->getCoveredBy($polygon, [], ["offset"=>0,"limit"=>1,"options"=>"count",'q'=>"device:network==1"], $request);//with some options and filters
+    $Context = $EntityContext->getCoveredBy($polygon, [], ["offset" => 0, "limit" => 1, "options" => "count", 'q' => "network==1"], $request);//with some options and filters
 //    $Context = $EntityContext->getIntersections($point, [], [], $request);
 //    $Context = $EntityContext->getIntersections($polygon, [], [], $request);
 //    $Context = $EntityContext->getDisjoints($polygon, [], [], $request); //get entities those not intersect with the reference geometry
