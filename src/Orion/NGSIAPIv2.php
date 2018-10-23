@@ -68,8 +68,13 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
      * @param mixed $options attrs,orderBy,options[count*,keyValues*,values*]
      * @return \Orion\Context\Context
      */
-    public function getEntities($type = false, $offset = 0, $limit = 1000, $ptions = []) {
+    public function getEntities($type = false, $offset = 0, $limit = 1000, $options = null)
+    {
         $Entities = new Context\Entity($this);
+
+        if (!$options) {
+            $options = [];
+        }
 
         if ($type) {
             $Entities->_setType($type);
@@ -80,7 +85,8 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
         return $Entities->getContext($options);
     }
 
-    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = true) {
+    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = null)
+    {
         
     }
 
