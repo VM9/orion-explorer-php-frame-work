@@ -236,7 +236,7 @@ class Context {
                             case "geo:polygon":
                             case "geo:line":
                                 //Transform Value Pairs to Polygon/Line Coords
-                                array_filter($attr->value, function($rawvalue) {
+                                $coords = array_filter($attr->value, function($rawvalue) {
                                     $coords = array_reverse(explode(",", $rawvalue)); //Change WGS84 Lat Long to Long Lat as GeoJson specifications.
                                     array_filter($coords, function($coord) {
                                         return floatval(trim($coord));
@@ -258,6 +258,16 @@ class Context {
                                 if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
                                     $Feature->properties['__metadata'][$key] = $attr->metadata;
                                 }
+
+                                //Add type to metadata
+                                if(isset($attr->type)){
+                                    if(!isset($Feature->properties['__metadata'][$key])){
+                                        $Feature->properties['__metadata'][$key] = [];
+                                    }
+
+                                    $Feature->properties['__metadata'][$key]['type'] = $attr->type;
+                                }
+
                                 break;
                         }
                         break;
