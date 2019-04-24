@@ -399,7 +399,7 @@ class HttpRequest {
         \curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10);
         \curl_setopt($curlHandle, CURLOPT_URL, $this->url);
         \curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
-        \curl_setopt($curlHandle, CURLOPT_VERBOSE, true);
+        \curl_setopt($curlHandle, CURLOPT_VERBOSE, false);
         \curl_setopt($curlHandle, CURLOPT_HEADER, true);
         \curl_setopt($curlHandle, CURLOPT_COOKIEFILE, '/dev/null');
         \curl_setopt($curlHandle, CURLOPT_HTTPHEADER, $this->getDefaultHeader());
