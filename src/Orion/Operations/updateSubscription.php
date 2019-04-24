@@ -56,8 +56,8 @@ class updateSubscription  implements operationsInterface {
 
     /**
      * Constructor
-     * 
-     * @param type $subscriptionId
+     *
+     * @param mixed $subscriptionId
      */
     public function __construct($subscriptionId) {
         $this->_notifyConditions = array();

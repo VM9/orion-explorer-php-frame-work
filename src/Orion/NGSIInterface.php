@@ -29,16 +29,16 @@ interface NGSIInterface {
      * @return Context object  
      * 
      */    
-    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = true);
+    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = null);
     
     /**
      * This method returns ALL Context Entities
      *
-     * @param type $type Selected Type
-     * @param type $offset
-     * @param type $limit
-     * @param type $details
+     * @param mixed $type Selected Type
+     * @param mixed $offset
+     * @param mixed $limit
+     * @param mixed $details
      * @return  Entities object  
      */
-    public function getEntities($type = false, $offset = 0, $limit = 1000, $details = "on");
+    public function getEntities($type = false, $offset = 0, $limit = 1000, $details = null);
 }

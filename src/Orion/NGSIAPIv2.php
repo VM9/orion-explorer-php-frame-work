@@ -60,24 +60,50 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
         parent::__construct($ServerAddress, $port, $type, $headers, $protocol);
     }
 
-    public function getEntities($type = false, $offset = 0, $limit = 1000, $details = "on") {
+    /**
+     *
+     * @param mixed $type
+     * @param mixed $offset
+     * @param mixed $limit
+     * @param mixed $options attrs,orderBy,options[count*,keyValues*,values*]
+     * @return \Orion\Context\Context
+     */
+    public function getEntities($type = false, $offset = 0, $limit = 1000, $options = null)
+    {
+        $Entities = new Context\Entity($this);
+
+        if (!$options) {
+            $options = [];
+        }
+
+        if ($type) {
+            $Entities->_setType($type);
+        }
+        $options["offset"] = $offset;
+        $options["limit"] = $limit;
+
+        return $Entities->getContext($options);
+    }
+
+    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = null)
+    {
         
     }
 
-    public function getEntityAttributeView($type = false, $offset = 0, $limit = 1000, $details = true) {
-        
-    }
-
+    /**
+     * 
+     * @return \Orion\Context\Context
+     */
     public function getEntityTypes() {
-        
+        return $this->get("types");
     }
 
     //API V2 Operations
 
     /**
      * Generic Post Request
-     * @param type $url
-     * @param type $requestBody
+     * @param mixed $url
+     * @param mixed $requestBody
      * @return HTTPClient
      */
     public function post($url, $requestBody = null) {
@@ -86,8 +112,8 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     }
 
     /**
-     * 
-     * @param type $url
+     *
+     * @param mixed $url
      * @param \Orion\Context\ContextFactory $context
      * @return HTTPClient
      * @throws type
@@ -134,21 +160,25 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     }
 
     /**
-     * 
-     * @param type $url
+     *
+     * @param mixed $url
      * @param \Orion\Context\ContextFactory $context
      * @return HTTPClient
      * @throws \Orion\Exception\GeneralException
      */
-    public function put($url, Context\ContextFactory $context) {
+    public function put($url, Context\ContextFactory $context = null, $raw = null) {
         $patchUrl = $this->getUrl($url);
-        $restReq = $this->restRequest($patchUrl, 'PUT', $context->get());
+        if (null != $raw) {
+            $restReq = $this->restRequest($patchUrl, 'PUT', $raw, "text/plain");
+        } else {
+            $restReq = $this->restRequest($patchUrl, 'PUT', $context->get());
+        }
         $ret = $restReq->getResponseBody();
         $retInfo = $restReq->getResponseInfo();
 
 
         if ($url == "entities" //Is entity endpoint
-                && null != $context->get('id')//Have a valid Id on context
+                && null != $context && null != $context->get('id')//Have a valid Id on context
                 && is_array($retInfo) && array_key_exists("http_code", $retInfo) && $retInfo['http_code'] == 204 //Te httpd request has executed with success
         ) {
 
@@ -172,8 +202,8 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
     }
 
     /**
-     * 
-     * @param type $url
+     *
+     * @param mixed $url
      * @param \Orion\Context\ContextFactory $context
      * @return HTTPClient
      * @throws Exception\GeneralException
@@ -211,24 +241,51 @@ class NGSIAPIv2 extends AbstractNGSI implements NGSIInterface {
 
     /**
      * Generic get
-     * @param type $url
+     * @param mixed $url
+     * @param \Orion\Utils\HttpRequest $request
+     * @param mixed $mime
      * @return \Orion\Context\Context
+     * @throws type
+     * @throws \Orion\Exception\GeneralException
      */
-    public function get($url, &$request = null, $mime = false) {
+    public function get($url, &$request = null, $mime = false, $accept = "application/json") {
         $geturl = $this->getUrl($url);
-        $request = $this->restRequest($geturl,"GET",null,$mime);
-        return new Context\Context($request->getResponseBody());
+        $request = $this->restRequest($geturl, "GET", null, $mime, $accept);
+
+        $responseContext = new Context\Context($request->getResponseBody());
+        if (isset($responseContext->get()->error)) {
+            $errorResponse = $responseContext->get();
+            $exception_name = "\\Orion\\Exception\\{$errorResponse->error}";
+            if (class_exists($exception_name)) {
+                throw new $exception_name($errorResponse->description, 500, null, $request);
+            } else {
+                throw new \Orion\Exception\GeneralException($errorResponse->error . " : " . $errorResponse->description, 500, null, $request);
+            }
+        }
+
+        return $responseContext;
     }
 
     /**
-     * 
-     * @param type $url
-     * @param type $request
+     *
+     * @param mixed $url
+     * @param mixed $request
      * @return HTTPClient
      */
     public function delete($url) {
         $deleteurl = $this->getUrl($url);
-        return $this->restRequest($deleteurl, "DELETE");
+        $request = $this->restRequest($deleteurl, "DELETE");
+        $responseContext = new Context\Context($request->getResponseBody());
+        if (isset($responseContext->get()->error)) {
+            $errorResponse = $responseContext->get();
+            $exception_name = "\\Orion\\Exception\\{$errorResponse->error}";
+            if (class_exists($exception_name)) {
+                throw new $exception_name($errorResponse->description, 500, null, $request);
+            } else {
+                throw new \Orion\Exception\GeneralException($errorResponse->error . " : " . $errorResponse->description, 500, null, $request);
+            }
+        }
+        return $request;
     }
 
 }

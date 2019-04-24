@@ -216,7 +216,7 @@ class HttpRequest {
         $reqBody = ($data !== null) ? $data : $this->request_body;
 
 
-        $this->request_body = $reqBody;
+        $this->request_body = (string) $reqBody;
     }
 
     /**
@@ -312,7 +312,6 @@ class HttpRequest {
      * @param \CURL $ch
      */
     protected function executePut($ch) {
-
         if (!is_string($this->request_body)) {
             $this->buildPostBody();
         }
@@ -400,7 +399,7 @@ class HttpRequest {
         \curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10);
         \curl_setopt($curlHandle, CURLOPT_URL, $this->url);
         \curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
-        \curl_setopt($curlHandle, CURLOPT_VERBOSE, true);
+        \curl_setopt($curlHandle, CURLOPT_VERBOSE, false);
         \curl_setopt($curlHandle, CURLOPT_HEADER, true);
         \curl_setopt($curlHandle, CURLOPT_COOKIEFILE, '/dev/null');
         \curl_setopt($curlHandle, CURLOPT_HTTPHEADER, $this->getDefaultHeader());
@@ -411,16 +410,18 @@ class HttpRequest {
      * @return type
      */
     protected function getDefaultHeader() {
-        $default = array('Content-Type: ' . $this->content_type,
-            'Accept: ' . $this->accept_type);
-
+        $default = ['Accept: ' . $this->accept_type];
+        //Orion accepts no payload for GET/DELETE requests. HTTP header Content-Type is thus forbidden
+        if($this->method != "GET" && $this->method != "DELETE"){
+            array_unshift($default, 'Content-Type: ' . $this->content_type);
+        }
         return array_merge($default, $this->custonHeader);
     }
 
     /**
-     * 
-     * @param type $key
-     * @param type $value
+     *
+     * @param mixed $key
+     * @param mixed $value
      */
     public function addCustonHeader($key, $value) {
         $header = $key . ": " . $value;
@@ -526,6 +527,11 @@ class HttpRequest {
     public function getResponseInfo() {
         return $this->response_info;
     }
+    
+    
+    public function getStatusCode(){
+        return $this->response_info['http_code'];
+    }
 
     /**
      * Get Response Header
@@ -568,7 +574,7 @@ class HttpRequest {
 
     /**
      * Set Username to authentications
-     * @param type $username
+     * @param mixed $username
      */
     public function setUsername($username) {
         $this->username = $username;
@@ -585,7 +591,7 @@ class HttpRequest {
     /**
      * Set HTTP request method
      * Only GET, POST, PUT, DELETE, POST_MP and PUT_MP is supported
-     * @param type $method
+     * @param mixed $method
      */
     public function setMethod($method) {
         $this->method = $method;
@@ -594,12 +600,25 @@ class HttpRequest {
     /**
      * Debug
      */
-    public function debug($label = ""){
+    public function debug($label = "", $body = true, $header = true){
         echo "[", date("Y-m-d H:i:s"), "]", $this->getMethod(), " ", $this->getResponseInfo()['url'], " Status ", $this->getResponseInfo()['http_code'];
         if($label != ""){
             echo " ($label)";
         }        
-        echo PHP_EOL, $this->getResponseBody();
+        
+        if($header){
+            echo PHP_EOL;
+            foreach ($this->response_headers as $key => $value) {
+                echo $key, " : ",$value,PHP_EOL;
+            }
+        }
+        if($body){
+            echo PHP_EOL, $this->getResponseBody();
+        }
+//        var_dump($this->getAcceptType());
+//        var_dump($this->getContentType());
+//        var_dump($this->getDefaultHeader());
+//        var_dump($this->request_body);
         return $this;
     }
 

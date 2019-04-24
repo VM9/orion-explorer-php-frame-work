@@ -17,7 +17,7 @@ $subscriptionEntity->update([
 
 $updateSubscription = new \Orion\Context\SubscriptionFactory($orion);
 $updateSubscription
-        ->setNotificationURL("http://localhost:1322/anotherone")
+    ->setNotificationURL("http://direct.vm9it.com:81")
         ->addNotificationAttr("pressure")
         ->setThrottling(10);
 
