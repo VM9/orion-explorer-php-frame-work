@@ -256,7 +256,7 @@ class Context {
                             default:
                                 $Feature->properties[$key] = $attr->value;
                                 if (isset($attr->metadata) && !empty((array) $attr->metadata)) {
-                                    $Feature->properties['__metadata'][$key] = $attr->metadata;
+                                    $Feature->properties['__metadata'][$key] = (array)$attr->metadata;
                                 }
 
                                 //Add type to metadata
