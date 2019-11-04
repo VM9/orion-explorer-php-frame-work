@@ -265,6 +265,10 @@ class Context {
                                         $Feature->properties['__metadata'][$key] = [];
                                     }
 
+                                    if (!is_array($Feature->properties['__metadata'][$key])) {
+                                        $Feature->properties['__metadata'][$key] = (array)$Feature->properties['__metadata'][$key];
+                                    }
+
                                     $Feature->properties['__metadata'][$key]['type'] = $attr->type;
                                 }
 
